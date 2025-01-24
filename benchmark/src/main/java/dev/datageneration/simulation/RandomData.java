@@ -1,8 +1,6 @@
 package dev.datageneration.simulation;
 
 import dev.datageneration.simulation.Sensors.*;
-import dev.datageneration.simulation.types.IntType;
-import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
@@ -123,7 +121,7 @@ public class RandomData {
             Sensor s = chooseSensor(dataInfos.length, type, id, dataInfos);
             for (int j = 0; j < amount[k]; j++) {
                 if (s != null) {
-                    s.generateDataPoint();
+                    s.generateData();
                 }
             }
             k ++;

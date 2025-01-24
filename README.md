@@ -22,18 +22,6 @@ _TODO_
 
 ---
 
-## Contributing
-
-We welcome contributions from the community!  
-To contribute:
-1. Fork the repository.
-2. Create a feature branch.
-3. Submit a pull request detailing your changes.
-
-Special thanks to @dmadoery for contributions and support!
-
----
-
 ## License
 
 This project is licensed under the [GPL3 License](./LICENSE).  

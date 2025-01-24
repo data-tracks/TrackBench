@@ -3,6 +3,7 @@ package dev.datageneration.simulation.Sensors;
 import dev.datageneration.simulation.types.*;
 import lombok.Getter;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -74,9 +75,30 @@ public abstract class Sensor {
     /**
      * Gets the information of the different data entries.
      **/
-    public abstract String[] getHeader();
+    public abstract List<String> getHeader();
 
     // Creates Json object.
-    public abstract void generateDataPoint();
+    public abstract void attachDataPoint(JSONObject target);
 
+    public void generateData(){
+
+        int f = getTickValue();
+        if(counter == f) {
+            tick ++;
+            counter = 0;
+        }
+        JSONObject dataInfo = new JSONObject();
+        dataInfo.put("id", id);
+        dataInfo.put("type", getType());
+        attachDataPoint(dataInfo);
+
+
+        // Wrap each JSON object with a number prefix
+        JSONObject freqObject = new JSONObject();
+        freqObject.put("data", dataInfo);
+        freqObject.put("tick", tick);
+        counter ++;
+
+        dataPoints.put(freqObject);
+    }
 }

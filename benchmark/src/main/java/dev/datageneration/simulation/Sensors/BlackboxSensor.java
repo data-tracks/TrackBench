@@ -23,7 +23,7 @@ public class BlackboxSensor extends Sensor {
     }
 
     @Override
-    public void generateDataPoint() {
+    public void attachDataPoint(JSONObject target) {
         // should only add an entry every 5th freq
         List<String> data = dType1.getData();
         //create JSON object

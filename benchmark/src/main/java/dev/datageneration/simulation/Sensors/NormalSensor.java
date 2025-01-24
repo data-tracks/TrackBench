@@ -34,7 +34,7 @@ public class NormalSensor extends Sensor {
     }
 
     @Override
-    public void generateDataPoint() {
+    public void attachDataPoint(JSONObject target) {
         String[] data =new String[] {dType1.sample(di1), dType2.sample(di2), dType3.sample(di3), dType4.sample(di4)};
 
         //create JSON object
