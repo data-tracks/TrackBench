@@ -59,12 +59,12 @@ public class Brake {
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
 //            sensorStream.foreach((key, value) -> {
-//                System.out.println("Key: " + key + " Value: " + value);
+//                log.info("Key: " + key + " Value: " + value);
 //            });
 
             KTable<Windowed<String>, AverageBrake> aggregatedStream = sensorStream
                     .groupBy((key, value) -> {
-//                        System.out.println("Key :" + key + " Value :" + value);
+//                        log.info("Key :" + key + " Value :" + value);
                         return key;
                     })
                     .windowedBy(TimeWindows.of(Duration.ofMillis(windowSize)).grace(Duration.ofMillis(0)).advanceBy(Duration.ofMillis(advanceBy)))
@@ -112,14 +112,14 @@ public class Brake {
 
                         String jsonMessage = json.toString();
 
-                        System.out.println("Message: " + jsonMessage);
+                        log.info("Message: " + jsonMessage);
                         producer.send(new ProducerRecord<>(outputTopic, "0", jsonMessage), (metadata, exception) -> {
                             if (exception != null) {
                                 System.err.println("Failed to send message: " + exception.getMessage());
                                 // Optionally, handle the failure (e.g., retry logic)
                             }
 //                            else {
-//                                System.out.println("Message sent to topic " + outputTopic + ": AverageTire Temp" + average[0] + " AverageTire Pressure" + average[1]);
+//                                log.info("Message sent to topic " + outputTopic + ": AverageTire Temp" + average[0] + " AverageTire Pressure" + average[1]);
 //                            }
                         });
                     });
@@ -135,7 +135,7 @@ public class Brake {
                 producer.flush();
                 streams.close();
             } finally {
-                System.out.println("Shutting down");
+                log.info("Shutting down");
             }
             }));
         } catch (Exception e) {

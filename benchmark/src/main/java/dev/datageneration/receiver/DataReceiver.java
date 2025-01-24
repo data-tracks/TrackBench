@@ -56,7 +56,7 @@ public class DataReceiver {
                 } else {
                     long now = System.currentTimeMillis();
                     if (now - inactivity > 10000) {
-                        System.out.println("No messages received for 10 seconds. Ending loop.");
+                        log.info("No messages received for 10 seconds. Ending loop.");
                         b = false;
                     }
                 }

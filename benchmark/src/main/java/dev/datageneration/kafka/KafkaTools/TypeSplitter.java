@@ -73,7 +73,7 @@ public class TypeSplitter {
 
                 String topicType = data.getString("type");
                 String id = String.valueOf(data.getInt("id"));
-//                System.out.println("ID: " + id);
+//                log.info("ID: " + id);
 
                 // Ensure the topic exists before sending
 
@@ -83,7 +83,7 @@ public class TypeSplitter {
                         System.err.println("Failed to send message: " + exception.getMessage());
                         // Optionally, handle the failure (e.g., retry logic)
                     } else {
-                        System.out.println("Message sent to topic " + topicType + ": " + value);
+                        log.info("Message sent to topic " + topicType + ": " + value);
                     }
                 });
 
@@ -114,7 +114,7 @@ public class TypeSplitter {
                     NewTopic newTopic = new NewTopic(topic, 1, (short) 1); // 1 partition, 1 replica
                     adminClient.createTopics(Collections.singleton(newTopic));
                     existingTopics.add(topic);
-                    System.out.println("Topic created: " + topic);
+                    log.info("Topic created: " + topic);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

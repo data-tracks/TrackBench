@@ -24,7 +24,7 @@ public class FinalData {
 
         finalData.sort(Comparator.comparingInt(jsonObject -> jsonObject.getInt("tick")));
 
-        System.out.println("Amount of entries sent: " + finalData.size());
+        log.info("Amount of entries sent: " + finalData.size());
 
         writeJsonFile(folderStore, fName, finalData);
     }

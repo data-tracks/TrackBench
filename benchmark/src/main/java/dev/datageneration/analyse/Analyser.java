@@ -37,7 +37,7 @@ public class Analyser {
                                 long lastReceivedTime, int throughput) throws IOException {
         if (aggregated) { //aggregated Data
             JsonFileHandler.readJsonFile(folder, file2, averagedData);
-            System.out.println("Aggregated data received");
+            log.info("Aggregated data received");
 
 
             List<JSONObject> onlyWindows = getOnlyWindows(dataReceived);
@@ -65,7 +65,7 @@ public class Analyser {
                 }
                 peekAnalyse.append("\n");
             }
-            System.out.println(peekAnalyse.toString());
+            log.info(peekAnalyse.toString());
 
             //Get Completeness of the peeks in the windows
             int amountWrongPeeks = getFalseWindow();
@@ -82,7 +82,7 @@ public class Analyser {
 
         } else {
             JsonFileHandler.readJsonFile(folder, file1, dataSent);
-            System.out.println("Normal data received");
+            log.info("Normal data received");
         }
 
         // End time
@@ -119,7 +119,7 @@ public class Analyser {
                 "\nWarning completeness: " + percentageCorrectWarnings +
                 "\nError completeness: " + percentageCorrectErrors +
                 "\n_________________________________________________________________________________________________";
-        System.out.println(output);
+        log.info(output);
 
         writeFile(folderResults, "analysis", output);
 
@@ -146,7 +146,7 @@ public class Analyser {
         int start;
         JSONObject json;
         for(int i = 0; i < dataReceived.size(); i++) {
-//            System.out.println(dataReceived.get(i).getJSONObject("data").getInt("id") + " " + dataReceived.get(i).getInt("startTime") + " " + dataReceived.get(i).getInt("endTime"));
+//            log.info(dataReceived.get(i).getJSONObject("data").getInt("id") + " " + dataReceived.get(i).getInt("startTime") + " " + dataReceived.get(i).getInt("endTime"));
             if(i == dataReceived.size() - 1) {
                 onlyMaxWindows.add(dataReceived.get(i));
                 break;

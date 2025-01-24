@@ -82,7 +82,7 @@ public class Warnings {
                             System.err.println("Failed to send message: " + exception.getMessage());
                             // Optionally, handle the failure (e.g., retry logic)
                         } else {
-                            System.out.println("Message sent to topic f3: " + value);
+                            log.info("Message sent to topic f3: " + value);
                         }
                     });
                 } else {
@@ -221,7 +221,7 @@ public class Warnings {
                                 System.err.println("Failed to send message: " + exception.getMessage());
                                 // Optionally, handle the failure (e.g., retry logic)
                             } else {
-                                System.out.println("Message sent to topic f3: " + value);
+                                log.info("Message sent to topic f3: " + value);
                             }
                         });
                     }
@@ -254,7 +254,7 @@ public class Warnings {
                     NewTopic newTopic = new NewTopic(topic, 1, (short) 1); // 1 partition, 1 replica
                     adminClient.createTopics(Collections.singleton(newTopic));
                     existingTopics.add(topic);
-                    System.out.println("Topic created: " + topic);
+                    log.info("Topic created: " + topic);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

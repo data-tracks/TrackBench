@@ -43,7 +43,7 @@ public class AverageAccelerometer {
         } else {
             return throttle;
         }
-//        System.out.println(average[0] + " " + average[1] + " " + average[2]);
+//        log.info(average[0] + " " + average[1] + " " + average[2]);
         return average;
     }
 }

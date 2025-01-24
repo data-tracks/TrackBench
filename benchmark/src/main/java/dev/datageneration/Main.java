@@ -15,76 +15,63 @@ import dev.datageneration.sending.ThreadedSender;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Main {
 
     //change path to where settings.txt if stored
     static final String path = "src/main/resources";
-    static final File file = new File(path + "/settings.txt");
+    static final String SETTINGS_PATH = "setting.properties";
     static final String tire = "src/main/java/dev/datageneration/kafka/KafkaTools/Tire.java";
     static boolean aggregated;
     static boolean createData;
     public static void main(String[] args) throws Exception {
 
         //Get Data from Settings file
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String st;
-        int counter = 0;
-        int amount = 0;
-        String[] input = new String[8];
-        while ((st = br.readLine()) != null){
-            if(counter >= 3 && counter <= 8) {
-                input[amount] = st.split(":")[1];
-                System.out.println(input[amount]);
-                amount++;
+        Properties props = new Properties();
+
+        try ( InputStream in = Main.class.getResourceAsStream(SETTINGS_PATH)) {
+            if (in == null) {
+                throw new RuntimeException("Could not find " + SETTINGS_PATH);
             }
-            if(counter == 10 || counter == 11) {
-                input[amount] = st.split(":")[1];
-                System.out.println(input[amount]);
-                amount++;
-            }
-            counter++;
+            props.load(in);
         }
+
         //Set the loaded data
-        if(input[0].equals("true")){
-            createData = true;
-        } else {
-            createData = false;
-        }
-        if(input[1].equals("true")){
-            aggregated = true;
-        } else {
-            aggregated = false;
-        }
-        int threadAmount = Integer.parseInt(input[2]);
-        int[] sensorArray = new int[Integer.parseInt(input[3])];
-        Arrays.fill(sensorArray, Integer.parseInt(input[4]));
-        long durationTimeStep = Integer.parseInt(input[5]); //milliseconds
-        final File folderStorage = new File(input[6]);
-        final File folderSensorData = new File(input[7]);
-        System.out.println("Factor: " + (int)(100/durationTimeStep * 5));
+        createData = Boolean.getBoolean(props.getProperty( "createData" ));
+        aggregated = Boolean.getBoolean(props.getProperty( "aggregatedData" ));
+        int threadAmount = Integer.parseInt(props.getProperty( "threadAmount" ));
+        int sensorAmount = Integer.parseInt(props.getProperty( "sensorAmount" ));
+        long stepDurationMs = Integer.parseInt(props.getProperty( "stepDurationMs" ));
+        final File path = new File(props.getProperty( "pathAggregated" ));
+        final File pathSensorData = new File(props.getProperty( "pathSensor" ));
+        log.info( "Factor: {}", (int) (100 / stepDurationMs * 5) );
 
         //Set data for all files
-        RandomData.setPeek((int)(100/durationTimeStep * 5));
-        Analyser.setAmountSensors(sensorArray.length);
+        RandomData.setPeek((int)(100/stepDurationMs * 5));
+        Analyser.setAmountSensors(sensorAmount);
         Analyser.setThreadAmount(threadAmount);
-        Analyser.setFolder(folderStorage);
-        AveragedData.setFolderData(folderSensorData);
-        AveragedData.setFolderStore(folderStorage);
-        ErrorCreator.setFolderData(folderSensorData);
-        FinalData.setFolderStore(folderStorage);
-        WindowedData.setFolderData(folderSensorData);
-        WindowedData.setFolderStore(folderStorage);
-        ThreadedSender.setPathNormal(folderStorage);
-        Comparer.setFolder(folderStorage);
-        DataGenerator.setFolderData(folderSensorData);
-        DataGenerator.setFolderStore(folderStorage);
-        SensorGenerator.setFolder(folderSensorData);
-        JsonFileHandler.setFolderAggregated(folderStorage);
-        JsonFileHandler.setFolderSensors(folderSensorData);
+        Analyser.setFolder(path);
+        AveragedData.setFolderData(pathSensorData);
+        AveragedData.setFolderStore(path);
+        ErrorCreator.setFolderData(pathSensorData);
+        FinalData.setFolderStore(path);
+        WindowedData.setFolderData(pathSensorData);
+        WindowedData.setFolderStore(path);
+        ThreadedSender.setPathNormal(path);
+        Comparer.setFolder(path);
+        DataGenerator.setFolderData(pathSensorData);
+        DataGenerator.setFolderStore(path);
+        SensorGenerator.setFolder(pathSensorData);
+        JsonFileHandler.setFolderAggregated(path);
+        JsonFileHandler.setFolderSensors(pathSensorData);
 
 
 
@@ -94,20 +81,20 @@ public class Main {
             JsonFileHandler.deleteAllJsonFiles();
 
             //create files
-            SensorGenerator.creator(sensorArray);
+            SensorGenerator.creator(sensorAmount);
             ErrorCreator.dataWithErrors(); //create some data loss and null entries.
             DataGenerator.dataGenerator();
             WindowedData.createWindowedData(); //creates warnings if some data is not in a wished range
-            AveragedData.aggregatedData(durationTimeStep); //get average over a time interval
+            AveragedData.aggregatedData(stepDurationMs); //get average over a time interval
             FinalData.createFinalData();
         }
 
         //Start Sending to Stream processing System and start receiver
         Thread sendThread = new Thread(() -> {
             try {
-                ThreadedSender.sendThreaded(aggregated, threadAmount, durationTimeStep);
+                ThreadedSender.sendThreaded(aggregated, threadAmount, stepDurationMs);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warn( e.getMessage() );
             }
         });
 
@@ -115,7 +102,7 @@ public class Main {
             try {
                 DataReceiver.receive(aggregated);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warn( e.getMessage() );
             }
         });
         receiveThread.start();
@@ -125,6 +112,6 @@ public class Main {
 
         sendThread.join();
         receiveThread.join();
-        System.out.println("Finished everything");
+        log.info("Finished everything");
     }
 }

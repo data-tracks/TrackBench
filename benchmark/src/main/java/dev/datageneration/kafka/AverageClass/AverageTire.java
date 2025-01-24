@@ -58,7 +58,7 @@ public class AverageTire {
         } else {
             return new double[]{temp, pressure, wear};
         }
-//        System.out.println(average[0] + " " + average[1] + " " + average[2]);
+//        log.info(average[0] + " " + average[1] + " " + average[2]);
         return average;
     }
 }

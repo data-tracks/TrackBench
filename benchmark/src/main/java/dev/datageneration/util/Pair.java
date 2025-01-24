@@ -5,6 +5,7 @@ import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Value(staticConstructor = "of")
@@ -16,6 +17,11 @@ public class Pair<Left, Right> {
         List<Left> lefts = new ArrayList<>();
         pairs.forEach(pair -> lefts.add(pair.left));
         return lefts;
+    }
+
+
+    public static <Left, Right> Pair<Left, Right> of( Left left, Right right ) {
+        return new Pair<>( left, right );
     }
 
 }

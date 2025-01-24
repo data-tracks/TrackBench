@@ -38,13 +38,13 @@ public class SingleThread implements Runnable {
                         }
                         ProducerRecord<String, String> record = new ProducerRecord<>(topic, message.toString());
                         producer.send(record);
-//                        System.out.println("Sent: " + record.toString());
+//                        log.info("Sent: " + record.toString());
                     }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.out.println(Thread.currentThread().getName());
-                System.out.println("Thread interrupted");
+                log.info(Thread.currentThread().getName());
+                log.info("Thread interrupted");
                 break;
             }
         }

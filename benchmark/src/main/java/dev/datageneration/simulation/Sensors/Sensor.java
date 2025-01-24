@@ -42,11 +42,10 @@ public abstract class Sensor {
         put( "array_of_data", new StringArrayType());
         put( "position", new IntType(0, 4));
 
-        //TODO: Add more data types
     }};
 
     public static Map<String, Integer> ticks = new HashMap<>(){{
-        put( "tire", 1);                //tick --> 10 entries per timeunit
+        put( "tire", 1 );                //tick --> 10 entries per timeunit
         put( "heat", 1);
         put( "speed", 1);
         put( "gForce", 1);
@@ -59,37 +58,32 @@ public abstract class Sensor {
         put( "blackbox", -5);           // every 5th tick an entry
     }};
 
-    final String type;
-    final int id;
     final JSONArray dataPoints = new JSONArray();
-    final int tickValue;
-    public  int counter = 0;
-    public  int tick = 1;
+    final int tickLength;
+    public int counter = 0;
+    public int tick = 1;
+    public final SensorTemplate template;
 
-    public Sensor(String type, int id) {
-        this.id = id;
-        this.type = type;
-        this.tickValue = ticks.get(type);
+
+
+    public Sensor(SensorTemplate template) {
+        this.template = template;
+        this.tickLength = ticks.get(template.getType());
     }
 
-    /**
-     * Gets the information of the different data entries.
-     **/
-    public abstract List<String> getHeader();
 
     // Creates Json object.
     public abstract void attachDataPoint(JSONObject target);
 
-    public void generateData(){
-
-        int f = getTickValue();
-        if(counter == f) {
-            tick ++;
+    public void simulateTick(long tick){
+        counter++;
+        if(counter != tickLength ) {
             counter = 0;
+            return;
         }
         JSONObject dataInfo = new JSONObject();
-        dataInfo.put("id", id);
-        dataInfo.put("type", getType());
+        dataInfo.put("id", template.getId());
+        dataInfo.put("type", template.getType());
         attachDataPoint(dataInfo);
 
 
@@ -97,7 +91,6 @@ public abstract class Sensor {
         JSONObject freqObject = new JSONObject();
         freqObject.put("data", dataInfo);
         freqObject.put("tick", tick);
-        counter ++;
 
         dataPoints.put(freqObject);
     }

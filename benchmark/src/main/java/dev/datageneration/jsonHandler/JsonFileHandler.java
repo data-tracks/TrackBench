@@ -42,7 +42,7 @@ public class JsonFileHandler {
         try (FileWriter outputfile = new FileWriter(outputFile)) {
             JSONArray outputArray = new JSONArray(allData);  // Convert the list of JSONObjects back to JSONArray
             outputfile.write(outputArray.toString(4));  // Indented output for readability
-            System.out.println("Data successfully written to: " + outputFile.getAbsolutePath());
+            log.info("Data successfully written to: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error writing the output file: " + e.getMessage());
             throw e;
@@ -61,7 +61,7 @@ public class JsonFileHandler {
 
         try (FileWriter outputfile = new FileWriter(outputFile, append)) {
             outputfile.write(data);  // Indented output for readability
-            System.out.println("File successfully written to: " + outputFile.getAbsolutePath());
+            log.info("File successfully written to: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error writing the output file: " + e.getMessage());
             throw e;
@@ -77,9 +77,9 @@ public class JsonFileHandler {
                 if (file.isFile() && file.getName().endsWith(".json")) {
                     boolean isDeleted = file.delete();
                     if (isDeleted) {
-                        System.out.println("Deleted: " + file.getName());
+                        log.info("Deleted: " + file.getName());
                     } else {
-                        System.out.println("Failed to delete: " + file.getName());
+                        log.info("Failed to delete: " + file.getName());
                     }
                 }
             }
@@ -89,9 +89,9 @@ public class JsonFileHandler {
                 if (file.isFile() && file.getName().endsWith(".json")) {
                     boolean isDeleted = file.delete();
                     if (isDeleted) {
-                        System.out.println("Deleted: " + file.getName());
+                        log.info("Deleted: " + file.getName());
                     } else {
-                        System.out.println("Failed to delete: " + file.getName());
+                        log.info("Failed to delete: " + file.getName());
                     }
                 }
             }

@@ -205,7 +205,7 @@ public class Comparer {
                 }
             }
             for(JSONObject warning: warnings) {
-                System.out.println(warning.toString());
+                log.info(warning.toString());
             }
 
             return "\nThere are missing: " + errors.size() + " errors and " + warnings.size() + " warnings.\n";
