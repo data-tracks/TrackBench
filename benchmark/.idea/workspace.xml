@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="moved to gradle, changed sensor design" />
+    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="moved to gradle, changed sensor design">
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/RandomData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/RandomData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/SensorGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/Sensors/DocSensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/DocSensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/Sensors/Sensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/Sensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/Sensors/SensorMetric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/SensorMetric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/Sensors/SensorTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/SensorTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,6 +102,9 @@
     &quot;accountId&quot;: &quot;def2c711-ae31-433a-9c89-91e4ce7daee9&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -201,7 +221,8 @@
       <updated>1737796421007</updated>
       <workItem from="1737796422113" duration="70000" />
       <workItem from="1737796501741" duration="7440000" />
-      <workItem from="1737884272059" duration="390000" />
+      <workItem from="1737884272059" duration="11090000" />
+      <workItem from="1737895502353" duration="12211000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
@@ -211,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737884652775</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="moved to gradle, changed sensor design">
+      <option name="closed" value="true" />
+      <created>1737884718649</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1737884718649</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -228,6 +257,16 @@
           <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/ErrorCreator.java</url>
           <line>37</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/util/LoadingBar.java</url>
+          <line>18</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/Sensor.java</url>
+          <line>153</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

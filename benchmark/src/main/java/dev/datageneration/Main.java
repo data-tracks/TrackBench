@@ -13,85 +13,45 @@ import dev.datageneration.simulation.RandomData;
 import dev.datageneration.simulation.SensorGenerator;
 import dev.datageneration.sending.ThreadedSender;
 
-import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.util.Properties;
+import dev.datageneration.simulation.BenchmarkConfig;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
 
 @Slf4j
 public class Main {
 
-    //change path to where settings.txt if stored
-    static final String path = "src/main/resources";
-    static final String SETTINGS_PATH = "settings.properties";
     static final String tire = "src/main/java/dev/datageneration/kafka/KafkaTools/Tire.java";
+
     public static void main(String[] args) throws Exception {
         //Get Data from Settings file
-        Configurations configs = new Configurations();
-        PropertiesConfiguration props = configs.properties( Main.class.getClassLoader().getResource( SETTINGS_PATH ) );
+        BenchmarkConfig config = BenchmarkConfig.fromFile();
+        // set to new seed
+        RandomData.seed = config.seed();
 
-
-        //Set the loaded data
-        boolean generate = props.getBoolean( "generate" );
-        boolean execute = props.getBoolean( "execute" );
-        boolean aggregated = props.getBoolean( "aggregatedData" );
-        int threadAmount = props.getInt( "threadAmount" );
-        int sensorAmount = props.getInt( "sensorAmount" );
-        long ticks = Long.parseLong(props.getString( "ticks" ).replace( "_", "" ));
-        long stepDurationMs = props.getInt( "stepDurationMs" );
-        final File path = new File(props.getString( "pathAggregated" ));
-        final File pathSensorData = new File(props.getString( "pathSensor" ));
-        log.info( "Factor: {}", (int) (100 / stepDurationMs * 5) );
-
-        //Set data for all files
-        RandomData.setPeek((int)(100/stepDurationMs * 5));
-        Analyser.setAmountSensors(sensorAmount);
-        Analyser.setThreadAmount(threadAmount);
-        Analyser.setFolder(path);
-        AveragedData.setFolderData(pathSensorData);
-        AveragedData.setFolderStore(path);
-        ErrorCreator.setFolderData(pathSensorData);
-        FinalData.setFolderStore(path);
-        WindowedData.setFolderData(pathSensorData);
-        WindowedData.setFolderStore(path);
-        ThreadedSender.setPathNormal(path);
-        Comparer.setFolder(path);
-        DataGenerator.setFolderData(pathSensorData);
-        DataGenerator.setFolderStore(path);
-        SensorGenerator.setFolder(pathSensorData);
-        JsonFileHandler.setFolderAggregated(path);
-        JsonFileHandler.setFolderSensors(pathSensorData);
-
-
+        setPaths(config);
 
         //Start Creation of Data
-        if(generate){
+        if(config.generate()){
             //Delete all files in folder
             JsonFileHandler.deleteAllJsonFiles();
 
             //create files
-            SensorGenerator.creator(ticks, sensorAmount);
-            ErrorCreator.dataWithErrors(); //create some data loss and null entries.
-            DataGenerator.dataGenerator();
+            SensorGenerator.creator(config);
+            //ErrorCreator.dataWithErrors(); //create some data loss and null entries.
+            /*DataGenerator.dataGenerator();
             WindowedData.createWindowedData(); //creates warnings if some data is not in a wished range
-            AveragedData.aggregatedData(stepDurationMs); //get average over a time interval
-            FinalData.createFinalData();
+            AveragedData.aggregatedData(config.stepDurationMs()); //get average over a time interval
+            FinalData.createFinalData();*/
         }
 
-        if ( !execute ){
+        if ( !config.execute() ){
             return;
         }
 
         //Start Sending to Stream processing System and start receiver
         Thread sendThread = new Thread(() -> {
             try {
-                ThreadedSender.sendThreaded(aggregated, threadAmount, stepDurationMs);
+                ThreadedSender.sendThreaded(config.aggregated(), config.threadAmount(), config.stepDurationMs());
             } catch (Exception e) {
                 log.warn( e.getMessage() );
             }
@@ -99,7 +59,7 @@ public class Main {
 
         Thread receiveThread = new Thread(() -> {
             try {
-                DataReceiver.receive(aggregated);
+                DataReceiver.receive(config.aggregated());
             } catch (Exception e) {
                 log.warn( e.getMessage() );
             }
@@ -113,4 +73,27 @@ public class Main {
         receiveThread.join();
         log.info("Finished everything");
     }
+
+
+    private static void setPaths( BenchmarkConfig config ) {
+        //Set data for all files
+        RandomData.setPeek(config.factor());
+        Analyser.setAmountSensors(config.sensorAmount());
+        Analyser.setThreadAmount(config.threadAmount());
+        Analyser.setFolder(config.path());
+        AveragedData.setFolderData(config.pathSensorData());
+        AveragedData.setFolderStore(config.path());
+        ErrorCreator.setFolderData(config.pathSensorData());
+        FinalData.setFolderStore(config.path());
+        WindowedData.setFolderData(config.pathSensorData());
+        WindowedData.setFolderStore(config.path());
+        ThreadedSender.setPathNormal(config.path());
+        Comparer.setFolder(config.path());
+        DataGenerator.setFolderData(config.pathSensorData());
+        DataGenerator.setFolderStore(config.path());
+        SensorGenerator.setFolder(config.pathSensorData());
+        JsonFileHandler.setFolderAggregated(config.path());
+        JsonFileHandler.setFolderSensors(config.pathSensorData());
+    }
+
 }

@@ -1,6 +1,6 @@
-package dev.datageneration.simulation.Sensors;
+package dev.datageneration.simulation.sensors;
 
-import static dev.datageneration.simulation.Sensors.Sensor.dataTypes;
+import static dev.datageneration.simulation.sensors.Sensor.dataTypes;
 
 import dev.datageneration.simulation.types.DataType;
 import java.util.HashMap;
@@ -32,23 +32,25 @@ public class SensorTemplate {
     long id = idCounter++;
     String type;
     List<String> headers;
+    double errorRate;
 
-    public SensorTemplate( String type, List<String> headers) {
+    public SensorTemplate( String type, double errorRate, List<String> headers ) {
         this.type = type;
         this.headers = headers;
+        this.errorRate = errorRate;
     }
 
-    public SensorTemplate(String type, String... headers) {
-        this(type, List.of(headers));
+    public SensorTemplate(String type, double errorRate, String... headers) {
+        this(type, errorRate, List.of(headers));
     }
 
 
-    public static @NotNull SensorTemplate of( String type, List<String> headers ) {
-        return new SensorTemplate(type, headers);
+    public static @NotNull SensorTemplate of( String type, double errorRate, List<String> headers ) {
+        return new SensorTemplate(type, errorRate, headers);
     }
 
-    public static @NotNull SensorTemplate of( String type, String... headers ) {
-        return new SensorTemplate( type, headers);
+    public static @NotNull SensorTemplate of( String type, double errorRate, String... headers ) {
+        return new SensorTemplate( type, errorRate, headers);
     }
 
     public Map<String, DataType> getDataTypes() {
