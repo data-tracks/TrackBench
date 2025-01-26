@@ -2,6 +2,7 @@ package dev.datageneration.simulation.sensors;
 
 import static dev.datageneration.simulation.sensors.Sensor.dataTypes;
 
+import dev.datageneration.simulation.ErrorRates;
 import dev.datageneration.simulation.types.DataType;
 import java.util.HashMap;
 import java.util.List;
@@ -32,25 +33,26 @@ public class SensorTemplate {
     long id = idCounter++;
     String type;
     List<String> headers;
-    double errorRate;
 
-    public SensorTemplate( String type, double errorRate, List<String> headers ) {
+    ErrorRates errorRates;
+
+    public SensorTemplate( String type, ErrorRates errorRates, List<String> headers ) {
         this.type = type;
         this.headers = headers;
-        this.errorRate = errorRate;
+        this.errorRates = errorRates;
     }
 
-    public SensorTemplate(String type, double errorRate, String... headers) {
-        this(type, errorRate, List.of(headers));
+    public SensorTemplate(String type, ErrorRates errorRates, String... headers) {
+        this(type, errorRates, List.of(headers));
     }
 
 
-    public static @NotNull SensorTemplate of( String type, double errorRate, List<String> headers ) {
-        return new SensorTemplate(type, errorRate, headers);
+    public static @NotNull SensorTemplate of( String type, ErrorRates errorRates, List<String> headers ) {
+        return new SensorTemplate(type, errorRates, headers);
     }
 
-    public static @NotNull SensorTemplate of( String type, double errorRate, String... headers ) {
-        return new SensorTemplate( type, errorRate, headers);
+    public static @NotNull SensorTemplate of( String type, ErrorRates errorRates, String... headers ) {
+        return new SensorTemplate( type, errorRates, headers);
     }
 
     public Map<String, DataType> getDataTypes() {

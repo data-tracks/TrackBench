@@ -36,10 +36,10 @@ public class Main {
             JsonFileHandler.deleteAllJsonFiles();
 
             //create files
-            SensorGenerator.creator(config);
+            SensorGenerator.start(config);
             //ErrorCreator.dataWithErrors(); //create some data loss and null entries.
-            /*DataGenerator.dataGenerator();
-            WindowedData.createWindowedData(); //creates warnings if some data is not in a wished range
+            DataGenerator.dataGenerator(config);
+            /*WindowedData.createWindowedData(); //creates warnings if some data is not in a wished range
             AveragedData.aggregatedData(config.stepDurationMs()); //get average over a time interval
             FinalData.createFinalData();*/
         }
@@ -89,7 +89,6 @@ public class Main {
         WindowedData.setFolderStore(config.path());
         ThreadedSender.setPathNormal(config.path());
         Comparer.setFolder(config.path());
-        DataGenerator.setFolderData(config.pathSensorData());
         DataGenerator.setFolderStore(config.path());
         SensorGenerator.setFolder(config.pathSensorData());
         JsonFileHandler.setFolderAggregated(config.path());

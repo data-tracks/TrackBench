@@ -19,24 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 public class RandomData {
 
     public static List<SensorTemplate> sensorTemplates = List.of(
-            SensorTemplate.of( "heat", 0.001, "temperature c" ),//heat sensor
-            SensorTemplate.of( "heat", 0.001, "temperature c" ),//heat sensor,
-            SensorTemplate.of( "tire", 0.001, "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_left_tyre
-            SensorTemplate.of( "tire", 0.001, "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_right_tyre
-            SensorTemplate.of( "tire", 0.001, "temperature tire", "pressure psi", "wear", "liability", "position" ),//rear_left_tyre
-            SensorTemplate.of( "tire", 0.001, "temperature tire", "pressure psi", "wear", "liability", "position" ),//rear_right_tyre
-            SensorTemplate.of( "speed", 0.001, "kph", "mph", "acceleration", "wind speed" ),//speed_sensor
-            SensorTemplate.of( "gForce", 0.001, "g-lateral", "g-longitudinal" ),//g_sensor
-            SensorTemplate.of( "fuelPump", 0.001, "temperature fuelP", "ml/min" ),//fuel_pump_sensor
-            SensorTemplate.of( "DRS", 0.001, "on/off", "drs-zone" ),//drs_sensor
-            SensorTemplate.of( "brake", 0.001, "temperature brake", "brake_pressure", "wear" ),//front_left_brake
-            SensorTemplate.of( "brake", 0.001, "temperature brake", "brake_pressure", "wear" ),//front_right_brake
-            SensorTemplate.of( "brake", 0.001, "temperature brake", "brake_pressure", "wear" ),//rear_left_brake
-            SensorTemplate.of( "brake", 0.001, "temperature brake", "brake_pressure", "wear" ),//rear_right_brake
-            SensorTemplate.of( "accelerometer", 0.001, "throttlepedall" ),
-            SensorTemplate.of( "engine", 0.001, "temperature engine", "rpm", "fuelFlow", "oil_pressure", "fuel_pressure", "exhaust" ),
-            SensorTemplate.of( "blackbox", 0.001, "array_of_data" ),
-            SensorTemplate.of( "steering", 0.001, "direction", "turning_degree" ) );
+            SensorTemplate.of( "heat", ErrorRates.of( 0.001, 0.001), "temperature c" ),//heat sensor
+            SensorTemplate.of( "heat", ErrorRates.of( 0.001, 0.001), "temperature c" ),//heat sensor,
+            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_left_tyre
+            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_right_tyre
+            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//rear_left_tyre
+            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//rear_right_tyre
+            SensorTemplate.of( "speed", ErrorRates.of( 0.001, 0.001), "kph", "mph", "acceleration", "wind speed" ),//speed_sensor
+            SensorTemplate.of( "gForce", ErrorRates.of( 0.001, 0.001), "g-lateral", "g-longitudinal" ),//g_sensor
+            SensorTemplate.of( "fuelPump", ErrorRates.of( 0.001, 0.001), "temperature fuelP", "ml/min" ),//fuel_pump_sensor
+            SensorTemplate.of( "DRS", ErrorRates.of( 0.001, 0.001), "on/off", "drs-zone" ),//drs_sensor
+            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//front_left_brake
+            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//front_right_brake
+            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//rear_left_brake
+            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//rear_right_brake
+            SensorTemplate.of( "accelerometer", ErrorRates.of( 0.001, 0.001), "throttlepedall" ),
+            SensorTemplate.of( "engine", ErrorRates.of( 0.001, 0.001), "temperature engine", "rpm", "fuelFlow", "oil_pressure", "fuel_pressure", "exhaust" ),
+            SensorTemplate.of( "blackbox", ErrorRates.of( 0.001, 0.001), "array_of_data" ),
+            SensorTemplate.of( "steering", ErrorRates.of( 0.001, 0.001), "direction", "turning_degree" ) );
 
 
     public static Random random = new Random();
@@ -106,49 +106,6 @@ public class RandomData {
     }
 
 
-    /**
-     * The real creator of the sensors.
-     * Creates sensors accordingly to the chosen amount.
-     *
-     * @return list of sensors
-     */
-    public static List<Sensor> createSensors( BenchmarkConfig config ) {
-        List<Sensor> sensors = new ArrayList<>();
-
-        IterRegistry registry = new IterRegistry( config.ticks(), config.updateTickVisual() );
-
-        for ( int i = 0; i < config.sensorAmount(); i++ ) {
-            // pick random sensor
-            int pickedSensorIndex = (int) getRandom( 0, RandomData.sensorTemplates.size() );
-            Sensor sensor = chooseSensor( RandomData.sensorTemplates.get( pickedSensorIndex ), config, registry );
-            sensors.add( sensor );
-        }
-
-        try {
-            // start all benchmarks
-            sensors.forEach( Sensor::start );
-
-            // wait for all sensors to finish
-            for ( Sensor sensor : sensors ) {
-                sensor.join();
-            }
-
-            log.info( "###\nFinishing last batch..." );
-
-        } catch ( Exception e ) {
-            throw new RuntimeException( e );
-        }
-
-        log.info( "###\nDone generating..." );
-
-        // we print the summary for debug purposes
-        for ( Sensor sensor : sensors ) {
-            log.info( "Sensor: {} generated {} ticks, one every {} tick(s), errors: {}", sensor.getTemplate().getType(), sensor.getMetric().ticksGenerated, sensor.getTemplate().getTickLength(), sensor.getMetric().errorsGenerated );
-        }
-
-        return sensors;
-    }
-
 
     public static List<String> listFilesForFolder( final File folder ) {
         List<String> filenames = new ArrayList<>();
@@ -164,9 +121,5 @@ public class RandomData {
         return filenames;
     }
 
-
-    public static Sensor chooseSensor( SensorTemplate template, BenchmarkConfig config, IterRegistry registry ) {
-        return new DocSensor( template, config, registry );
-    }
 
 }

@@ -1,6 +1,7 @@
 package dev.datageneration.simulation.sensors;
 
 import dev.datageneration.simulation.BenchmarkConfig;
+import dev.datageneration.simulation.ErrorHandler;
 import dev.datageneration.simulation.types.DataType;
 import dev.datageneration.simulation.types.DoubleType;
 import dev.datageneration.simulation.types.IntType;
@@ -65,14 +66,14 @@ public abstract class Sensor extends Thread {
     @Getter
     private final SensorMetric metric = new SensorMetric();
 
+    @Getter
     private FileJsonTarget dataTarget;
+    @Getter
     private FileJsonTarget dataWithErrorTarget;
+    @Getter
     private FileJsonTarget errorTarget;
 
-    private final long errorInterval;
-    private final long maxErrorAlteration;
-    private long dynamicErrorInterval;
-    private long errorCounter = 0;
+    private final ErrorHandler errorHandler;
 
 
     public Sensor( SensorTemplate template, BenchmarkConfig config, IterRegistry registry ) {
@@ -81,8 +82,7 @@ public abstract class Sensor extends Thread {
         this.config = config;
         this.registry = registry;
         this.id = idBuilder++;
-        this.errorInterval = config.calculateErrorInterval( this );
-        this.maxErrorAlteration = (long) (this.errorInterval * config.maxErrorAlteration());
+        this.errorHandler = new ErrorHandler( this );
     }
 
 
@@ -133,47 +133,20 @@ public abstract class Sensor extends Thread {
 
         dataTarget.attach( freqObject );
 
-        if ( isError() ) {
-            // we attach an error to both files
-            attachError( tick );
-            errorCounter = 0;
-            recalculateError();
-        } else {
-            // we attach the normal object
-            dataWithErrorTarget.attach( freqObject );
-            errorCounter++;
-        }
+        handlePotentialError( tick, freqObject );
 
         counter = 0;
         metric.ticksGenerated++;
     }
 
 
-    private void recalculateError() {
-        // max shift of error in more or less interval between two errors
-        this.dynamicErrorInterval = this.errorInterval + (((int) (random.nextFloat() * maxErrorAlteration * 2)) - maxErrorAlteration);
+    private void handlePotentialError( long tick, JSONObject freqObject ) throws IOException {
+        if ( !errorHandler.handleError(tick) ){
+            // we attach the normal object as we did not produce error
+            dataWithErrorTarget.attach( freqObject );
+        }
     }
 
 
-    private boolean isError() {
-        return errorCounter >= dynamicErrorInterval;
-    }
-
-
-    private void attachError( long tick ) throws IOException {
-        metric.errorsGenerated++;
-
-        JSONObject errorData = new JSONObject();
-        errorData.put( "type", template.getType() );
-        errorData.put( "id", id );
-        errorData.put( "Error", "No Data" );
-
-        JSONObject error = new JSONObject();
-        error.put( "tick", tick );
-        error.put( "data", errorData );
-
-        dataWithErrorTarget.attach( error );
-        errorTarget.attach( error );
-    }
 
 }

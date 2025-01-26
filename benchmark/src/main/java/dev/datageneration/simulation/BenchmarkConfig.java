@@ -3,6 +3,10 @@ package dev.datageneration.simulation;
 import dev.datageneration.Main;
 import dev.datageneration.simulation.sensors.Sensor;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -86,17 +90,25 @@ public record BenchmarkConfig(
     }
 
 
-    public long calculateErrorInterval( Sensor sensor ) {
-        if ( sensor.getTemplate().getErrorRate() == 0 ) {
+    public long calculateErrorInterval( Sensor sensor, double rate ) {
+        if ( rate == 0 ) {
             return ticks;
         }
 
         long ticksGenerated = ticks / sensor.getTemplate().getTickLength();
 
-        long errorsTotal = (long) (ticksGenerated * sensor.getTemplate().getErrorRate());
+        long errorsTotal = (long) (ticksGenerated * rate);
 
         return ticks / errorsTotal;
     }
 
+
+    public List<File> getSensorFiles(String path) {
+        File target = new File( pathSensorData, path );
+        if ( target.isFile() ) {
+            throw new IllegalArgumentException( "Sensor file path '" + path + "' exists but is not a file" );
+        }
+        return Arrays.stream( Objects.requireNonNull( target.listFiles() ) ).map( file -> new File( target, file.getName() ) ).collect( Collectors.toList() );
+    }
 
 }
