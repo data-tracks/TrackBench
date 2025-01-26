@@ -1,13 +1,14 @@
 package dev.datageneration.jsonHandler;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.util.List;
 import java.util.Objects;
-
+@Slf4j
 public class JsonFileHandler {
     @Setter
     static  File folderAggregated;

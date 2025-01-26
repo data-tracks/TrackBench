@@ -1,5 +1,6 @@
 package dev.datageneration.kafka.KafkaTools;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -18,6 +19,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+@Slf4j
 public class TypeSplitter {
 
     private static final Set<String> existingTopics = new HashSet<>();

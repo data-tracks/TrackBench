@@ -1,12 +1,13 @@
 package dev.datageneration.sending;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.json.JSONObject;
 
 import java.util.concurrent.BlockingQueue;
 
-
+@Slf4j
 public class SingleThread implements Runnable {
     //Topic
     String topic;

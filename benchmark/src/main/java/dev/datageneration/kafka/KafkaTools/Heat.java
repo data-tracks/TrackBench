@@ -4,6 +4,7 @@ package dev.datageneration.kafka.KafkaTools;
 import dev.datageneration.kafka.AverageClass.AverageHeat;
 import dev.datageneration.kafka.JsonClass.JsonHeat;
 import dev.datageneration.kafka.Serde.AverageHeatSerde;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import java.time.Duration;
 import java.util.Properties;
 
+@Slf4j
 public class Heat {
 
     static Properties props = new Properties();

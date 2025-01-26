@@ -13,45 +13,40 @@ import dev.datageneration.simulation.RandomData;
 import dev.datageneration.simulation.SensorGenerator;
 import dev.datageneration.sending.ThreadedSender;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.net.URI;
+import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
 
 @Slf4j
 public class Main {
 
     //change path to where settings.txt if stored
     static final String path = "src/main/resources";
-    static final String SETTINGS_PATH = "setting.properties";
+    static final String SETTINGS_PATH = "settings.properties";
     static final String tire = "src/main/java/dev/datageneration/kafka/KafkaTools/Tire.java";
-    static boolean aggregated;
-    static boolean createData;
     public static void main(String[] args) throws Exception {
-
         //Get Data from Settings file
-        Properties props = new Properties();
+        Configurations configs = new Configurations();
+        PropertiesConfiguration props = configs.properties( Main.class.getClassLoader().getResource( SETTINGS_PATH ) );
 
-        try ( InputStream in = Main.class.getResourceAsStream(SETTINGS_PATH)) {
-            if (in == null) {
-                throw new RuntimeException("Could not find " + SETTINGS_PATH);
-            }
-            props.load(in);
-        }
 
         //Set the loaded data
-        createData = Boolean.getBoolean(props.getProperty( "createData" ));
-        aggregated = Boolean.getBoolean(props.getProperty( "aggregatedData" ));
-        int threadAmount = Integer.parseInt(props.getProperty( "threadAmount" ));
-        int sensorAmount = Integer.parseInt(props.getProperty( "sensorAmount" ));
-        long stepDurationMs = Integer.parseInt(props.getProperty( "stepDurationMs" ));
-        final File path = new File(props.getProperty( "pathAggregated" ));
-        final File pathSensorData = new File(props.getProperty( "pathSensor" ));
+        boolean generate = props.getBoolean( "generate" );
+        boolean execute = props.getBoolean( "execute" );
+        boolean aggregated = props.getBoolean( "aggregatedData" );
+        int threadAmount = props.getInt( "threadAmount" );
+        int sensorAmount = props.getInt( "sensorAmount" );
+        long ticks = Long.parseLong(props.getString( "ticks" ).replace( "_", "" ));
+        long stepDurationMs = props.getInt( "stepDurationMs" );
+        final File path = new File(props.getString( "pathAggregated" ));
+        final File pathSensorData = new File(props.getString( "pathSensor" ));
         log.info( "Factor: {}", (int) (100 / stepDurationMs * 5) );
 
         //Set data for all files
@@ -76,17 +71,21 @@ public class Main {
 
 
         //Start Creation of Data
-        if(createData){
+        if(generate){
             //Delete all files in folder
             JsonFileHandler.deleteAllJsonFiles();
 
             //create files
-            SensorGenerator.creator(sensorAmount);
+            SensorGenerator.creator(ticks, sensorAmount);
             ErrorCreator.dataWithErrors(); //create some data loss and null entries.
             DataGenerator.dataGenerator();
             WindowedData.createWindowedData(); //creates warnings if some data is not in a wished range
             AveragedData.aggregatedData(stepDurationMs); //get average over a time interval
             FinalData.createFinalData();
+        }
+
+        if ( !execute ){
+            return;
         }
 
         //Start Sending to Stream processing System and start receiver

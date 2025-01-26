@@ -2,6 +2,7 @@ package dev.datageneration.simulation;
 
 import dev.datageneration.jsonHandler.JsonFileHandler;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -9,7 +10,7 @@ import java.util.*;
 
 import static dev.datageneration.jsonHandler.JsonFileHandler.writeJsonFile;
 
-
+@Slf4j
 public class DataGenerator {
     @Setter
     static  File folderData;

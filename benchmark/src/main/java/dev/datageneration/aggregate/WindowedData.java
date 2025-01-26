@@ -34,7 +34,7 @@ public class WindowedData {
                 getWindowedData();
             }
         }
-        windowedData.sort(Comparator.comparingInt(jsonObject -> jsonObject.getInt("tick")));
+        windowedData.sort(Comparator.comparingInt(jsonObject -> jsonObject.getNumber("tick").intValue()));
         writeJsonFile(folderStore, fName, windowedData);
     }
 
@@ -56,22 +56,22 @@ public class WindowedData {
         switch (type) {
             case "tire":
                 if(jsonObject.getJSONObject("data").getInt("temperature tire") > 110) {
-                    warning = "position:" + jsonObject.getJSONObject("data").getInt("position") + " is to hot.";
+                    warning = "position:" + jsonObject.getJSONObject("data").getNumber("position").intValue() + " is to hot.";
                     createErrorObject(jsonObject, type, warning);
                 }
                 if (jsonObject.getJSONObject("data").getInt("wear") > 90) {
-                    warning = "position:" + jsonObject.getJSONObject("data").getInt("position") + " is worn down.";
+                    warning = "position:" + jsonObject.getJSONObject("data").getNumber("position").intValue() + " is worn down.";
                     createErrorObject(jsonObject, type, warning);
                 }
                 if (jsonObject.getJSONObject("data").getDouble("pressure psi") > 30) {
-                    warning = "position:" + jsonObject.getJSONObject("data").getInt("position") + " to high pressure.";
+                    warning = "position:" + jsonObject.getJSONObject("data").getNumber("position").intValue() + " to high pressure.";
                     createErrorObject(jsonObject, type, warning);
                 }
                 data.remove(jsonObject);
                 break;
 
             case "heat":
-                if(jsonObject.getJSONObject("data").getInt("temperature c") > 50) {
+                if(jsonObject.getJSONObject("data").getNumber("temperature c").intValue() > 50) {
                     warning = " to hot temperature.";
                     createErrorObject(jsonObject, type, warning);
                 }
@@ -79,27 +79,27 @@ public class WindowedData {
                 break;
 
             case "engine":
-                if(jsonObject.getJSONObject("data").getDouble("oil_pressure") > 7) {
+                if(jsonObject.getJSONObject("data").getNumber("oil_pressure").doubleValue() > 7) {
                     warning = " oil pressure to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if(jsonObject.getJSONObject("data").getInt("temperature engine") > 600) {
+                if(jsonObject.getJSONObject("data").getNumber("temperature engine").intValue() > 600) {
                     warning = " is overheating.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if (jsonObject.getJSONObject("data").getDouble("fuel_pressure") > 5) {
+                if (jsonObject.getJSONObject("data").getNumber("fuel_pressure").doubleValue() > 5) {
                     warning = " fuel pressure to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if (jsonObject.getJSONObject("data").getLong("rpm") > 18000) {
+                if (jsonObject.getJSONObject("data").getNumber("rpm").longValue() > 18000) {
                     warning = " rpm to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if(jsonObject.getJSONObject("data").getDouble("exhaust") > 1.2) {
+                if(jsonObject.getJSONObject("data").getNumber("exhaust").doubleValue() > 1.2) {
                     warning = " exhaust fumes not good.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if(jsonObject.getJSONObject("data").getInt("fuelFlow") > 120) {
+                if(jsonObject.getJSONObject("data").getNumber("fuelFlow").intValue() > 120) {
                     warning = " fuelFlow to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
@@ -107,11 +107,11 @@ public class WindowedData {
                 break;
 
             case "fuelPump":
-                if(jsonObject.getJSONObject("data").getLong("ml/min") > 4000) {
+                if(jsonObject.getJSONObject("data").getNumber("ml/min").longValue() > 4000) {
                     warning = " fuel flow is to low.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if (jsonObject.getJSONObject("data").getInt("temperature fuelP") > 60) {
+                if (jsonObject.getJSONObject("data").getNumber("temperature fuelP").intValue() > 60) {
                     warning = " fuel-pump temperature is to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
@@ -119,15 +119,15 @@ public class WindowedData {
                 break;
 
             case "brake":
-                if(jsonObject.getJSONObject("data").getInt("temperature brake") > 1000) {
+                if(jsonObject.getJSONObject("data").getNumber("temperature brake").intValue() > 1000) {
                     warning = " is overheating.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if(jsonObject.getJSONObject("data").getInt("wear") > 90) {
+                if(jsonObject.getJSONObject("data").getNumber("wear").intValue() > 90) {
                     warning = " is worn down.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if(jsonObject.getJSONObject("data").getInt("brake_pressure") > 10) {
+                if(jsonObject.getJSONObject("data").getNumber("brake_pressure").intValue() > 10) {
                     warning = " brake pressure to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
@@ -135,18 +135,18 @@ public class WindowedData {
                 break;
 
             case "gForce":
-                if(jsonObject.getJSONObject("data").getDouble("g-lateral") > 6) {
+                if(jsonObject.getJSONObject("data").getNumber("g-lateral").intValue() > 6) {
                     warning = " g-force lateral is high.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if (jsonObject.getJSONObject("data").getDouble("g-longitudinal") > 5) {
+                if (jsonObject.getJSONObject("data").getNumber("g-longitudinal").intValue() > 5) {
                     warning = " g-force longitudinal is high.";
                     createErrorObject(jsonObject, type, warning);
                 }
                 data.remove(jsonObject);
                 break;
             case "accelerometer":
-                if(jsonObject.getJSONObject("data").getInt("throttlepedall") > 100) {
+                if(jsonObject.getJSONObject("data").getNumber("throttlepedall").intValue() > 100) {
                     warning = " throttlepedall is high.";
                     createErrorObject(jsonObject, type, warning);
                 }
@@ -154,11 +154,11 @@ public class WindowedData {
                 break;
 
             case "speed":
-                if(jsonObject.getJSONObject("data").getDouble("kph") > 360) {
+                if(jsonObject.getJSONObject("data").getNumber("kph").intValue() > 360) {
                     warning = " kph is high.";
                     createErrorObject(jsonObject, type, warning);
                 }
-                if (jsonObject.getJSONObject("data").getDouble("wind speed") > 200) {
+                if (jsonObject.getJSONObject("data").getNumber("wind speed").intValue() > 200) {
                     warning = " wind speed is to high.";
                     createErrorObject(jsonObject, type, warning);
                 }
@@ -174,7 +174,7 @@ public class WindowedData {
     private static void createErrorObject(JSONObject jsonObject, String type, String warning) {
         JSONObject error = new JSONObject();
         error.put("data", jsonObject.getJSONObject("data"));
-        error.put("WarningMessage", type + " id:" + jsonObject.getJSONObject("data").getInt("id") + " " + warning);
+        error.put("WarningMessage", type + " id:" + jsonObject.getJSONObject("data").getNumber("id") + " " + warning);
         error.put("tick", jsonObject.getInt("tick"));
         windowedData.add(error);
     }

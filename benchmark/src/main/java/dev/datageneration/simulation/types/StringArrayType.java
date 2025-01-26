@@ -17,8 +17,8 @@ public record StringArrayType() implements DataType {
     }
 
     @Override
-    public List<String> getData() {
-        List<String> data = new ArrayList<>();
+    public List<Object> getData() {
+        List<Object> data = new ArrayList<>();
         Random random = new Random();
         int entries = random.nextInt((50 - 5) + 1) + 5;
         for (int i = 0; i < entries; i++) {

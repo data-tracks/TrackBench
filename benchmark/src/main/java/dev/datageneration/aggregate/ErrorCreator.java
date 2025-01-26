@@ -2,6 +2,7 @@ package dev.datageneration.aggregate;
 
 import dev.datageneration.simulation.RandomData;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,7 +34,6 @@ public class ErrorCreator {
 
         for (String file : filenames) {
             if (file.endsWith(".json")) {
-
                 readJsonFile(folderData, file, data);
                 createErrors();
                 deleteEntries();
@@ -57,18 +57,7 @@ public class ErrorCreator {
         int amountErrors = (int)RandomData.getRandom(1, max);
         while (amountErrors > 0) {
             int rand = (int)RandomData.getRandom(0, data.size() - 1);
-            JSONObject d = data.get(rand);
-            int tick = d.getInt("tick");
-            JSONObject dd = d.getJSONObject("data");
-            String type = dd.getString("type");
-            int id = dd.getInt("id");
-            JSONObject error = new JSONObject();
-            JSONObject errorData = new JSONObject();
-            errorData.put("type", type);
-            errorData.put("id", id);
-            errorData.put("Error", "No Data");
-            error.put("tick", tick);
-            error.put("data", errorData);
+            JSONObject error = attachError( rand );
             data.remove(rand);
             dataWithErrors.add(error);
             amountErrors--;
@@ -76,4 +65,23 @@ public class ErrorCreator {
         dataWithErrors.addAll(data);
         data.clear();
     }
+
+
+    @NotNull
+    private static JSONObject attachError( int rand ) {
+        JSONObject d = data.get( rand );
+        int tick = d.getInt("tick");
+        JSONObject dd = d.getJSONObject("data");
+        String type = dd.getString("type");
+        int id = dd.getInt("id");
+        JSONObject error = new JSONObject();
+        JSONObject errorData = new JSONObject();
+        errorData.put("type", type);
+        errorData.put("id", id);
+        errorData.put("Error", "No Data");
+        error.put("tick", tick);
+        error.put("data", errorData);
+        return error;
+    }
+
 }

@@ -7,6 +7,7 @@ import dev.datageneration.kafka.JsonClass.JsonBrake;
 import dev.datageneration.kafka.JsonClass.JsonFuelPump;
 import dev.datageneration.kafka.Serde.AverageBrakeSerde;
 import dev.datageneration.kafka.Serde.AverageFuelPumpSerde;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 import java.time.Duration;
 import java.util.Properties;
 
+@Slf4j
 public class FuelPump {
 
     static Properties props = new Properties();

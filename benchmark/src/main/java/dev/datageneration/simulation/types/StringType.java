@@ -14,7 +14,7 @@ public record StringType() implements DataType {
     }
 
     @Override
-    public List<String> getData() {
+    public List<Object> getData() {
         return List.of();
     }
 }

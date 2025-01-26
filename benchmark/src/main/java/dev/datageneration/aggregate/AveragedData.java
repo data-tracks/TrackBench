@@ -1,6 +1,7 @@
 package dev.datageneration.aggregate;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -13,6 +14,7 @@ import static dev.datageneration.jsonHandler.JsonFileHandler.readJsonFile;
 import static dev.datageneration.jsonHandler.JsonFileHandler.writeJsonFile;
 import static dev.datageneration.simulation.RandomData.listFilesForFolder;
 
+@Slf4j
 public class AveragedData {
     @Setter
     static File folderData;
@@ -32,7 +34,7 @@ public class AveragedData {
     public static void aggregatedData(long durTime) throws Exception {
         durationTimeStep = durTime;
         advanceBy = 45; // good number
-        windowSize = (int) (advanceBy * 4);
+        windowSize = advanceBy * 4;
 
 
         filenames = listFilesForFolder(folderData);
@@ -46,7 +48,10 @@ public class AveragedData {
         while(!allData.isEmpty()) {
             JSONObject data = allData.getFirst();
             JSONObject d = data.getJSONObject("data");
-            int id = d.getInt("id");
+            int id = d.getNumber("id").intValue();
+
+            log.info( "starting aggregation {}", id );
+
             switch (d.getString("type")) {
                 case "tire":
                     createAverageTire(data, id);
@@ -415,8 +420,8 @@ public class AveragedData {
             while (index < allData.size()) {
                 JSONObject obj = allData.get(index);
                 JSONObject d = (JSONObject) obj.get("data");
-                if (d.getInt("id") == id && !d.has("Error")) {
-                    p += d.getLong("rpm");
+                if (d.getNumber("id").intValue() == id && !d.has("Error")) {
+                    p += d.getNumber("rpm").longValue();
                     counter++;
                     index ++;
                     break;
@@ -437,9 +442,9 @@ public class AveragedData {
                 JSONObject d = (JSONObject) obj.get("data");
                 if(d.getInt("id") == id && !d.has("Error")) {
                     if(d.getString("type").equals("tire")) {
-                        p += d.getDouble("pressure psi");
+                        p += d.getNumber("pressure psi").doubleValue();
                     } else if (d.getString("type").equals("brake")) {
-                        p += d.getDouble("brake_pressure");
+                        p += d.getNumber("brake_pressure").doubleValue();
                     }
                     counter ++;
                     index ++;
@@ -460,8 +465,8 @@ public class AveragedData {
             while (index < allData.size()) {
                 JSONObject obj = allData.get(index);
                 JSONObject d = (JSONObject) obj.get("data");
-                if(d.getInt("id") == id && !d.has("Error")) {
-                    p += d.getDouble("oil_pressure");
+                if(d.getNumber("id").intValue() == id && !d.has("Error")) {
+                    p += d.getNumber("oil_pressure").doubleValue();
                     counter ++;
                     index ++;
                     break;
@@ -481,8 +486,8 @@ public class AveragedData {
             while (index < allData.size()) {
                 JSONObject obj = allData.get(index);
                 JSONObject d = (JSONObject) obj.get("data");
-                if(d.getInt("id") == id && !d.has("Error")) {
-                    p += d.getDouble("fuel_pressure");
+                if(d.getNumber("id").intValue() == id && !d.has("Error")) {
+                    p += d.getNumber("fuel_pressure").doubleValue();
                     counter ++;
                     index ++;
                     break;
@@ -506,15 +511,15 @@ public class AveragedData {
                     if (obj.getString("type").equals("tire")) {
                         p += obj.getInt("temperature tire");
                     } else if(obj.getString("type").equals("engine")) {
-                        p += obj.getInt("temperature engine");
+                        p += obj.getNumber("temperature engine").intValue();
                     } else if(obj.getString("type").equals("brake")) {
-                        p += obj.getInt("temperature brake");
+                        p += obj.getNumber("temperature brake").intValue();
                     } else if (obj.getString("type").equals("fuel_pump")) {
-                        p += obj.getInt("temperature fuelP");
+                        p += obj.getNumber("temperature fuelP").intValue();
                     } else if (obj.getString("type").equals("brake")) {
-                        p += obj.getInt("temperature brake");
+                        p += obj.getNumber("temperature brake").intValue();
                     } else if (obj.getString("type").equals("heat")) {
-                        p += obj.getInt("temperature c");
+                        p += obj.getNumber("temperature c").intValue();
                     }
                     counter++;
                     index ++;
@@ -536,7 +541,7 @@ public class AveragedData {
             if(amount <= 0) {
                 break;
             }
-            if (obj.getJSONObject("data").getInt("id") == id) {
+            if (obj.getJSONObject("data").getNumber("id").intValue() == id) {
                 editedList.add(obj);
                 amount--;
             }

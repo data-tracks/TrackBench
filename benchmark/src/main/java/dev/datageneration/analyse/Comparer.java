@@ -3,6 +3,7 @@ package dev.datageneration.analyse;
 import dev.datageneration.jsonHandler.JsonFileHandler;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 public class Comparer {
     static List<JSONObject> dataSent = new LinkedList<>();
     static List<JSONObject> averagedData = new LinkedList<>();

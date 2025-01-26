@@ -1,6 +1,7 @@
 package dev.datageneration.aggregate;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.List;
 import static dev.datageneration.jsonHandler.JsonFileHandler.readJsonFile;
 import static dev.datageneration.jsonHandler.JsonFileHandler.writeJsonFile;
 
+@Slf4j
 public class FinalData {
     @Setter
     static File folderStore;

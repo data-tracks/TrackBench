@@ -12,7 +12,7 @@ public record IntType(int min, int max) implements DataType {
     }
 
     @Override
-    public List<String> getData() {
+    public List<Object> getData() {
         return List.of();
     }
 }

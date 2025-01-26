@@ -44,41 +44,26 @@ public abstract class Sensor {
 
     }};
 
-    public static Map<String, Integer> ticks = new HashMap<>(){{
-        put( "tire", 1 );                //tick --> 10 entries per timeunit
-        put( "heat", 1);
-        put( "speed", 1);
-        put( "gForce", 1);
-        put( "fuelPump", 1);
-        put( "DRS", 1);
-        put( "brake", 1);
-        put( "steering", 1);
-        put( "accelerometer", 1);
-        put( "engine", 1);
-        put( "blackbox", -5);           // every 5th tick an entry
-    }};
+
 
     final JSONArray dataPoints = new JSONArray();
-    final int tickLength;
     public int counter = 0;
-    public int tick = 1;
     public final SensorTemplate template;
+
+    public final SensorMetric metric = new SensorMetric();
 
 
 
     public Sensor(SensorTemplate template) {
         this.template = template;
-        this.tickLength = ticks.get(template.getType());
     }
-
 
     // Creates Json object.
     public abstract void attachDataPoint(JSONObject target);
 
     public void simulateTick(long tick){
         counter++;
-        if(counter != tickLength ) {
-            counter = 0;
+        if(counter < this.template.getTickLength() ) {
             return;
         }
         JSONObject dataInfo = new JSONObject();
@@ -93,5 +78,8 @@ public abstract class Sensor {
         freqObject.put("tick", tick);
 
         dataPoints.put(freqObject);
+
+        counter = 0;
+        metric.ticksGenerated++;
     }
 }

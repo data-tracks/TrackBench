@@ -3,6 +3,7 @@ package dev.datageneration.kafka.KafkaTools;
 import dev.datageneration.kafka.AverageClass.AverageSpeed;
 import dev.datageneration.kafka.JsonClass.JsonSpeed;
 import dev.datageneration.kafka.Serde.AverageSpeedSerde;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import java.time.Duration;
 import java.util.Properties;
 
+@Slf4j
 public class Speed {
 
     static Properties props = new Properties();

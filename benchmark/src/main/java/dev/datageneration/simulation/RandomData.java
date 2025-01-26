@@ -112,28 +112,27 @@ public class RandomData {
      * @param sensorAmount amount of sensors
      * @return list of sensors
      */
-    public static List<Sensor> createSensors( int sensorAmount ) {
+    public static List<Sensor> createSensors( long ticks, int sensorAmount ) {
         List<Sensor> sensors = new ArrayList<>();
-        List<Boolean> finished = new ArrayList<>();
 
         for ( int i = 0; i < sensorAmount; i++ ) {
-            sensors.add( chooseSensor( RandomData.sensorTemplates.get( i ) ) );
-            finished.add( false );
+            int pickedSensorIndex = (int) getRandom(0, RandomData.sensorTemplates.size());
+            sensors.add( chooseSensor( RandomData.sensorTemplates.get( pickedSensorIndex ) ) );
         }
 
         long tick = 0;
-
-        while ( !finished.stream().allMatch( e -> e ) ) {
+        for ( long i = 0; i < ticks; i++ ) {
             for ( Sensor sensor : sensors ) {
-                log.info( String.valueOf( sensor.template.getHeaders() ) );
                 sensor.simulateTick(tick);
             }
+        }
 
-            tick++;
+        // we print the summary for debug purposes
+        for ( Sensor sensor : sensors ) {
+            log.info( "Sensor:{} generated {} ticks, one every {} tick(s)", sensor.getTemplate().getType(), sensor.getMetric().ticksGenerated, sensor.getTemplate().getTickLength() );
         }
 
         return sensors;
-
     }
 
 

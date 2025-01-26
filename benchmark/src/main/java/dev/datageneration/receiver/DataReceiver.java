@@ -1,7 +1,7 @@
 package dev.datageneration.receiver;
 
 import dev.datageneration.analyse.Analyser;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -11,6 +11,7 @@ import java.io.*;
 import java.time.Duration;
 import java.util.*;
 
+@Slf4j
 public class DataReceiver {
     static int throughput = 0;
     static List<JSONObject> dataReceived = new LinkedList<>();
@@ -22,7 +23,7 @@ public class DataReceiver {
     static String groupID = "15";
     static long inactivity;
 
-    public static void receive(boolean aggregated) throws IOException, InterruptedException {
+    public static void receive(boolean aggregated) throws IOException {
         props.put("bootstrap.servers", KafkaBroker);
         props.put("group.id", groupID);
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -31,19 +32,19 @@ public class DataReceiver {
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
-        consumer.subscribe(Collections.singletonList(topic));
-        try {
+        try ( consumer ) {
+            consumer.subscribe( Collections.singletonList( topic ) );
             inactivity = System.currentTimeMillis();
             boolean b = true;
-            while (b) {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-                if(!records.isEmpty() ) {
-                    for (ConsumerRecord<String, String> record : records) {
-                        if(!record.value().isEmpty()) {
+            while ( b ) {
+                ConsumerRecords<String, String> records = consumer.poll( Duration.ofMillis( 100 ) );
+                if ( !records.isEmpty() ) {
+                    for ( ConsumerRecord<String, String> record : records ) {
+                        if ( !record.value().isEmpty() ) {
                             String recordValue = record.value();
-                            JSONObject json = new JSONObject(recordValue);
-                            dataReceived.add(json);
-                            if(throughput == 0) {
+                            JSONObject json = new JSONObject( recordValue );
+                            dataReceived.add( json );
+                            if ( throughput == 0 ) {
                                 startTime = System.currentTimeMillis();
                             }
                             throughput++;
@@ -55,19 +56,17 @@ public class DataReceiver {
 
                 } else {
                     long now = System.currentTimeMillis();
-                    if (now - inactivity > 10000) {
-                        log.info("No messages received for 10 seconds. Ending loop.");
+                    if ( now - inactivity > 10000 ) {
+                        log.info( "No messages received for 10 seconds. Ending loop." );
                         b = false;
                     }
                 }
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Close the consumer
-            consumer.close();
+        } catch ( Exception e ) {
+            log.error( e.getMessage() );
         }
+        // Close the consumer
         Analyser.analyser(aggregated, dataReceived, startTime, lastReceivedTime, throughput);
     }
 }
