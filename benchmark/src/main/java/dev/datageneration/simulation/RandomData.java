@@ -17,28 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RandomData {
-
-    public static List<SensorTemplate> sensorTemplates = List.of(
-            SensorTemplate.of( "heat", ErrorRates.of( 0.001, 0.001), "temperature c" ),//heat sensor
-            SensorTemplate.of( "heat", ErrorRates.of( 0.001, 0.001), "temperature c" ),//heat sensor,
-            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_left_tyre
-            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_right_tyre
-            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//rear_left_tyre
-            SensorTemplate.of( "tire", ErrorRates.of( 0.001, 0.001), "temperature tire", "pressure psi", "wear", "liability", "position" ),//rear_right_tyre
-            SensorTemplate.of( "speed", ErrorRates.of( 0.001, 0.001), "kph", "mph", "acceleration", "wind speed" ),//speed_sensor
-            SensorTemplate.of( "gForce", ErrorRates.of( 0.001, 0.001), "g-lateral", "g-longitudinal" ),//g_sensor
-            SensorTemplate.of( "fuelPump", ErrorRates.of( 0.001, 0.001), "temperature fuelP", "ml/min" ),//fuel_pump_sensor
-            SensorTemplate.of( "DRS", ErrorRates.of( 0.001, 0.001), "on/off", "drs-zone" ),//drs_sensor
-            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//front_left_brake
-            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//front_right_brake
-            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//rear_left_brake
-            SensorTemplate.of( "brake", ErrorRates.of( 0.001, 0.001), "temperature brake", "brake_pressure", "wear" ),//rear_right_brake
-            SensorTemplate.of( "accelerometer", ErrorRates.of( 0.001, 0.001), "throttlepedall" ),
-            SensorTemplate.of( "engine", ErrorRates.of( 0.001, 0.001), "temperature engine", "rpm", "fuelFlow", "oil_pressure", "fuel_pressure", "exhaust" ),
-            SensorTemplate.of( "blackbox", ErrorRates.of( 0.001, 0.001), "array_of_data" ),
-            SensorTemplate.of( "steering", ErrorRates.of( 0.001, 0.001), "direction", "turning_degree" ) );
-
-
     public static Random random = new Random();
     public static long seed = 795673489;
     @Setter
@@ -46,7 +24,12 @@ public class RandomData {
 
 
     public static void setSeed( long s ) {
-        random.setSeed( s );
+        seed = s;
+        random = new Random(s);
+    }
+
+    public static void resetRandom() {
+        random = new Random(seed);
     }
 
 

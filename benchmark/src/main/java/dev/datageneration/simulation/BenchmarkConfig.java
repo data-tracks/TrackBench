@@ -17,6 +17,7 @@ public record BenchmarkConfig(
         boolean execute,
         boolean aggregated,
         long sensorBatchSize,
+        long readBatchSize,
         float maxErrorAlteration,
         int threadAmount,
         int sensorAmount,
@@ -30,6 +31,7 @@ public record BenchmarkConfig(
     public static final String DEFAULT_SETTINGS_FILE = "settings.properties";
 
     public static final String DATA_PATH = "data";
+    public static final String SENSORS_PATH = "sensors";
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
 
@@ -50,6 +52,7 @@ public record BenchmarkConfig(
                 props.getBoolean( "execute" ),
                 props.getBoolean( "aggregatedData" ),
                 getNumber( props, "sensorBatchSize" ),
+                getNumber( props, "readBatchSize" ),
                 props.getFloat( "maxErrorAlteration" ),
                 props.getInt( "threadAmount" ),
                 props.getInt( "sensorAmount" ),
@@ -111,4 +114,7 @@ public record BenchmarkConfig(
         return Arrays.stream( Objects.requireNonNull( target.listFiles() ) ).map( file -> new File( target, file.getName() ) ).collect( Collectors.toList() );
     }
 
+    public File getSensorPath() {
+        return new File( pathSensorData, SENSORS_PATH );
+    }
 }

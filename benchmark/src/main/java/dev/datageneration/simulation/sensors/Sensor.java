@@ -127,13 +127,13 @@ public abstract class Sensor extends Thread {
         attachDataPoint( data );
 
         // Wrap each JSON object with a number prefix
-        JSONObject freqObject = new JSONObject();
-        freqObject.put( "data", data );
-        freqObject.put( "tick", tick );
+        JSONObject dataWrapper = new JSONObject();
+        dataWrapper.put( "data", data );
+        dataWrapper.put( "tick", tick );
 
-        dataTarget.attach( freqObject );
+        dataTarget.attach( dataWrapper );
 
-        handlePotentialError( tick, freqObject );
+        handlePotentialError( tick, dataWrapper );
 
         counter = 0;
         metric.ticksGenerated++;

@@ -18,6 +18,4 @@ public class Pair<Left, Right> {
         pairs.forEach(pair -> lefts.add(pair.left));
         return lefts;
     }
-
-
 }

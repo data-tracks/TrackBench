@@ -49,9 +49,7 @@ public class FileJsonTarget implements JsonTarget {
         for ( String entry : batch ) {
             builder.append( entry ).append( "\n" );
         }
-
         writer.append(builder.toString());
-        writer.flush();
     }
 
 

@@ -12,10 +12,6 @@ import static dev.datageneration.jsonHandler.JsonFileHandler.writeJsonFile;
 
 @Slf4j
 public class DataGenerator {
-    @Setter
-    static  File folderStore;
-    static final String fName = "ALL_DATA";
-
 
     /**
      * Reads the data from the generated JSON files and stores them in a list (allData).

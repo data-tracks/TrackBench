@@ -15,6 +15,8 @@ import dev.datageneration.sending.ThreadedSender;
 
 import dev.datageneration.simulation.BenchmarkConfig;
 import java.util.concurrent.TimeUnit;
+
+import dev.datageneration.util.JsonIterator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,14 +35,15 @@ public class Main {
         //Start Creation of Data
         if(config.generate()){
             //Delete all files in folder
-            JsonFileHandler.deleteAllJsonFiles();
+            JsonFileHandler.deleteFolder(config.pathSensorData());
+            JsonFileHandler.deleteFolder(config.path());
 
             //create files
             SensorGenerator.start(config);
             //ErrorCreator.dataWithErrors(); //create some data loss and null entries.
-            DataGenerator.dataGenerator(config);
-            /*WindowedData.createWindowedData(); //creates warnings if some data is not in a wished range
-            AveragedData.aggregatedData(config.stepDurationMs()); //get average over a time interval
+            //DataGenerator.dataGenerator(config);
+            WindowedData.createWindowedData(config); //creates warnings if some data is not in a wished range
+            /*AveragedData.aggregatedData(config.stepDurationMs()); //get average over a time interval
             FinalData.createFinalData();*/
         }
 
@@ -89,10 +92,6 @@ public class Main {
         WindowedData.setFolderStore(config.path());
         ThreadedSender.setPathNormal(config.path());
         Comparer.setFolder(config.path());
-        DataGenerator.setFolderStore(config.path());
-        SensorGenerator.setFolder(config.pathSensorData());
-        JsonFileHandler.setFolderAggregated(config.path());
-        JsonFileHandler.setFolderSensors(config.pathSensorData());
     }
 
 }
