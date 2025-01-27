@@ -1,20 +1,31 @@
 package dev.datageneration.simulation.sensors;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dev.datageneration.aggregate.SingleExtractor;
+import dev.datageneration.processing.Formatter;
+import dev.datageneration.processing.IdentityStep;
+import dev.datageneration.processing.Step;
+import dev.datageneration.processing.Value;
 import dev.datageneration.simulation.BenchmarkConfig;
 import dev.datageneration.simulation.ErrorHandler;
 import dev.datageneration.simulation.types.DataType;
+import dev.datageneration.simulation.types.DataType.NumericType;
 import dev.datageneration.simulation.types.DoubleType;
 import dev.datageneration.simulation.types.IntType;
 import dev.datageneration.simulation.types.LongType;
 import dev.datageneration.simulation.types.StringArrayType;
 import dev.datageneration.util.FileJsonTarget;
+import dev.datageneration.util.FileStep;
 import dev.datageneration.util.IterRegistry;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import lombok.Getter;
-import org.json.JSONObject;
 
 public abstract class Sensor extends Thread {
 
@@ -77,11 +88,11 @@ public abstract class Sensor extends Thread {
 
 
     public Sensor( SensorTemplate template, BenchmarkConfig config, IterRegistry registry ) {
-        this.random = new Random( config.seed() );
         this.template = template;
         this.config = config;
         this.registry = registry;
         this.id = idBuilder++;
+        this.random = new Random( config.seed() + id ); // this is still determinist as this is done in the same thread
         this.errorHandler = new ErrorHandler( this );
     }
 
@@ -89,7 +100,7 @@ public abstract class Sensor extends Thread {
     /**
      * attaches a data object
      */
-    public abstract void attachDataPoint( JSONObject target );
+    public abstract void attachDataPoint( ObjectNode target );
 
 
     @Override
@@ -121,14 +132,14 @@ public abstract class Sensor extends Thread {
         if ( counter < this.template.getTickLength() ) {
             return;
         }
-        JSONObject data = new JSONObject();
+        ObjectNode data = JsonNodeFactory.instance.objectNode();
         data.put( "id", id );
         data.put( "type", template.getType() );
         attachDataPoint( data );
 
         // Wrap each JSON object with a number prefix
-        JSONObject dataWrapper = new JSONObject();
-        dataWrapper.put( "data", data );
+        ObjectNode dataWrapper = JsonNodeFactory.instance.objectNode();
+        dataWrapper.putIfAbsent( "data", data );
         dataWrapper.put( "tick", tick );
 
         dataTarget.attach( dataWrapper );
@@ -140,13 +151,34 @@ public abstract class Sensor extends Thread {
     }
 
 
-    private void handlePotentialError( long tick, JSONObject freqObject ) throws IOException {
-        if ( !errorHandler.handleError(tick) ){
+    private void handlePotentialError( long tick, ObjectNode data ) throws IOException {
+        if ( !errorHandler.handleError( tick ) ) {
             // we attach the normal object as we did not produce error
-            dataWithErrorTarget.attach( freqObject );
+            dataWithErrorTarget.attach( data );
         }
     }
 
+    public Step getProcessing() {
+        List<Step> steps = new ArrayList<>();
 
+
+        for ( Entry<String, DataType> nameType : template.getDataTypes().entrySet() ) {
+            FileStep file = new FileStep( List.of(), new FileJsonTarget( config.getSingleWindowPath( this, nameType.getKey() ), config ) );
+            if ( nameType.getValue() instanceof NumericType ) {
+                Step step;
+                if ( nameType.getValue() instanceof DoubleType ) {
+                    step = new Formatter( List.of( file ), v -> List.of( new Value( v.tick(), v.node() ) ) );
+                } else if ( nameType.getValue() instanceof IntType ) {
+                    step = new Formatter( List.of( file ), v -> List.of( new Value( v.tick(), v.node() ) ) );
+                } else {
+                    continue;
+                }
+                steps.add( new SingleExtractor( List.of( step ), "data." + nameType.getKey() ) );
+            }
+
+        }
+
+        return new IdentityStep( steps );
+    }
 
 }

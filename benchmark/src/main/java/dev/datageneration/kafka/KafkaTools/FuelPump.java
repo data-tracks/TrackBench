@@ -1,11 +1,8 @@
 package dev.datageneration.kafka.KafkaTools;
 
 
-import dev.datageneration.kafka.AverageClass.AverageBrake;
 import dev.datageneration.kafka.AverageClass.AverageFuelPump;
-import dev.datageneration.kafka.JsonClass.JsonBrake;
 import dev.datageneration.kafka.JsonClass.JsonFuelPump;
-import dev.datageneration.kafka.Serde.AverageBrakeSerde;
 import dev.datageneration.kafka.Serde.AverageFuelPumpSerde;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -105,7 +102,7 @@ public class FuelPump {
                         JSONObject data = new JSONObject();
                         data.put("averageTemp", average[0]);
                         data.put("averageFlowRate", average[1]);
-                        data.put("id", value.getID());
+                        data.put("id", value.getId());
                         data.put("type", "fuelPump");
 
                         JSONObject json = new JSONObject();

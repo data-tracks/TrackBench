@@ -1,9 +1,13 @@
 package dev.datageneration.simulation.types;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 public interface DataType {
-    Object sample(String name);
+    JsonNode sample(String name);
 
     List<Object> getData();
+
+
+    interface NumericType extends DataType {}
 }

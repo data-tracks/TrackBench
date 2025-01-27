@@ -1,58 +1,42 @@
-package dev.datageneration.aggregate;
+package dev.datageneration.window;
 
 import dev.datageneration.simulation.BenchmarkConfig;
-import lombok.Setter;
+import dev.datageneration.simulation.BenchmarkContext;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static dev.datageneration.jsonHandler.JsonFileHandler.readJsonFile;
-import static dev.datageneration.jsonHandler.JsonFileHandler.writeJsonFile;
-import static dev.datageneration.simulation.RandomData.listFilesForFolder;
 
 @Slf4j
 public class WindowedData {
 
-    @Setter
-    static  File folderData;
-    @Setter
-    static  File folderStore;
-    static final String fName = "windowedData";
-
     static List<JSONObject> data = new ArrayList<>();  // Store JSONObjects instead of String arrays
     static List<JSONObject> windowedData = new ArrayList<>();  // Store JSONObjects instead of String arrays
 
-    public static void createWindowedData(BenchmarkConfig config) {
-        List<File> files = config.getSensorFiles( BenchmarkConfig.DATA_WITH_ERRORS_PATH );
-        List<WindowCreator> windowCreators = new ArrayList<>();
+    public static void createWindowedData( BenchmarkContext context) {
+        List<File> files = context.getConfig().getSensorFiles( BenchmarkConfig.DATA_WITH_ERRORS_PATH );
+        List<ProcessingHandler> processingHandlers = new ArrayList<>();
 
         log.info( "found {}", files.stream().map(File::getAbsolutePath).collect(Collectors.joining("\n")));
 
         for (File file : files) {
             if (file.getName().endsWith(".json")) {
-                WindowCreator creator = new WindowCreator(config, file);
-                windowCreators.add(creator);
+                ProcessingHandler creator = new ProcessingHandler(context, file);
+                processingHandlers.add(creator);
             }
         }
-        windowCreators.forEach(Thread::start);
+        processingHandlers.forEach(Thread::start);
 
         try {
-            for (WindowCreator windowCreator : windowCreators) {
-                windowCreator.join();
+            for ( ProcessingHandler processingHandler : processingHandlers ) {
+                processingHandler.join();
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        //windowedData.sort(Comparator.comparingInt(jsonObject -> jsonObject.getNumber("tick").intValue()));
-        //writeJsonFile(folderStore, fName, windowedData);
     }
 
     private static void getWindowedData() {

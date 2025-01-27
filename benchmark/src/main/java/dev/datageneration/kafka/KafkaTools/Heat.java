@@ -91,7 +91,7 @@ public class Heat {
 //                        String message = "AverageTire Temp: " + average[0] + " AverageTire Pressure: " + average[1] + " Count: " + value.getCount();
                         JSONObject data = new JSONObject();
                         data.put("averageTemp", average);
-                        data.put("id", value.getID());
+                        data.put("id", value.getId());
                         data.put("type", "heat");
 
                         JSONObject json = new JSONObject();

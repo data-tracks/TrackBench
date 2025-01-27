@@ -102,7 +102,7 @@ public class Speed {
                         data.put("averageSpeed kph", average[0]);
                         data.put("averageSpeed mph", (average[0] / 1.609344));
                         data.put("averageWindSpeed", average[1]);
-                        data.put("id", value.getID());
+                        data.put("id", value.getId());
                         data.put("type", "speed");
 
                         JSONObject json = new JSONObject();

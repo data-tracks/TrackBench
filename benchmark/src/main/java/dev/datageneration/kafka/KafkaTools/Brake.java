@@ -104,7 +104,7 @@ public class Brake {
                         data.put("averageTemp", average[0]);
                         data.put("averagePressure", average[1]);
                         data.put("averageWear", average[2]);
-                        data.put("id", value.getID());
+                        data.put("id", value.getId());
                         data.put("type", "brake");
 
                         JSONObject json = new JSONObject();

@@ -3,12 +3,12 @@ package dev.datageneration;
 import dev.datageneration.aggregate.AveragedData;
 import dev.datageneration.aggregate.ErrorCreator;
 import dev.datageneration.aggregate.FinalData;
-import dev.datageneration.aggregate.WindowedData;
+import dev.datageneration.window.WindowedData;
 import dev.datageneration.analyse.Analyser;
 import dev.datageneration.analyse.Comparer;
 import dev.datageneration.jsonHandler.JsonFileHandler;
 import dev.datageneration.receiver.DataReceiver;
-import dev.datageneration.simulation.DataGenerator;
+import dev.datageneration.simulation.BenchmarkContext;
 import dev.datageneration.simulation.RandomData;
 import dev.datageneration.simulation.SensorGenerator;
 import dev.datageneration.sending.ThreadedSender;
@@ -16,7 +16,6 @@ import dev.datageneration.sending.ThreadedSender;
 import dev.datageneration.simulation.BenchmarkConfig;
 import java.util.concurrent.TimeUnit;
 
-import dev.datageneration.util.JsonIterator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,6 +26,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         //Get Data from Settings file
         BenchmarkConfig config = BenchmarkConfig.fromFile();
+        BenchmarkContext context = new BenchmarkContext( config );
         // set to new seed
         RandomData.seed = config.seed();
 
@@ -39,10 +39,10 @@ public class Main {
             JsonFileHandler.deleteFolder(config.path());
 
             //create files
-            SensorGenerator.start(config);
+            SensorGenerator.start(context);
             //ErrorCreator.dataWithErrors(); //create some data loss and null entries.
             //DataGenerator.dataGenerator(config);
-            WindowedData.createWindowedData(config); //creates warnings if some data is not in a wished range
+            WindowedData.createWindowedData(context); //creates warnings if some data is not in a wished range
             /*AveragedData.aggregatedData(config.stepDurationMs()); //get average over a time interval
             FinalData.createFinalData();*/
         }
@@ -88,8 +88,6 @@ public class Main {
         AveragedData.setFolderStore(config.path());
         ErrorCreator.setFolderData(config.pathSensorData());
         FinalData.setFolderStore(config.path());
-        WindowedData.setFolderData(config.pathSensorData());
-        WindowedData.setFolderStore(config.path());
         ThreadedSender.setPathNormal(config.path());
         Comparer.setFolder(config.path());
     }

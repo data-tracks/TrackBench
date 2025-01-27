@@ -1,5 +1,9 @@
 package dev.datageneration.simulation;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.datageneration.simulation.sensors.Sensor;
 import java.io.IOException;
 import org.json.JSONObject;
@@ -79,14 +83,14 @@ public class ErrorHandler {
 
 
     private void attachNoData( long tick ) throws IOException {
-        JSONObject errorData = new JSONObject();
+        ObjectNode errorData = JsonNodeFactory.instance.objectNode();
         errorData.put( "type", sensor.getTemplate().getType() );
         errorData.put( "id", sensor.id );
         errorData.put( "Error", "No Data" );
 
-        JSONObject error = new JSONObject();
+        ObjectNode error = JsonNodeFactory.instance.objectNode();
         error.put( "tick", tick );
-        error.put( "data", errorData );
+        error.putIfAbsent( "data", errorData );
 
         sensor.getDataWithErrorTarget().attach( error );
         sensor.getErrorTarget().attach( error );

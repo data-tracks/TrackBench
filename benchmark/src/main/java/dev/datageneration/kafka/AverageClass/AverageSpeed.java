@@ -1,11 +1,17 @@
 package dev.datageneration.kafka.AverageClass;
 
+import lombok.Getter;
+
 public class AverageSpeed {
     public double speed;
     public double wind;
+    @Getter
     public int count;
+    @Getter
     public int tickStart;
+    @Getter
     public int tickEnd;
+    @Getter
     public int id;
 
     public AverageSpeed(double speed, double wind, int count, int tickStart, int tickEnd, int id) {
@@ -25,21 +31,6 @@ public class AverageSpeed {
         return wind;
     }
 
-    public int getID() {
-        return id;
-    }
-
-    public int getTickStart() {
-        return tickStart;
-    }
-
-    public int getTickEnd() {
-        return tickEnd;
-    }
-
-    public int getCount() {
-        return count;
-    }
 
     public double[] getAverage() {
         double[] average = new double[2];

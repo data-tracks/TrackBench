@@ -1,11 +1,18 @@
 package dev.datageneration.kafka.AverageClass;
 
+import lombok.Getter;
+
 public class AverageFuelPump {
+    @Getter
     public double temp;
     public double flowRate;
+    @Getter
     public int count;
+    @Getter
     public int tickStart;
+    @Getter
     public int tickEnd;
+    @Getter
     public int id;
 
     public AverageFuelPump(double temp, double flowRate, int count, int tickStart, int tickEnd, int id) {
@@ -17,29 +24,11 @@ public class AverageFuelPump {
         this.id = id;
     }
 
-    public double getTemp() {
-        return temp;
-    }
 
     public double getPressure() {
         return flowRate;
     }
 
-    public int getID() {
-        return id;
-    }
-
-    public int getTickStart() {
-        return tickStart;
-    }
-
-    public int getTickEnd() {
-        return tickEnd;
-    }
-
-    public int getCount() {
-        return count;
-    }
 
     public double[] getAverage() {
         double[] average = new double[2];

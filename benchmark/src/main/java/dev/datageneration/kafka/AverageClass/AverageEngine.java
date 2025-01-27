@@ -1,15 +1,22 @@
 package dev.datageneration.kafka.AverageClass;
 
+import lombok.Getter;
+
 public class AverageEngine {
     public int temp;
+    @Getter
     public long rpm;
     public int fuelFlow;
     public double oilPressure;
     public double fuelPressure;
     public double exhaust;
+    @Getter
     public int count;
+    @Getter
     public int tickStart;
+    @Getter
     public int tickEnd;
+    @Getter
     public int id;
 
     public AverageEngine(int temp, long rpm,int fuelFlow, double oilPressure, double fuelPressure,
@@ -30,26 +37,6 @@ public class AverageEngine {
         return temp;
     }
 
-    public long getRPM() {
-        return rpm;
-    }
-
-    public int getID() {
-        return id;
-    }
-
-    public int getTickStart() {
-        return tickStart;
-    }
-
-    public int getTickEnd() {
-        return tickEnd;
-    }
-
-
-    public int getCount() {
-        return count;
-    }
 
     public double[] getAverage() {
         double[] average = new double[6];

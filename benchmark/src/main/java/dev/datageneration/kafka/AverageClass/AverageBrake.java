@@ -13,6 +13,7 @@ public class AverageBrake {
     public int tickStart;
     @Getter
     public int tickEnd;
+    @Getter
     public int id;
     public int wear;
 
@@ -26,9 +27,6 @@ public class AverageBrake {
         this.wear = wear;
     }
 
-    public int getID() {
-        return id;
-    }
 
     public double[] getAverage() {
         double[] average = new double[]{0,0,0};

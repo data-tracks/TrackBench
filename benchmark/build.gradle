@@ -27,6 +27,8 @@ dependencies {
     implementation 'org.apache.kafka:kafka-clients:3.8.0'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.18.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.18.2'
     implementation 'org.json:json:20231013'
     implementation 'io.javalin:javalin:6.3.0'
     implementation 'org.apache.commons:commons-configuration2:2.11.0'

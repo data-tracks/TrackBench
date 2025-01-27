@@ -1,5 +1,8 @@
 package dev.datageneration.kafka.AverageClass;
 
+import lombok.Getter;
+
+@Getter
 public class AverageHeat {
     public double temp;
     public int count;
@@ -16,25 +19,6 @@ public class AverageHeat {
         this.id = id;
     }
 
-    public double getTemp() {
-        return temp;
-    }
-
-    public int getID() {
-        return id;
-    }
-
-    public int getTickStart() {
-        return tickStart;
-    }
-
-    public int getTickEnd() {
-        return tickEnd;
-    }
-
-    public int getCount() {
-        return count;
-    }
 
     public double getAverage() {
         double average;

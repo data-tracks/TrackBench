@@ -34,6 +34,7 @@ public record BenchmarkConfig(
     public static final String SENSORS_PATH = "sensors";
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
+    public static final String WINDOW_PATH = "window";
 
 
     public static BenchmarkConfig fromFile() {
@@ -93,6 +94,16 @@ public record BenchmarkConfig(
     }
 
 
+    public File getSingleWindowPath( Sensor sensor, String name ) {
+        String parent = "single_" + WINDOW_PATH;
+        File folder = new File( pathSensorData, parent );
+
+        File path = new File( "%s/%d_%s".formatted( folder.getAbsolutePath(), sensor.id, sensor.getTemplate().getType() ) );
+        boolean success = path.mkdirs();
+        return new File( "/%s/%s.json".formatted( path.getAbsolutePath(), name.replace( "/", "-" ) ) );
+    }
+
+
     public long calculateErrorInterval( Sensor sensor, double rate ) {
         if ( rate == 0 ) {
             return ticks;
@@ -106,7 +117,7 @@ public record BenchmarkConfig(
     }
 
 
-    public List<File> getSensorFiles(String path) {
+    public List<File> getSensorFiles( String path ) {
         File target = new File( pathSensorData, path );
         if ( target.isFile() ) {
             throw new IllegalArgumentException( "Sensor file path '" + path + "' exists but is not a file" );
@@ -114,7 +125,11 @@ public record BenchmarkConfig(
         return Arrays.stream( Objects.requireNonNull( target.listFiles() ) ).map( file -> new File( target, file.getName() ) ).collect( Collectors.toList() );
     }
 
+
     public File getSensorPath() {
-        return new File( pathSensorData, SENSORS_PATH );
+        pathSensorData.mkdirs();
+        return new File( pathSensorData.toString(), SENSORS_PATH + ".json"  );
     }
+
+
 }

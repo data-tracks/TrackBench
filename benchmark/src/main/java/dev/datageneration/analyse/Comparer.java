@@ -66,7 +66,7 @@ public class Comparer {
         return message;
     }
 
-    private static String compareAveraged(List<JSONObject> windowList, boolean received) throws IOException {
+    private static String compareAveraged(List<JSONObject> windowList, boolean received) {
         int[] peeks = new int[7];
         List<List<JSONObject>> peekWindows = new LinkedList<>();
         for (int i = 0; i < 7; i++) {
@@ -184,7 +184,7 @@ public class Comparer {
         //check peeks
         if(receivedSended.equals("received")) {
             String peekChecker = checkPeeks(peekWindows);
-            return message.toString() + peekChecker;
+            return message + peekChecker;
         }
 
         return message.toString();

@@ -1,5 +1,7 @@
 package dev.datageneration.simulation.types;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import dev.datageneration.simulation.RandomData;
 
 import java.util.ArrayList;
@@ -9,11 +11,11 @@ import java.util.Random;
 public record StringArrayType() implements DataType {
 
     @Override
-    public String sample(String name) {
+    public TextNode sample(String name) {
 
         String[] data = new String[] {"left", "right", "break", "accelerate", "straight"};
         int rand = (int)RandomData.getRandom(0,4);
-        return data[rand];
+        return TextNode.valueOf( data[rand] );
     }
 
     @Override

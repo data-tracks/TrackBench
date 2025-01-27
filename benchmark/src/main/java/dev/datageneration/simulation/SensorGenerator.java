@@ -4,13 +4,12 @@ import dev.datageneration.simulation.sensors.DocSensor;
 import dev.datageneration.simulation.sensors.Sensor;
 import dev.datageneration.simulation.sensors.SensorTemplate;
 import dev.datageneration.util.IterRegistry;
-import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 @Slf4j
 public class SensorGenerator {
@@ -19,26 +18,29 @@ public class SensorGenerator {
      * Creates Sensors and fills them with data accordingly to the given sensorArray.
      * Once the sensors are created it writes their data into csv files.
      */
-    public static void start(BenchmarkConfig config) {
+    public static void start(BenchmarkContext context) {
         // create Sensors
         RandomData.setSeed(RandomData.seed);
-        createSensors(config);
+        createSensors(context);
     }
 
     /**
      * Creates sensors accordingly to the chosen amount.
      */
-    public static void createSensors( BenchmarkConfig config ) {
+    public static void createSensors( BenchmarkContext context ) {
         List<Sensor> sensors = new ArrayList<>();
 
-        IterRegistry registry = new IterRegistry( config.ticks(), config.updateTickVisual() );
+        IterRegistry registry = new IterRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual() );
 
-        for ( int i = 0; i < config.sensorAmount(); i++ ) {
+        for ( int i = 0; i < context.getConfig().sensorAmount(); i++ ) {
             // pick random sensor
             int pickedSensorIndex = (int) RandomData.getRandom( 0, SensorTemplate.templates.size() );
-            Sensor sensor = chooseSensor( SensorTemplate.templates.get( pickedSensorIndex ), config, registry );
+            Sensor sensor = chooseSensor( SensorTemplate.templates.get( pickedSensorIndex ), context.getConfig(), registry );
             sensors.add( sensor );
         }
+
+        saveSensors(sensors, context.getConfig());
+        context.setSensors( sensors );
 
         try {
             // start all benchmarks
@@ -62,13 +64,21 @@ public class SensorGenerator {
             log.info( "Sensor: {}, MetaData: {}", sensor.getTemplate().getType(), sensor.getMetric() );
         }
 
-        saveSensors(sensors, config);
+
     }
 
     private static void saveSensors(List<Sensor> sensors, BenchmarkConfig config) {
         JSONArray array = new JSONArray();
-        sensors.forEach( sensor -> array.put(sensor.getTemplate()));
-        //writer = new FileWriter(config.getSensorPath());
+
+        sensors.forEach( sensor -> array.put(sensor.getTemplate().toJson()));
+        try {
+            FileWriter writer = new FileWriter( config.getSensorPath() );
+            writer.write( array.toString(4) );
+            writer.flush();
+            writer.close();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     public static Sensor chooseSensor( SensorTemplate template, BenchmarkConfig config, IterRegistry registry ) {

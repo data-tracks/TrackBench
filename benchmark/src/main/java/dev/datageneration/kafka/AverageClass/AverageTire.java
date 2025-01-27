@@ -1,12 +1,21 @@
 package dev.datageneration.kafka.AverageClass;
 
+import lombok.Getter;
+
 public class AverageTire {
+    @Getter
     public double temp;
+    @Getter
     public double pressure;
+    @Getter
     public int count;
+    @Getter
     public int tickStart;
+    @Getter
     public int tickEnd;
+    @Getter
     public int id;
+    @Getter
     public int position;
     public int wear;
 
@@ -21,33 +30,6 @@ public class AverageTire {
         this.wear = wear;
     }
 
-    public double getTemp() {
-        return temp;
-    }
-
-    public double getPressure() {
-        return pressure;
-    }
-
-    public int getID() {
-        return id;
-    }
-
-    public int getTickStart() {
-        return tickStart;
-    }
-
-    public int getTickEnd() {
-        return tickEnd;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public int getCount() {
-        return count;
-    }
 
     public double[] getAverage() {
         double[] average = new double[3];

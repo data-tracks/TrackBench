@@ -1,10 +1,16 @@
 package dev.datageneration.kafka.AverageClass;
 
+import lombok.Getter;
+
 public class AverageAccelerometer {
     public double throttle;
+    @Getter
     public int count;
+    @Getter
     public int tickStart;
+    @Getter
     public int tickEnd;
+    @Getter
     public int id;
 
 
@@ -20,21 +26,6 @@ public class AverageAccelerometer {
         return throttle;
     }
 
-    public int getID() {
-        return id;
-    }
-
-    public int getTickStart() {
-        return tickStart;
-    }
-
-    public int getTickEnd() {
-        return tickEnd;
-    }
-
-    public int getCount() {
-        return count;
-    }
 
     public double getAverage() {
         double average;

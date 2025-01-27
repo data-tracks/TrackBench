@@ -1,5 +1,8 @@
 package dev.datageneration.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import dev.datageneration.processing.Step;
+import dev.datageneration.processing.Value;
 import dev.datageneration.simulation.BenchmarkConfig;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,10 +12,10 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 
 @Slf4j
 public class FileJsonTarget implements JsonTarget {
+
     final File file;
     final Writer writer;
     final BenchmarkConfig config;
@@ -20,24 +23,30 @@ public class FileJsonTarget implements JsonTarget {
     long counter = 0;
     List<String> batch = new ArrayList<>();
 
-    public FileJsonTarget(File file , BenchmarkConfig config) {
+
+    public FileJsonTarget( File file, BenchmarkConfig config ) {
         this.file = file;
         this.config = config;
         try {
-            this.writer = new BufferedWriter( new FileWriter(file, true) );
+            this.writer = new BufferedWriter( new FileWriter( file, true ) );
         } catch ( IOException e ) {
             throw new RuntimeException( e );
         }
     }
 
+
     @Override
-    public void attach( JSONObject object ) throws IOException {
+    public void attach( JsonNode value ) {
         if ( counter < config.sensorBatchSize() ) {
-            batch.add( object.toString() );
+            batch.add( value.toString() );
             counter++;
             return;
         }
-        writeBatch();
+        try {
+            writeBatch();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
         batch.clear();
         counter = 0;
     }
@@ -45,11 +54,11 @@ public class FileJsonTarget implements JsonTarget {
 
     private void writeBatch() throws IOException {
         StringBuilder builder = new StringBuilder();
-        
+
         for ( String entry : batch ) {
             builder.append( entry ).append( "\n" );
         }
-        writer.append(builder.toString());
+        writer.append( builder.toString() );
     }
 
 
@@ -59,5 +68,6 @@ public class FileJsonTarget implements JsonTarget {
         writer.flush();
         writer.close();
     }
+
 
 }
