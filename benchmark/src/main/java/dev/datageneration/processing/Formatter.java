@@ -7,8 +7,7 @@ public class Formatter extends Step {
 
     Function<Value, List<Value>> transform;
 
-    public Formatter(List<Step> steps, Function<Value, List<Value>> transform) {
-        super(steps);
+    public Formatter(Function<Value, List<Value>> transform) {
         this.transform = transform;
     }
 

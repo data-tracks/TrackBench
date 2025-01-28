@@ -13,6 +13,7 @@ public class AvgAggregator implements Aggregator {
     public void next( JsonNode value ) {
         try {
             number += value.asDouble();
+            count++;
         }catch ( Exception e ) {
             throw new RuntimeException( e );
         }
@@ -21,12 +22,9 @@ public class AvgAggregator implements Aggregator {
 
 
     @Override
-    public List<JsonNode> reset() {
+    public List<JsonNode> get() {
         double result = number / count;
         DoubleNode value = DoubleNode.valueOf(result);
-
-        count = 0;
-        number = 0;
 
         return List.of(value);
     }

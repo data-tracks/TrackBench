@@ -1,5 +1,6 @@
 package dev.datageneration.window;
 
+import dev.datageneration.processing.ProcessingHandler;
 import dev.datageneration.simulation.BenchmarkConfig;
 import dev.datageneration.simulation.BenchmarkContext;
 import lombok.extern.slf4j.Slf4j;

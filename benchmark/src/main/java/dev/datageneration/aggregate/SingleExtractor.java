@@ -10,8 +10,7 @@ public class SingleExtractor extends Extractor {
     private final String path;
 
 
-    public SingleExtractor( List<Step> steps, String path ) {
-        super( steps );
+    public SingleExtractor( String path ) {
         String adjustedPath = path.replace( ".", "/" );
 
         this.path = adjustedPath.startsWith( "/" ) ? adjustedPath : "/" + adjustedPath;
@@ -21,7 +20,7 @@ public class SingleExtractor extends Extractor {
 
     @Override
     public void next( List<Value> values ) {
-        toAllSteps( values.stream().map( v -> new Value( v.tick(), v.node().at( path ) ) ).toList() );
+        toAllSteps( values.stream().map( v -> new Value( v.getTick(), v.getNode().at( path ) ) ).toList() );
     }
 
 }

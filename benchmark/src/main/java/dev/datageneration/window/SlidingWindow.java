@@ -15,52 +15,56 @@ public class SlidingWindow extends Window {
 
     Supplier<Aggregator> aggregateCreator;
 
-    Extractor extractor;
 
     long relevantTicks;
 
     List<Pair<Long, Aggregator>> aggregators = new ArrayList<>();
 
 
-    public SlidingWindow( List<Step> steps, Supplier<Aggregator> aggregateCreator, Extractor extractor, long relevantTicks ) {
-        super(steps);
+    public SlidingWindow(Supplier<Aggregator> aggregateCreator, long relevantTicks ) {
         this.aggregateCreator = aggregateCreator;
         this.relevantTicks = relevantTicks;
-        this.extractor = extractor;
     }
 
 
     @Override
     public void next( Value value ) {
         Aggregator aggregator = aggregateCreator.get();
-        JsonNode target = null;//extractor.extract( value.node() );
 
-        // add aggregator for current
-        aggregator.next( target );
-        Pair<Long, Aggregator> pair = new Pair<>( value.tick(), aggregator );
+        Pair<Long, Aggregator> pair = new Pair<>( value.getTick(), aggregator );
         aggregators.add( pair );
 
-        long lowestTick = value.tick() - relevantTicks;
+        long lowestTick = value.getTick() - relevantTicks;
 
         Iterator<Pair<Long, Aggregator>> iter = aggregators.iterator();
 
+        long count = 0;
         // remove the older values
         while ( iter.hasNext() ) {
             Pair<Long, Aggregator> current = iter.next();
             if ( current.left() < lowestTick ) {
-                aggregators.removeFirst();
+                // to remove later
+                count++;
             }else {
                 // first usable value
-                pair = iter.next();
+                pair = current;
+                pair.right().next(value.getNode());
                 break;
             }
         }
 
         // update after values
         while ( iter.hasNext() ) {
-            iter.next().right().next( target );
+            iter.next().right().next( value.getNode() );
         }
-        toAllSteps( pair.right().reset().stream().map( v -> new Value( value.tick(), v ) ).toList() );
+
+        // remove old
+        for (long i = 0; i < count; i++) {
+            aggregators.removeFirst();
+        }
+
+
+        toAllSteps( pair.right().get().stream().map( v -> new Value( value.getTick(), v ) ).toList() );
 
     }
 

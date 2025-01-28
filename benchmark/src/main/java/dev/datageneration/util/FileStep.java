@@ -10,8 +10,7 @@ public class FileStep extends Step {
     private final JsonTarget target;
 
 
-    public FileStep( List<Step> steps, JsonTarget target ) {
-        super( steps );
+    public FileStep( JsonTarget target ) {
         this.target = target;
     }
 
@@ -29,7 +28,7 @@ public class FileStep extends Step {
     @Override
     public void next( List<Value> values ) {
         for ( Value value : values ) {
-            target.attach( value.node() );
+            target.attach( value.getNode() );
         }
         toAllSteps( values );
     }

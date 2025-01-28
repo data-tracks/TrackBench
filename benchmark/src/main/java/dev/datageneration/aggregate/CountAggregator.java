@@ -15,9 +15,9 @@ public class CountAggregator implements Aggregator {
 
 
     @Override
-    public List<JsonNode> reset() {
+    public List<JsonNode> get() {
         LongNode result = LongNode.valueOf( count );
-        count = 0;
+
         return List.of(result);
     }
 

@@ -88,6 +88,28 @@ public class RandomData {
         }
     }
 
+    public static double getRandomWithProbability(double min, double max, String name, double current) {
+        double range = max - min;
+
+        if (probabilities.containsKey(name)) {
+            double[] prob = probabilities.get(name);
+            double boundary = range * prob[0];
+
+            double biasFactor = random.nextDouble() <= prob[0] ? 0.7 : 0.3; // Stronger bias for high probability
+            double rangeMin = (random.nextDouble() <= prob[0]) ? min : boundary;
+            double rangeMax = (random.nextDouble() <= prob[0]) ? boundary : max;
+
+            return getBiasedRandom(rangeMin, rangeMax, current, biasFactor);
+        } else {
+            return getRandom(min, max);
+        }
+    }
+
+    private static double getBiasedRandom(double rangeMin, double rangeMax, double current, double biasFactor) {
+        double randomValue = rangeMin + random.nextDouble() * (rangeMax - rangeMin);
+        return (1 - biasFactor) * randomValue + biasFactor * current;
+    }
+
 
 
     public static List<String> listFilesForFolder( final File folder ) {

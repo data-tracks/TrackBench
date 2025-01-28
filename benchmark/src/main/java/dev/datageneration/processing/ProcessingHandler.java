@@ -1,26 +1,14 @@
-package dev.datageneration.window;
+package dev.datageneration.processing;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.datageneration.aggregate.AvgAggregator;
-import dev.datageneration.aggregate.SingleExtractor;
-import dev.datageneration.processing.Filter;
-import dev.datageneration.processing.Step;
-import dev.datageneration.processing.Value;
 import dev.datageneration.simulation.BenchmarkConfig;
 import dev.datageneration.simulation.BenchmarkContext;
 import dev.datageneration.simulation.sensors.Sensor;
-import dev.datageneration.simulation.types.DoubleType;
-import dev.datageneration.simulation.types.IntType;
-import dev.datageneration.util.FileJsonTarget;
 import dev.datageneration.util.JsonIterator;
-import dev.datageneration.util.JsonTarget;
-import dev.datageneration.util.Pair;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 

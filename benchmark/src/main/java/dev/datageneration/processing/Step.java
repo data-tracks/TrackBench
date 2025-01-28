@@ -1,15 +1,18 @@
 package dev.datageneration.processing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Step {
 
-    public final List<Step> steps;
+    public final List<Step> steps = new ArrayList<>();
 
 
-    public Step( List<Step> steps ) {
-        this.steps = steps;
+    public Step after(Step step) {
+        steps.add(step);
+        return this;
     }
+
     public void close() {
         this.steps.forEach( Step::close );
     }

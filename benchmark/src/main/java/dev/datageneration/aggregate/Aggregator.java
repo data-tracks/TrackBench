@@ -7,6 +7,6 @@ public interface Aggregator {
 
     void next( JsonNode object );
 
-    List<JsonNode> reset();
+    List<JsonNode> get();
 
 }

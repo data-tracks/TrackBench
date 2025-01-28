@@ -8,8 +8,7 @@ public class Filter extends Step {
     Function<Value, Boolean> filter;
 
 
-    public Filter( List<Step> steps, Function<Value, Boolean> filter ) {
-        super( steps );
+    public Filter(Function<Value, Boolean> filter ) {
         this.filter = filter;
     }
 
