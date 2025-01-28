@@ -1,15 +1,19 @@
 package dev.datageneration.simulation;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.datageneration.simulation.sensors.DocSensor;
 import dev.datageneration.simulation.sensors.Sensor;
 import dev.datageneration.simulation.sensors.SensorTemplate;
-import dev.datageneration.util.IterRegistry;
+import dev.datageneration.util.CountRegistry;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
 
 @Slf4j
 public class SensorGenerator {
@@ -18,11 +22,12 @@ public class SensorGenerator {
      * Creates Sensors and fills them with data accordingly to the given sensorArray.
      * Once the sensors are created it writes their data into csv files.
      */
-    public static void start(BenchmarkContext context) {
+    public static void start( BenchmarkContext context ) {
         // create Sensors
-        RandomData.setSeed(RandomData.seed);
-        createSensors(context);
+        RandomData.setSeed( RandomData.seed );
+        createSensors( context );
     }
+
 
     /**
      * Creates sensors accordingly to the chosen amount.
@@ -30,16 +35,21 @@ public class SensorGenerator {
     public static void createSensors( BenchmarkContext context ) {
         List<Sensor> sensors = new ArrayList<>();
 
-        IterRegistry registry = new IterRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual() );
+        CountRegistry registry = new CountRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual(), "%" );
 
         for ( int i = 0; i < context.getConfig().sensorAmount(); i++ ) {
             // pick random sensor
             int pickedSensorIndex = (int) RandomData.getRandom( 0, SensorTemplate.templates.size() );
-            Sensor sensor = chooseSensor( SensorTemplate.templates.get( pickedSensorIndex ), context.getConfig(), registry );
+            Sensor sensor = chooseSensor( SensorTemplate.templates.get( pickedSensorIndex ).get(), context.getConfig(), registry );
             sensors.add( sensor );
         }
 
-        saveSensors(sensors, context.getConfig());
+        saveSensors( sensors, context.getConfig() );
+        List<Sensor> sensors2 = loadSensors( context.config );
+        if ( sensors2.size() != sensors.size() ) {
+            throw new RuntimeException( "Sensor loading is wrong" );
+        }
+
         context.setSensors( sensors );
 
         try {
@@ -67,13 +77,14 @@ public class SensorGenerator {
 
     }
 
-    private static void saveSensors(List<Sensor> sensors, BenchmarkConfig config) {
-        JSONArray array = new JSONArray();
 
-        sensors.forEach( sensor -> array.put(sensor.getTemplate().toJson()));
+    private static void saveSensors( List<Sensor> sensors, BenchmarkConfig config ) {
+        ArrayNode array = JsonNodeFactory.instance.arrayNode();
+
+        sensors.forEach( sensor -> array.add( sensor.toJson() ) );
         try {
             FileWriter writer = new FileWriter( config.getSensorPath() );
-            writer.write( array.toString(4) );
+            writer.write( array.toPrettyString() );
             writer.flush();
             writer.close();
         } catch ( IOException e ) {
@@ -81,7 +92,30 @@ public class SensorGenerator {
         }
     }
 
-    public static Sensor chooseSensor( SensorTemplate template, BenchmarkConfig config, IterRegistry registry ) {
+
+    public static List<Sensor> loadSensors( BenchmarkConfig config ) {
+        List<Sensor> sensors = new ArrayList<>();
+
+        try {
+            JsonNode array = new ObjectMapper().readTree( config.getSensorPath() );
+            if ( !array.isArray() ) {
+                throw new RuntimeException( "Sensor path is not a JSON array" );
+            }
+            for ( JsonNode node : array ) {
+                if ( !node.isObject() ) {
+                    throw new RuntimeException( "Sensor is not a JSON object" );
+                }
+                sensors.add( Sensor.fromJson( (ObjectNode) node, config ) );
+            }
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+        return sensors;
+    }
+
+
+    public static Sensor chooseSensor( SensorTemplate template, BenchmarkConfig config, CountRegistry registry ) {
         return new DocSensor( template, config, registry );
     }
+
 }

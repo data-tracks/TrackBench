@@ -1,8 +1,9 @@
-package dev.datageneration.window;
+package dev.datageneration.processing;
 
-import dev.datageneration.processing.ProcessingHandler;
 import dev.datageneration.simulation.BenchmarkConfig;
 import dev.datageneration.simulation.BenchmarkContext;
+import dev.datageneration.util.CountRegistry;
+import dev.datageneration.util.SimpleCountRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
@@ -12,20 +13,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class WindowedData {
+public class ProcessingGenerator {
 
     static List<JSONObject> data = new ArrayList<>();  // Store JSONObjects instead of String arrays
     static List<JSONObject> windowedData = new ArrayList<>();  // Store JSONObjects instead of String arrays
 
-    public static void createWindowedData( BenchmarkContext context) {
-        List<File> files = context.getConfig().getSensorFiles( BenchmarkConfig.DATA_WITH_ERRORS_PATH );
+    public static void process( BenchmarkContext context) {
+        List<File> files = context.getConfig().getSensorFiles( context.getConfig().getDataWithErrorPath() );
         List<ProcessingHandler> processingHandlers = new ArrayList<>();
+
+        SimpleCountRegistry registry = new SimpleCountRegistry( files.size(), " file(s)" );
 
         log.info( "found {}", files.stream().map(File::getAbsolutePath).collect(Collectors.joining("\n")));
 
         for (File file : files) {
             if (file.getName().endsWith(".json")) {
-                ProcessingHandler creator = new ProcessingHandler(context, file);
+                ProcessingHandler creator = new ProcessingHandler(context, file, registry);
                 processingHandlers.add(creator);
             }
         }

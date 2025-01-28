@@ -3,7 +3,7 @@ package dev.datageneration.util;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class IterRegistry {
+public class CountRegistry {
     LoadingBar loadingBar;
     Map<Long, Long> counts = new ConcurrentHashMap<>();
 
@@ -12,10 +12,10 @@ public class IterRegistry {
 
     long last = 0;
 
-    public IterRegistry(long total, long steps) {
+    public CountRegistry(long total, long steps, String units) {
         this.total = total;
         this.steps = steps;
-        this.loadingBar = new LoadingBar(total);
+        this.loadingBar = new LoadingBar(total, units);
     }
 
     public void update(long id, long count) {

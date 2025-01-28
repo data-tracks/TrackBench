@@ -3,7 +3,7 @@ package dev.datageneration;
 import dev.datageneration.aggregate.AveragedData;
 import dev.datageneration.aggregate.ErrorCreator;
 import dev.datageneration.aggregate.FinalData;
-import dev.datageneration.window.WindowedData;
+import dev.datageneration.processing.ProcessingGenerator;
 import dev.datageneration.analyse.Analyser;
 import dev.datageneration.analyse.Comparer;
 import dev.datageneration.jsonHandler.JsonFileHandler;
@@ -33,23 +33,28 @@ public class Main {
         setPaths(config);
 
         //Start Creation of Data
-        if(config.generate()){
+        if(config.generateSensors()){
+            System.out.println("Generating sensors...");
             //Delete all files in folder
-            JsonFileHandler.deleteFolder(config.pathSensorData());
-            JsonFileHandler.deleteFolder(config.path());
+            JsonFileHandler.deleteFolder(config.getDataPath());
 
             //create files
             SensorGenerator.start(context);
-            //ErrorCreator.dataWithErrors(); //create some data loss and null entries.
-            //DataGenerator.dataGenerator(config);
-            WindowedData.createWindowedData(context); //creates warnings if some data is not in a wished range
-            /*AveragedData.aggregatedData(config.stepDurationMs()); //get average over a time interval
-            FinalData.createFinalData();*/
         }
+
+        if ( config.generateProcessing() ) {
+            context.loadNecessities();
+            JsonFileHandler.deleteFolder(config.getProcessingPath());
+            System.out.println("Generating processing...");
+
+            ProcessingGenerator.process(context);
+        }
+
 
         if ( !config.execute() ){
             return;
         }
+        System.out.println("Starting processing...");
 
         //Start Sending to Stream processing System and start receiver
         Thread sendThread = new Thread(() -> {
@@ -84,9 +89,8 @@ public class Main {
         Analyser.setAmountSensors(config.sensorAmount());
         Analyser.setThreadAmount(config.threadAmount());
         Analyser.setFolder(config.path());
-        AveragedData.setFolderData(config.pathSensorData());
         AveragedData.setFolderStore(config.path());
-        ErrorCreator.setFolderData(config.pathSensorData());
+
         FinalData.setFolderStore(config.path());
         ThreadedSender.setPathNormal(config.path());
         Comparer.setFolder(config.path());

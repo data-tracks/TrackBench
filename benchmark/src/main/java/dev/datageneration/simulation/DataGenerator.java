@@ -18,7 +18,7 @@ public class DataGenerator {
      * Always sorts the list by "prefix" and writes the sorted data back to a JSON file called ALL_DATA.json.
      */
     public static void dataGenerator( BenchmarkConfig config ) throws Exception {
-        List<File> filenames = config.getSensorFiles( BenchmarkConfig.DATA_WITH_ERRORS_PATH );
+        List<File> filenames = config.getSensorFiles( config.getDataWithErrorPath() );
 
         log.info( "found {}", filenames );
     }

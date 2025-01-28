@@ -1,7 +1,9 @@
 package dev.datageneration.simulation;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Value;
-import org.json.JSONObject;
 
 @Value(staticConstructor = "of")
 public class ErrorRates {
@@ -10,11 +12,16 @@ public class ErrorRates {
     double dropRate;
 
 
-    public JSONObject toJson() {
-        JSONObject obj = new JSONObject();
+
+    public JsonNode toJson() {
+        ObjectNode obj = JsonNodeFactory.instance.objectNode();
         obj.put("noDataRate", noDataRate);
         obj.put("dropRate", dropRate);
         return obj;
+    }
+
+    public static ErrorRates fromJson( ObjectNode errorRates ) {
+        return new ErrorRates(errorRates.get("noDataRate").asDouble(), errorRates.get("dropRate").asDouble());
     }
 
 }

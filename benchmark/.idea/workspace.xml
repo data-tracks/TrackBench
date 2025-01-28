@@ -5,9 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="generates data in parallel, fixed slow error generation">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13-milestone-3/fileHashes/fileHashes.bin" afterDir="false" />
@@ -16,25 +13,23 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/Aggregator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/Aggregator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/AvgAggregator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/AvgAggregator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/CountAggregator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/CountAggregator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/Extractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/Extractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/SingleExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/SingleExtractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Formatter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Formatter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/IdentityStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/DistributionStep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Step.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Step.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Value.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/Value.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/ProcessingHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/ProcessingHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/BenchmarkConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/BenchmarkConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/BenchmarkContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/BenchmarkContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/DataGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/DataGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/ErrorRates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/ErrorRates.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/RandomData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/RandomData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/SensorGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/DocSensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/DocSensor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/Sensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/Sensor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/types/DoubleType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/types/DoubleType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/types/IntType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/types/NumberType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/FileStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/FileStep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/ProcessingHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/ProcessingHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/SlidingWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/SlidingWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/Window.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/WindowedData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/WindowedData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/SensorTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/sensors/SensorTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/FixedDequeue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/FixedDequeue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/IterRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/CountRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/JsonIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/JsonIterator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/util/LoadingBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/datageneration/window/WindowedData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/datageneration/processing/ProcessingGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,31 +126,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.benchmark [:dev.datageneration.Main.main()].executor": "Run",
-    "Gradle.benchmark [build].executor": "Run",
-    "Gradle.benchmark [run].executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/datomo/git/TrackBench/benchmark",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.benchmark [:dev.datageneration.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [run].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/datomo/git/TrackBench/benchmark&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="dev.datageneration.window" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="dev.datageneration.util" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.benchmark [run]">
@@ -248,6 +246,8 @@
       <workItem from="1738017400658" duration="1426000" />
       <workItem from="1738018845573" duration="251000" />
       <workItem from="1738019105581" duration="95000" />
+      <workItem from="1738077020355" duration="10008000" />
+      <workItem from="1738087119532" duration="990000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
@@ -304,19 +304,19 @@
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/aggregate/AvgAggregator.java</url>
-          <line>17</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/processing/ProcessingHandler.java</url>
-          <line>64</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/jsonHandler/JsonFileHandler.java</url>
           <line>78</line>
           <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/util/JsonIterator.java</url>
+          <line>31</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dev/datageneration/simulation/SensorGenerator.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.18.2/deef8697b92141fb6caf7aa86966cff4eec9b04f/jackson-databind-2.18.2.jar!/com/fasterxml/jackson/databind/node/NumericNode.class</url>

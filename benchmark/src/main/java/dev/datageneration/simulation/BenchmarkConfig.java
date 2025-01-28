@@ -10,10 +10,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.jetbrains.annotations.NotNull;
 
 public record BenchmarkConfig(
         int seed,
-        boolean generate,
+        File path,
+        boolean generateSensors,
+        boolean generateProcessing,
         boolean execute,
         boolean aggregated,
         long sensorBatchSize,
@@ -23,14 +26,13 @@ public record BenchmarkConfig(
         int sensorAmount,
         long ticks,
         long stepDurationMs,
-        File path,
-        File pathSensorData,
         long updateTickVisual
 ) {
 
     public static final String DEFAULT_SETTINGS_FILE = "settings.properties";
 
     public static final String DATA_PATH = "data";
+    public static final String PROCESSING_PATH =  "processing";
     public static final String SENSORS_PATH = "sensors";
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
@@ -49,7 +51,9 @@ public record BenchmarkConfig(
 
         return new BenchmarkConfig(
                 props.getInt( "seed" ),
-                props.getBoolean( "generate" ),
+                new File( props.getString( "path" ) ),
+                props.getBoolean( "generateSensors" ),
+                props.getBoolean( "generateProcessing" ),
                 props.getBoolean( "execute" ),
                 props.getBoolean( "aggregatedData" ),
                 getNumber( props, "sensorBatchSize" ),
@@ -59,8 +63,6 @@ public record BenchmarkConfig(
                 props.getInt( "sensorAmount" ),
                 getNumber( props, "ticks" ),
                 props.getInt( "stepDurationMs" ),
-                new File( props.getString( "pathAggregated" ) ),
-                new File( props.getString( "pathSensor" ) ),
                 getNumber( props, "updateTickVisual" )
         );
     }
@@ -75,32 +77,62 @@ public record BenchmarkConfig(
         return 100 / stepDurationMs * 5;
     }
 
+    @NotNull
+    private File getFileAndMkDirs(String... parentDirs) {
+        File file = new File( path.toString(), String.join( "/", parentDirs ) );
+        boolean mkdirs = file.mkdirs();
+        return file;
+    }
 
-    public File getDataPath( Sensor sensor ) {
-        boolean success = new File( pathSensorData.toString(), DATA_PATH ).mkdirs();
-        return new File( "%s/%s/%d_%s.json".formatted( pathSensorData.toString(), DATA_PATH, sensor.id, sensor.getTemplate().getType() ) );
+    @NotNull
+    private File getSensorJson( File path, Sensor sensor ) {
+        return getJson( path, "%d_%s.json".formatted( sensor.id, sensor.getTemplate().getType() ) );
+    }
+
+    @NotNull
+    private File getJson( File path, String name ) {
+        return new File( path, "%s.json".formatted( name ) );
+    }
+
+
+    public File getDataPath(){
+        return new File( path.toString(), DATA_PATH );
+    }
+
+    public File getSensorPath( Sensor sensor ) {
+        File parent = getFileAndMkDirs(DATA_PATH, DATA_PATH);
+        return getSensorJson( parent, sensor );
     }
 
 
     public File getErrorPath( Sensor sensor ) {
-        boolean success = new File( pathSensorData.toString(), ERRORS_DATA_PATH ).mkdirs();
-        return new File( "%s/%s/%d_%s.json".formatted( pathSensorData.toString(), ERRORS_DATA_PATH, sensor.id, sensor.getTemplate().getType() ) );
+        File parent = getFileAndMkDirs(DATA_PATH, ERRORS_DATA_PATH);
+        return getSensorJson( parent, sensor );
+    }
+
+    public File getDataWithErrorPath() {
+        return getFileAndMkDirs(DATA_PATH, DATA_WITH_ERRORS_PATH);
     }
 
 
     public File getDataWithErrorPath( Sensor sensor ) {
-        boolean success = new File( pathSensorData.toString(), DATA_WITH_ERRORS_PATH ).mkdirs();
-        return new File( "%s/%s/%d_%s.json".formatted( pathSensorData.toString(), DATA_WITH_ERRORS_PATH, sensor.id, sensor.getTemplate().getType() ) );
+        File parent = getDataWithErrorPath();
+        return getSensorJson( parent, sensor );
     }
 
 
-    public File getSingleWindowPath( Sensor sensor, String name ) {
-        String parent = "single_" + WINDOW_PATH;
-        File folder = new File( pathSensorData, parent );
+    public File getProcessingPath() {
+        return getFileAndMkDirs(PROCESSING_PATH);
+    }
 
-        File path = new File( "%s/%d_%s".formatted( folder.getAbsolutePath(), sensor.id, sensor.getTemplate().getType() ) );
+    public File getSingleProcessingPath( Sensor sensor, String name ) {
+
+
+        File parent = getProcessingPath();
+        File path = new File( "%s/%d_%s".formatted( parent.getAbsolutePath(), sensor.id, sensor.getTemplate().getType() ) );
         boolean success = path.mkdirs();
-        return new File( "/%s/%s.json".formatted( path.getAbsolutePath(), name.replace( "/", "-" ) ) );
+
+        return getJson( path, name.replace( "/", "-" ) );
     }
 
 
@@ -117,19 +149,19 @@ public record BenchmarkConfig(
     }
 
 
-    public List<File> getSensorFiles( String path ) {
-        File target = new File( pathSensorData, path );
-        if ( target.isFile() ) {
+    public List<File> getSensorFiles(File dir) {
+        if ( dir.isFile() ) {
             throw new IllegalArgumentException( "Sensor file path '" + path + "' exists but is not a file" );
         }
-        return Arrays.stream( Objects.requireNonNull( target.listFiles() ) ).map( file -> new File( target, file.getName() ) ).collect( Collectors.toList() );
+        return Arrays.stream( Objects.requireNonNull( dir.listFiles() ) ).map( file -> new File( dir, file.getName() ) ).collect( Collectors.toList() );
     }
 
 
     public File getSensorPath() {
-        pathSensorData.mkdirs();
-        return new File( pathSensorData.toString(), SENSORS_PATH + ".json"  );
+        File parent = getFileAndMkDirs( DATA_PATH );
+        return getJson( parent, SENSORS_PATH  );
     }
+
 
 
 }

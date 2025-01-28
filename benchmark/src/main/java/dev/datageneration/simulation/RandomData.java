@@ -1,9 +1,5 @@
 package dev.datageneration.simulation;
 
-import dev.datageneration.simulation.sensors.DocSensor;
-import dev.datageneration.simulation.sensors.Sensor;
-import dev.datageneration.simulation.sensors.SensorTemplate;
-import dev.datageneration.util.IterRegistry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
