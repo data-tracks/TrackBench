@@ -56,7 +56,7 @@ public class Sender extends ObservableThread {
 
             }
         }catch( InterruptedException e ) {
-            throw new RuntimeException( e );
+            // this is intended
         }
 
     }

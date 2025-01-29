@@ -64,7 +64,7 @@ public class SendCoordinator extends Thread {
 
 
     private void prepare() {
-        List<File> files = context.getConfig().getSensorFiles( context.getConfig().getDataWithErrorPath() );
+        List<File> files = context.getConfig().getFilesInFolder( context.getConfig().getDataWithErrorPath() );
 
         int id = 0;
         for ( File sensor : files ) {

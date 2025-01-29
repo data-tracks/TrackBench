@@ -4,6 +4,8 @@ import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -41,4 +43,37 @@ public class BenchmarkContext {
         sensors.addAll( SensorGenerator.loadSensors( config ) );
     }
 
+    public void printProcessingTime(){
+        printTime("The processing");
+    }
+
+    public void printGeneratingTime() {
+        printTime("Generating data which");
+    }
+
+    public void printTime(String prefix) {
+        log.info( "{} will take approx. {}...", prefix, formatNanoseconds( config.stepDurationNs() * config.ticks() ) );
+        log.info( "Ticks {} and {}ns per tick...", config.ticks(), config.stepDurationNs() );
+    }
+
+
+    public static String formatNanoseconds( long nanoseconds ) {
+        Duration duration = Duration.ofNanos( nanoseconds );
+
+        if ( duration.toDays() > 0 ) {
+            return duration.toDays() + " days";
+        } else if ( duration.toHours() > 0 ) {
+            return duration.toHours() + " hours";
+        } else if ( duration.toMinutes() > 0 ) {
+            return duration.toMinutes() + " minutes";
+        } else if ( duration.getSeconds() > 0 ) {
+            return duration.getSeconds() + " seconds";
+        } else if ( duration.toMillis() > 0 ) {
+            return duration.toMillis() + " milliseconds";
+        } else if ( duration.toNanos() >= 1000 ) {
+            return duration.toNanos() / 1000 + " microseconds";
+        } else {
+            return nanoseconds + " nanoseconds";
+        }
+    }
 }

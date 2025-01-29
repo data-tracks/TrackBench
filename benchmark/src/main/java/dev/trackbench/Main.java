@@ -30,6 +30,7 @@ public class Main {
 
         if ( config.generate() ) {
             System.out.println( "Generating sensors..." );
+            context.printGeneratingTime();
             //Delete all files in folder
             JsonFileHandler.deleteFolder( config.getDataPath() );
 
@@ -48,6 +49,10 @@ public class Main {
         if ( config.execute() ) {
             System.out.println( "Starting processing..." );
             ProcessingCoordinator.start(context);
+            System.out.println( "Finished processing." );
+
+            System.out.println( "Starting analyser..." );
+            Analyser.start(context);
         }
         log.info( "Finished everything" );
     }

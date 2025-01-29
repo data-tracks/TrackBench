@@ -17,7 +17,7 @@ public class ProcessingGenerator {
     static List<JSONObject> windowedData = new ArrayList<>();  // Store JSONObjects instead of String arrays
 
     public static void process( BenchmarkContext context) {
-        List<File> files = context.getConfig().getSensorFiles( context.getConfig().getDataWithErrorPath() );
+        List<File> files = context.getConfig().getFilesInFolder( context.getConfig().getDataWithErrorPath() );
         List<ProcessingHandler> processingHandlers = new ArrayList<>();
 
         SimpleCountRegistry registry = new SimpleCountRegistry( files.size(), " file(s)" );

@@ -36,7 +36,7 @@ public record BenchmarkConfig(
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
     public static final String RESULT_PATH = "result";
-    public static final long executionMaxMin = 5;
+    public static final long executionMaxMin = 2;
 
 
     public static BenchmarkConfig fromFile() {
@@ -156,11 +156,16 @@ public record BenchmarkConfig(
     }
 
 
-    public List<File> getSensorFiles(File dir) {
+    public List<File> getFilesInFolder(File dir) {
         if ( dir.isFile() ) {
-            throw new IllegalArgumentException( "Sensor file path '" + path + "' exists but is not a file" );
+            throw new IllegalArgumentException( "Path '" + path + "' exists but is not a folder." );
         }
         return Arrays.stream( Objects.requireNonNull( dir.listFiles() ) ).map( file -> new File( dir, file.getName() ) ).collect( Collectors.toList() );
+    }
+
+    public List<File> getResultFiles() {
+        File folder = getFileAndMkDirs( RESULT_PATH );
+        return getFilesInFolder( folder );
     }
 
 
@@ -168,7 +173,6 @@ public record BenchmarkConfig(
         File parent = getFileAndMkDirs( DATA_PATH );
         return getJson( parent, SENSORS_PATH  );
     }
-
 
 
 

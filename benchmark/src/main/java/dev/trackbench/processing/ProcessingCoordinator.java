@@ -12,8 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProcessingCoordinator {
 
     public static void start( BenchmarkContext context ) {
-        log.info( "The whole processing will take approx. {}...", formatNanoseconds( context.getConfig().stepDurationNs() * context.getConfig().ticks() ) );
-        log.info( "Ticks {} and {}ns per tick...", context.getConfig().ticks(), context.getConfig().stepDurationNs() );
+        context.printProcessingTime();
         context.setClock( new Clock( context.getConfig() ) );
         try {
             // system might want to do some setting up
@@ -46,25 +45,6 @@ public class ProcessingCoordinator {
     }
 
 
-    public static String formatNanoseconds( long nanoseconds ) {
-        Duration duration = Duration.ofNanos( nanoseconds );
-
-        if ( duration.toDays() > 0 ) {
-            return duration.toDays() + " days";
-        } else if ( duration.toHours() > 0 ) {
-            return duration.toHours() + " hours";
-        } else if ( duration.toMinutes() > 0 ) {
-            return duration.toMinutes() + " minutes";
-        } else if ( duration.getSeconds() > 0 ) {
-            return duration.getSeconds() + " seconds";
-        } else if ( duration.toMillis() > 0 ) {
-            return duration.toMillis() + " milliseconds";
-        } else if ( duration.toNanos() >= 1000 ) {
-            return duration.toNanos() / 1000 + " microseconds";
-        } else {
-            return nanoseconds + " nanoseconds";
-        }
-    }
 
 
 }

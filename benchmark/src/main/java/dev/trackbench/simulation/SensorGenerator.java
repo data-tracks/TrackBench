@@ -85,7 +85,7 @@ public class SensorGenerator {
 
         sensors.forEach( sensor -> array.add( sensor.toJson() ) );
         try {
-            FileWriter writer = new FileWriter( config.getSensorPath() );
+            FileWriter writer = new FileWriter( config.getSensorPath(), false );
             writer.write( array.toPrettyString() );
             writer.flush();
             writer.close();
