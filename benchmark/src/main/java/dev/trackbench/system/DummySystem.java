@@ -50,7 +50,7 @@ public class DummySystem implements System {
                     dataConsumer.attach( clock.tick(), value );
                 }
             } catch ( Exception e ) {
-                throw new RuntimeException( e );
+                // all good
             }
         };
     }

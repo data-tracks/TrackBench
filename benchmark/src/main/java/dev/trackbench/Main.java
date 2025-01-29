@@ -11,6 +11,7 @@ import dev.trackbench.sending.SendCoordinator;
 import dev.trackbench.simulation.RandomData;
 import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.system.DummySystem;
+import dev.trackbench.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,6 +51,9 @@ public class Main {
             System.out.println( "Starting processing..." );
             ProcessingCoordinator.start(context);
             System.out.println( "Finished processing." );
+
+            Validator.start(context);
+
 
             System.out.println( "Starting analyser..." );
             Analyser.start(context);

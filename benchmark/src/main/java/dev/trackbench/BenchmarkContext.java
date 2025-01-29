@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Getter
@@ -52,8 +53,13 @@ public class BenchmarkContext {
     }
 
     public void printTime(String prefix) {
-        log.info( "{} will take approx. {}...", prefix, formatNanoseconds( config.stepDurationNs() * config.ticks() ) );
+        log.info( "{} will take approx. {}...", prefix, tickToTime(config.ticks()));
         log.info( "Ticks {} and {}ns per tick...", config.ticks(), config.stepDurationNs() );
+    }
+
+    @NotNull
+    public String tickToTime(long tick) {
+        return formatNanoseconds(config.stepDurationNs() * tick);
     }
 
 
@@ -76,4 +82,5 @@ public class BenchmarkContext {
             return nanoseconds + " nanoseconds";
         }
     }
+
 }

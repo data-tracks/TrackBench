@@ -23,7 +23,15 @@ public class Clock extends Thread {
         scheduler.scheduleAtFixedRate( tick::incrementAndGet, 100, config.stepDurationNs(), TimeUnit.NANOSECONDS);
     }
 
+    public void shutdown() {
+        scheduler.shutdown();
+    }
+
     public long tick() {
         return tick.get();
     }
+
+
+
+
 }

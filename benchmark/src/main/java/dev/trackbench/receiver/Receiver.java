@@ -6,6 +6,7 @@ import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.FileJsonTarget;
 import dev.trackbench.util.ObservableThread;
+import lombok.Getter;
 
 public class Receiver extends ObservableThread {
 
@@ -33,4 +34,10 @@ public class Receiver extends ObservableThread {
         system.getReceiver( running, ready, clock, buffer ).run();
     }
 
+
+    @Override
+    public void interrupt() {
+        this.buffer.interrupt();
+        super.interrupt();
+    }
 }

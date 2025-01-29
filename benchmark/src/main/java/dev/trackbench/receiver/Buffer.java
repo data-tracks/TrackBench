@@ -44,7 +44,7 @@ public class Buffer extends ObservableThread {
                 count++;
             }
         } catch ( InterruptedException | JsonProcessingException e ) {
-            throw new RuntimeException( e );
+            // this is intended
         }
 
     }

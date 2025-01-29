@@ -178,6 +178,10 @@ public class Analyser {
     }
 
     public static void start(BenchmarkContext context) {
+        extractMetrics(context);
+    }
+
+    private static void extractMetrics(BenchmarkContext context) {
         DelayCollector delayCollector = new DelayCollector(context);
         for (Pair<String, String> pair : delayCollector.start()) {
             log.info("{}: {}", pair.left(), pair.right());

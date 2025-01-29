@@ -194,7 +194,6 @@ public abstract class Sensor extends Thread {
                         )
                 );
             }
-
         }
 
         return initial;

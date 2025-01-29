@@ -11,13 +11,14 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 
 public class DelayCollector {
+    private final BenchmarkContext context;
     Deque<Long> delays = new ConcurrentLinkedDeque<>();
 
     List<DelayWorker> workers = new ArrayList<>();
 
 
     public DelayCollector(BenchmarkContext context) {
-
+        this.context = context;
         for (File file : context.getConfig().getResultFiles()) {
             workers.add(new DelayWorker(file, context, this));
         }
@@ -34,11 +35,14 @@ public class DelayCollector {
             throw new RuntimeException(e);
         }
 
-        Pair<String, String> avg = new Pair<>("AvgDelay", String.valueOf(delays.stream().reduce(0L, Long::sum) / delays.size()));
+        long avgTicks = delays.stream().reduce(0L, Long::sum) / delays.size();
+        Pair<String, String> avg = new Pair<>("AvgDelay", avgTicks + " ticks " + context.tickToTime(avgTicks));
 
-        Pair<String, String> max = new Pair<>("AvgDelay", String.valueOf(delays.stream().max(Long::compareTo).orElseThrow()));
+        long maxTicks = delays.stream().max(Long::compareTo).orElseThrow();
+        Pair<String, String> max = new Pair<>("Max", maxTicks + " ticks " + context.tickToTime(maxTicks));
 
-        Pair<String, String> min = new Pair<>("AvgDelay", String.valueOf(delays.stream().min(Long::compareTo).orElseThrow()));
+        long minTicks = delays.stream().min(Long::compareTo).orElseThrow();
+        Pair<String, String> min = new Pair<>("Min", minTicks + " ticks " + context.tickToTime(minTicks));
 
         return List.of(avg, max, min);
     }

@@ -38,6 +38,8 @@ public class ProcessingCoordinator {
             //we can start stopping threads, the target system takes too long to process or finished everything
             receiver.stopReceivers();
             receiver.join();
+
+            context.getClock().shutdown();;
             context.getClock().join();
         } catch ( InterruptedException e ) {
             throw new RuntimeException( e );
