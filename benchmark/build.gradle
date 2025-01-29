@@ -17,7 +17,7 @@ repositories {
 
 application {
     // Define the main class for the application.
-    mainClass = 'dev.datageneration.Main'
+    mainClass = 'dev.trackbench.Main'
 }
 
 dependencies {
