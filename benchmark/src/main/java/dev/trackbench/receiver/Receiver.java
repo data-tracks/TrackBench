@@ -6,7 +6,7 @@ import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.FileJsonTarget;
 import dev.trackbench.util.ObservableThread;
-import lombok.Getter;
+import dev.trackbench.workloads.Workload;
 
 public class Receiver extends ObservableThread {
 
@@ -14,10 +14,12 @@ public class Receiver extends ObservableThread {
     private final System system;
     private final Clock clock;
     private final Buffer buffer;
+    private final Workload workload;
 
 
-    public Receiver( System system, Clock clock, FileJsonTarget target ) {
+    public Receiver( Workload workload, System system, Clock clock, FileJsonTarget target ) {
         this.system = system;
+        this.workload = workload;
         this.clock = clock;
         this.buffer = new Buffer( ( tick, value ) -> {
             ObjectNode node = JsonNodeFactory.instance.objectNode();
@@ -31,7 +33,7 @@ public class Receiver extends ObservableThread {
     @Override
     public void run() {
         this.buffer.start();
-        system.getReceiver( running, ready, clock, buffer ).run();
+        system.getReceiver( workload, running, ready, clock, buffer ).run();
     }
 
 

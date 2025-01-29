@@ -41,7 +41,7 @@ public class Main {
 
         if ( config.simulate() ) {
             context.loadNecessities();
-            JsonFileHandler.deleteFolder( config.getProcessingPath() );
+            JsonFileHandler.deleteFolder( config.getSimulationPath() );
             System.out.println( "Generating processing..." );
 
             ProcessingGenerator.process( context );
@@ -52,12 +52,18 @@ public class Main {
             ProcessingCoordinator.start(context);
             System.out.println( "Finished processing." );
 
+        }
+
+        if ( config.validate() ) {
+            System.out.println( "Starting validation..." );
             Validator.start(context);
+        }
 
-
+        if( config.analyze() ) {
             System.out.println( "Starting analyser..." );
             Analyser.start(context);
         }
+
         log.info( "Finished everything" );
     }
 

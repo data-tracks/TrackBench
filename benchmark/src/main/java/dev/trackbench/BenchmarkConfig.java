@@ -17,6 +17,8 @@ public record BenchmarkConfig(
         boolean generate,
         boolean simulate,
         boolean execute,
+        boolean validate,
+        boolean analyze,
         boolean aggregated,
         long sensorBatchSize,
         long readBatchSize,
@@ -31,7 +33,7 @@ public record BenchmarkConfig(
     public static final String DEFAULT_SETTINGS_FILE = "settings.properties";
 
     public static final String DATA_PATH = "data";
-    public static final String PROCESSING_PATH =  "processing";
+    public static final String SIMULATION_PATH = "simulation";
     public static final String SENSORS_PATH = "sensors";
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
@@ -55,6 +57,8 @@ public record BenchmarkConfig(
                 props.getBoolean( "generate" ),
                 props.getBoolean( "simulate" ),
                 props.getBoolean( "execute" ),
+                props.getBoolean( "validate" ),
+                props.getBoolean( "analyze" ),
                 props.getBoolean( "aggregatedData" ),
                 getNumber( props, "sensorBatchSize" ),
                 getNumber( props, "readBatchSize" ),
@@ -77,46 +81,58 @@ public record BenchmarkConfig(
         return 100 / stepDurationNs * 5;
     }
 
+
     @NotNull
-    private File getFileAndMkDirs(String... parentDirs) {
+    public File getFileAndMkDirs( String... parentDirs ) {
         File file = new File( path.toString(), String.join( "/", parentDirs ) );
         boolean mkdirs = file.mkdirs();
         return file;
     }
 
+
     @NotNull
     private File getSensorJson( File path, Sensor sensor ) {
-        return getJson( path, "%d_%s.json".formatted( sensor.id, sensor.getTemplate().getType() ) );
+        return getJson( path, "%d_%s".formatted( sensor.id, sensor.getTemplate().getType() ) );
     }
+
 
     @NotNull
     private File getJson( File path, String name ) {
-        return new File( path, "%s.json".formatted( name ) );
+        return new File( path, "%s.json".formatted( name.replace( ".json", "" ) ) );
     }
 
 
-    public File getDataPath(){
+    public File getDataPath() {
         return new File( path.toString(), DATA_PATH );
     }
 
-    public File getResultPath( long num ) {
-        File file = getFileAndMkDirs( RESULT_PATH );
+
+    public File getResultFile(String workflow) {
+        return getFileAndMkDirs( RESULT_PATH, workflow );
+    }
+
+
+    public File getResultFile( String workflow, long num ) {
+        File file = getResultFile(workflow);
+
         return getJson( file, String.valueOf( num ) );
     }
 
+
     public File getSensorPath( Sensor sensor ) {
-        File parent = getFileAndMkDirs(DATA_PATH, DATA_PATH);
+        File parent = getFileAndMkDirs( DATA_PATH, DATA_PATH );
         return getSensorJson( parent, sensor );
     }
 
 
     public File getErrorPath( Sensor sensor ) {
-        File parent = getFileAndMkDirs(DATA_PATH, ERRORS_DATA_PATH);
+        File parent = getFileAndMkDirs( DATA_PATH, ERRORS_DATA_PATH );
         return getSensorJson( parent, sensor );
     }
 
+
     public File getDataWithErrorPath() {
-        return getFileAndMkDirs(DATA_PATH, DATA_WITH_ERRORS_PATH);
+        return getFileAndMkDirs( DATA_PATH, DATA_WITH_ERRORS_PATH );
     }
 
 
@@ -126,20 +142,8 @@ public record BenchmarkConfig(
     }
 
 
-    public File getProcessingPath() {
-        return getFileAndMkDirs(PROCESSING_PATH);
-    }
-
-
-
-    public File getSingleProcessingPath( Sensor sensor, String name ) {
-
-
-        File parent = getProcessingPath();
-        File path = new File( "%s/%d_%s".formatted( parent.getAbsolutePath(), sensor.id, sensor.getTemplate().getType() ) );
-        boolean success = path.mkdirs();
-
-        return getJson( path, name.replace( "/", "-" ) );
+    public File getSimulationPath() {
+        return getFileAndMkDirs( SIMULATION_PATH );
     }
 
 
@@ -156,12 +160,13 @@ public record BenchmarkConfig(
     }
 
 
-    public List<File> getFilesInFolder(File dir) {
+    public List<File> getFilesInFolder( File dir ) {
         if ( dir.isFile() ) {
             throw new IllegalArgumentException( "Path '" + path + "' exists but is not a folder." );
         }
         return Arrays.stream( Objects.requireNonNull( dir.listFiles() ) ).map( file -> new File( dir, file.getName() ) ).collect( Collectors.toList() );
     }
+
 
     public List<File> getResultFiles() {
         File folder = getFileAndMkDirs( RESULT_PATH );
@@ -171,9 +176,18 @@ public record BenchmarkConfig(
 
     public File getSensorPath() {
         File parent = getFileAndMkDirs( DATA_PATH );
-        return getJson( parent, SENSORS_PATH  );
+        return getJson( parent, SENSORS_PATH );
     }
 
 
+    public File getSimulationFile( String workflow, String name ) {
+        File parent = getSimulationPath( workflow );
+        return getJson( parent, name );
+    }
+
+
+    public File getSimulationPath( String workflow ) {
+        return getFileAndMkDirs( SIMULATION_PATH, workflow.toLowerCase() );
+    }
 
 }

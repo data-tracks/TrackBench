@@ -4,10 +4,13 @@ import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
-
-import java.time.Duration;
+import dev.trackbench.util.TimeUtils;
+import dev.trackbench.workloads.IdentityWorkload;
+import dev.trackbench.workloads.Workload;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.NonFinal;
@@ -28,10 +31,15 @@ public class BenchmarkContext {
     @Setter
     private Clock clock;
 
+    private Map<Integer, Workload> workloads = new HashMap<>();
+
 
     public BenchmarkContext( BenchmarkConfig config, System system ) {
         this.config = config;
         this.system = system;
+
+        workloads.put( 0, new IdentityWorkload( config ) );
+        //workloads.put( 1, new ErrorWorkload( config ) );
     }
 
 
@@ -59,28 +67,12 @@ public class BenchmarkContext {
 
     @NotNull
     public String tickToTime(long tick) {
-        return formatNanoseconds(config.stepDurationNs() * tick);
+        return TimeUtils.formatNanoseconds(config.stepDurationNs() * tick);
     }
 
 
-    public static String formatNanoseconds( long nanoseconds ) {
-        Duration duration = Duration.ofNanos( nanoseconds );
-
-        if ( duration.toDays() > 0 ) {
-            return duration.toDays() + " days";
-        } else if ( duration.toHours() > 0 ) {
-            return duration.toHours() + " hours";
-        } else if ( duration.toMinutes() > 0 ) {
-            return duration.toMinutes() + " minutes";
-        } else if ( duration.getSeconds() > 0 ) {
-            return duration.getSeconds() + " seconds";
-        } else if ( duration.toMillis() > 0 ) {
-            return duration.toMillis() + " milliseconds";
-        } else if ( duration.toNanos() >= 1000 ) {
-            return duration.toNanos() / 1000 + " microseconds";
-        } else {
-            return nanoseconds + " nanoseconds";
-        }
+    public Workload getWorkload(int n) {
+        return workloads.get( n );
     }
 
 }

@@ -2,8 +2,10 @@ package dev.trackbench.receiver;
 
 import dev.trackbench.BenchmarkContext;
 import dev.trackbench.util.FileJsonTarget;
+import dev.trackbench.workloads.Workload;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,10 +30,12 @@ public class ReceiveCoordinator extends Thread {
 
 
     public void prepare() {
-        for ( long i = 0; i < context.getConfig().receivers(); i++ ) {
-            Receiver receiver = new Receiver( context.getSystem(), context.getClock(), new FileJsonTarget( context.getConfig().getResultPath( i ), context.getConfig() ) );
-            receivers.add( receiver );
-            receiver.start();
+        for ( Entry<Integer, Workload> entry : context.getWorkloads().entrySet() ) {
+            for ( long i = 0; i < context.getConfig().receivers(); i++ ) {
+                Receiver receiver = new Receiver( entry.getValue(), context.getSystem(), context.getClock(), new FileJsonTarget( context.getConfig().getResultFile( entry.getValue().getName(), i ), context.getConfig() ) );
+                receivers.add( receiver );
+                receiver.start();
+            }
         }
 
         try {

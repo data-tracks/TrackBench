@@ -2,15 +2,10 @@ package dev.trackbench.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.trackbench.BenchmarkConfig;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -20,46 +15,30 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public class JsonIterator {
 
-    private final BenchmarkConfig benchmarkConfig;
+    private final long readBatchSize;
     private final ObjectMapper mapper = new ObjectMapper();
     @Getter
     private final File file;
     List<JsonNode> cache = new ArrayList<>();
     private final BufferedReader reader;
     @Getter
+    private final long lines;
+
+    @Getter
     private long counter = 0;
 
 
-    public JsonIterator( BenchmarkConfig benchmarkConfig, File target ) {
+    public JsonIterator( long readBatchSize, File target ) {
         this.file = target;
-        this.benchmarkConfig = benchmarkConfig;
+        this.readBatchSize = readBatchSize;
         try {
-            countLines( target );
+            this.lines = FileUtils.countLines( target );
             this.reader = new BufferedReader( new FileReader( target ) );
         } catch ( FileNotFoundException e ) {
             throw new RuntimeException( e );
         }
     }
 
-
-    private static void countLines( File target ) throws FileNotFoundException {
-
-        try ( RandomAccessFile file = new RandomAccessFile( target, "r" ); FileChannel channel = file.getChannel() ) {
-
-            MappedByteBuffer buffer = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
-            int lineCount = 0;
-
-            for ( int i = 0; i < buffer.limit(); i++ ) {
-                if ( buffer.get( i ) == '\n' ) {
-                    lineCount++;
-                }
-            }
-
-            log.info( "File {} has {} lines", target.getName(), lineCount );
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
-    }
 
 
     @Nullable
@@ -79,7 +58,7 @@ public class JsonIterator {
         }
 
         try {
-            for ( long i = 0; i < benchmarkConfig.readBatchSize(); i++ ) {
+            for ( long i = 0; i < readBatchSize; i++ ) {
                 String line = reader.readLine();
                 if ( line == null ) {
                     break;

@@ -3,30 +3,19 @@ package dev.trackbench.simulation.sensor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.trackbench.simulation.aggregate.AvgAggregator;
-import dev.trackbench.simulation.aggregate.SingleExtractor;
-import dev.trackbench.simulation.processing.Formatter;
-import dev.trackbench.simulation.processing.DistributionStep;
-import dev.trackbench.simulation.processing.Step;
-import dev.trackbench.simulation.processing.Value;
 import dev.trackbench.BenchmarkConfig;
 import dev.trackbench.simulation.ErrorHandler;
 import dev.trackbench.simulation.type.DataType;
-import dev.trackbench.simulation.type.DataType.NumericType;
 import dev.trackbench.simulation.type.DoubleType;
-import dev.trackbench.simulation.type.NumberType;
 import dev.trackbench.simulation.type.LongType;
+import dev.trackbench.simulation.type.NumberType;
 import dev.trackbench.simulation.type.StringArrayType;
-import dev.trackbench.util.FileJsonTarget;
-import dev.trackbench.util.FileStep;
 import dev.trackbench.util.CountRegistry;
+import dev.trackbench.util.FileJsonTarget;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-
-import dev.trackbench.simulation.window.SlidingWindow;
 import java.util.function.Supplier;
 import lombok.Getter;
 
@@ -169,34 +158,6 @@ public abstract class Sensor extends Thread {
             // we attach the normal object as we did not produce error
             dataWithErrorTarget.attach( data );
         }
-    }
-
-    public Step getProcessing() {
-        DistributionStep initial = new DistributionStep();
-
-
-        for ( Entry<String, DataType> nameType : template.getHeaderTypes().entrySet() ) {
-            if ( nameType.getValue() instanceof NumericType ) {
-                Step formatter;
-                if ( nameType.getValue() instanceof DoubleType ) {
-                    formatter = new Formatter(Value::ensureDouble);
-                } else if ( nameType.getValue() instanceof NumberType) {
-                    formatter = new Formatter(Value::ensureInt);
-                } else {
-                    continue;
-                }
-                initial.after(
-                        new SingleExtractor("data." + nameType.getKey() ).after(
-                                formatter.after(
-                                        new SlidingWindow(AvgAggregator::new, 5 ).after(
-                                                new FileStep( new FileJsonTarget( config.getSingleProcessingPath( this, nameType.getKey() ), config ) ))
-                                )
-                        )
-                );
-            }
-        }
-
-        return initial;
     }
 
 

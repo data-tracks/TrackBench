@@ -16,7 +16,9 @@ public class Filter extends Step {
     @Override
     public void next( List<Value> value ) {
         List<Value> values = value.stream().filter( v -> filter.apply( v ) ).toList();
-        toAllSteps( values );
+        if ( !values.isEmpty() ) {
+            toAllSteps( values );
+        }
     }
 
 }

@@ -22,7 +22,7 @@ public class DelayWorker extends ObservableThread {
 
     @Override
     public void run() {
-        JsonIterator iterator = new JsonIterator(context.getConfig(), target);
+        JsonIterator iterator = new JsonIterator(context.getConfig().readBatchSize(), target);
 
         while (iterator.hasNext()) {
             ObjectNode node = (ObjectNode) iterator.next();

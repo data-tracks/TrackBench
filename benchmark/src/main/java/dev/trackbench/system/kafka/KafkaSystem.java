@@ -5,6 +5,7 @@ import dev.trackbench.Main;
 import dev.trackbench.receiver.Buffer;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
+import dev.trackbench.workloads.Workload;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
@@ -65,7 +66,7 @@ public class KafkaSystem implements System {
 
 
     @Override
-    public Runnable getReceiver( AtomicBoolean running, AtomicBoolean ready, Clock clock, Buffer dataConsumer ) {
+    public Runnable getReceiver( Workload workload, AtomicBoolean running, AtomicBoolean ready, Clock clock, Buffer dataConsumer ) {
         return () -> {
             Properties props = new Properties();
             props.put( "bootstrap.servers", configuration.getProperty( "receiverUrl" ) );
@@ -79,11 +80,11 @@ public class KafkaSystem implements System {
             long tick = clock.tick();
 
             try ( consumer ) {
-                consumer.subscribe( List.of( props.getProperty( "receiverTopic" ) ) );
+                consumer.subscribe( List.of( workload.getName() ) );
 
-                ready.set(true);
+                ready.set( true );
 
-                while (running.get() ) {
+                while ( running.get() ) {
                     ConsumerRecords<String, String> records = consumer.poll( Duration.ofMillis( 100 ) );
                     if ( !records.isEmpty() ) {
                         tick = clock.tick();
