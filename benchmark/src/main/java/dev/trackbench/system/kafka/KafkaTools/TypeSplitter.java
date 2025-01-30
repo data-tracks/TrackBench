@@ -1,5 +1,7 @@
 package dev.trackbench.system.kafka.KafkaTools;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -12,12 +14,8 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
-import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class TypeSplitter {
@@ -26,6 +24,14 @@ public class TypeSplitter {
     static Properties props = new Properties();
     static Properties producerProps = new Properties();
     static Producer<String, String> producer;
+    static String inputTopic = "input";
+    static String outputTopic = "output";
+    static String errorTopic = "error";
+    static ObjectMapper mapper = new ObjectMapper();
+
+    //TODO: use this HashMap
+    static Map<String, List<String>> keywords = new HashMap<>();
+
 
     public static void getProps(Properties props) {
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -40,6 +46,8 @@ public class TypeSplitter {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "spliter-data-app");
         getProps(props);
 
+        //TODO: add format file here using the HashMap
+
         // Configure producer
         producerProps.put("bootstrap.servers", "localhost:9092");
         producerProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -53,7 +61,6 @@ public class TypeSplitter {
 
         StreamsBuilder builder = new StreamsBuilder();
 
-        String inputTopic = "f1";
         KStream<String, String> sensorStream = builder.stream(inputTopic);
 
         // Ensure the input topic exists before processing
@@ -62,22 +69,47 @@ public class TypeSplitter {
         // Process the sensor data and send it to the appropriate topic
         sensorStream.foreach((key, value) -> {
             try {
-                JSONObject json = new JSONObject(value);
-                if (!json.has("data") || !(json.get("data") instanceof JSONObject)) {
-                    System.err.println("Invalid message format: 'data' field missing or not a JSONObject. Skipping message: " + value);
+                JsonNode node = mapper.readTree(value);
+                JsonNode data = node.get("data");
+                String topicType = data.get("type").asText();
+                String id = data.get("id").asText();
+
+                // send all messages as is through the systems output
+                producer.send(new ProducerRecord<>(outputTopic, id, value), (metadata, exception) -> {
+                    if (exception != null) {
+                        System.err.println("Failed to send message: " + exception.getMessage());
+                        // Optionally, handle the failure (e.g., retry logic)
+                    } else {
+                        log.info("Message sent to topic " + topicType + ": " + value);
+                    }
+                });
+
+                if (!node.has("data") || data.has("Error")) {
+                    System.err.println("Invalid message format: 'data' field missing or Error. Sending message to errors: " + value);
+                    producer.send(new ProducerRecord<>(errorTopic, id, value), (metadata, exception) -> {
+                        if (exception != null) {
+                            System.err.println("Failed to send message: " + exception.getMessage());
+                            // Optionally, handle the failure (e.g., retry logic)
+                        } else {
+                            log.info("Message sent to topic " + topicType + ": " + value);
+                        }
+                    });
                     return;
                 }
-                JSONObject data = json.getJSONObject("data");
-//                if (!data.has("type")) {
-//                    System.err.println("Invalid message format: 'type' field missing in 'data'. Skipping message: " + value);
-//                    return;
-//                }
 
-                String topicType = data.getString("type");
-                String id = String.valueOf(data.getInt("id"));
-//                log.info("ID: " + id);
-
-                // Ensure the topic exists before sending
+                // check the entries of their format
+                if (!checkFormat(node)) {
+                    System.err.println("Invalid message format: 'data' field missing or Error. Sending message to errors: " + value);
+                    producer.send(new ProducerRecord<>(errorTopic, id, value), (metadata, exception) -> {
+                        if (exception != null) {
+                            System.err.println("Failed to send message: " + exception.getMessage());
+                            // Optionally, handle the failure (e.g., retry logic)
+                        } else {
+                            log.info("Message sent to topic " + topicType + ": " + value);
+                        }
+                    });
+                    return;
+                }
 
                 // Send the message to the appropriate topic
                 producer.send(new ProducerRecord<>(topicType, id, value), (metadata, exception) -> {
@@ -100,6 +132,20 @@ public class TypeSplitter {
 
         // Graceful shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+    }
+
+    private static boolean checkFormat(JsonNode node) {
+        boolean format = true;
+        if(keywords.containsKey(node.get("type").asText())) {
+            List<String> list = keywords.get(node.get("type").asText());
+            for(String str : list) {
+                if(!node.has(str)) {
+                    format = false;
+                    break;
+                }
+            }
+        }
+        return format;
     }
 
     /**
