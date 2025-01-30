@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import dev.trackbench.simulation.ErrorRates;
+import dev.trackbench.simulation.error.ErrorRates;
 import dev.trackbench.simulation.type.DataType;
 import java.util.ArrayList;
 import java.util.HashMap;

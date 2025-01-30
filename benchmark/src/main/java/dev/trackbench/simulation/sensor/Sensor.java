@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.BenchmarkConfig;
-import dev.trackbench.simulation.ErrorHandler;
+import dev.trackbench.simulation.error.ErrorHandler;
 import dev.trackbench.simulation.type.DataType;
 import dev.trackbench.simulation.type.DoubleType;
 import dev.trackbench.simulation.type.LongType;
@@ -67,7 +67,7 @@ public abstract class Sensor extends Thread {
     @Getter
     private final BenchmarkConfig config;
     @Getter
-    private final SensorMetric metric = new SensorMetric();
+    private final SensorMeta metric = new SensorMeta();
 
     @Getter
     private FileJsonTarget dataTarget;
@@ -85,6 +85,11 @@ public abstract class Sensor extends Thread {
         this.registry = registry;
         this.id = idBuilder++;
         this.random = new Random( config.seed() + id ); // this is still determinist as this is done in the same thread
+
+        this.dataTarget = new FileJsonTarget( config.getSensorPath( this ), config );
+        this.errorTarget = new FileJsonTarget( config.getErrorPath( this ), config );
+        this.dataWithErrorTarget = new FileJsonTarget( config.getDataWithErrorPath( this ), config );
+
         this.errorHandler = new ErrorHandler( this );
     }
 
@@ -107,9 +112,7 @@ public abstract class Sensor extends Thread {
 
     @Override
     public void run() {
-        this.dataTarget = new FileJsonTarget( config.getSensorPath( this ), config );
-        this.errorTarget = new FileJsonTarget( config.getErrorPath( this ), config );
-        this.dataWithErrorTarget = new FileJsonTarget( config.getDataWithErrorPath( this ), config );
+
         try {
             for ( long tick = 0; tick < config.ticks(); tick++ ) {
                 simulateTick( tick );
@@ -118,6 +121,7 @@ public abstract class Sensor extends Thread {
                     registry.update( id, tick );
                 }
             }
+            errorHandler.getErrors().forEach( e -> metric.addError(e) );
             // emptying last batch
             dataTarget.close();
             dataWithErrorTarget.close();
@@ -154,7 +158,7 @@ public abstract class Sensor extends Thread {
 
 
     private void handlePotentialError( long tick, ObjectNode data ) throws IOException {
-        if ( !errorHandler.handleError( tick ) ) {
+        if ( !errorHandler.handleError( tick, data ) ) {
             // we attach the normal object as we did not produce error
             dataWithErrorTarget.attach( data );
         }

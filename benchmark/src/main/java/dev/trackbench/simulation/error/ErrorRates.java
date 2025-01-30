@@ -1,4 +1,4 @@
-package dev.trackbench.simulation;
+package dev.trackbench.simulation.error;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
