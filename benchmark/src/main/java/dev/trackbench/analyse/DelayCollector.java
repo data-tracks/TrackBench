@@ -1,6 +1,6 @@
 package dev.trackbench.analyse;
 
-import dev.trackbench.BenchmarkContext;
+import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.util.Pair;
 
 import java.io.File;

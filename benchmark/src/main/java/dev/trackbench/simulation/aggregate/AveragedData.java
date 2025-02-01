@@ -10,8 +10,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import static dev.trackbench.jsonHandler.JsonFileHandler.readJsonFile;
-import static dev.trackbench.jsonHandler.JsonFileHandler.writeJsonFile;
+import static dev.trackbench.util.jsonHandler.JsonFileHandler.readJsonFile;
+import static dev.trackbench.util.jsonHandler.JsonFileHandler.writeJsonFile;
 import static dev.trackbench.simulation.RandomData.listFilesForFolder;
 
 @Slf4j

@@ -2,10 +2,10 @@ package dev.trackbench.system.kafka;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.Main;
-import dev.trackbench.receiver.Buffer;
+import dev.trackbench.execution.receiver.Buffer;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
-import dev.trackbench.workloads.Workload;
+import dev.trackbench.configuration.workloads.Workload;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;

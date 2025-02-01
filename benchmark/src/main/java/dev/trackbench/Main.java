@@ -1,13 +1,15 @@
 package dev.trackbench;
 
-import dev.trackbench.processing.ProcessingCoordinator;
+import dev.trackbench.configuration.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.execution.ExecutionCoordinator;
 import dev.trackbench.simulation.aggregate.AveragedData;
 import dev.trackbench.simulation.aggregate.FinalData;
 import dev.trackbench.analyse.Analyser;
 import dev.trackbench.analyse.Comparer;
-import dev.trackbench.jsonHandler.JsonFileHandler;
+import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import dev.trackbench.simulation.processing.ProcessingGenerator;
-import dev.trackbench.sending.SendCoordinator;
+import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.simulation.RandomData;
 import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.system.DummySystem;
@@ -49,7 +51,7 @@ public class Main {
 
         if ( config.execute() ) {
             System.out.println( "Starting processing..." );
-            ProcessingCoordinator.start(context);
+            ExecutionCoordinator.start(context);
             System.out.println( "Finished processing." );
 
         }

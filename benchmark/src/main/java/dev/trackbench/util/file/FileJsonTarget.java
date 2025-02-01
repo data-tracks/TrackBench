@@ -1,7 +1,7 @@
-package dev.trackbench.util;
+package dev.trackbench.util.file;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dev.trackbench.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkConfig;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

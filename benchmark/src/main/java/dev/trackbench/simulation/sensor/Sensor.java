@@ -3,7 +3,7 @@ package dev.trackbench.simulation.sensor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.trackbench.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.simulation.error.ErrorHandler;
 import dev.trackbench.simulation.type.DataType;
 import dev.trackbench.simulation.type.DoubleType;
@@ -11,7 +11,7 @@ import dev.trackbench.simulation.type.LongType;
 import dev.trackbench.simulation.type.NumberType;
 import dev.trackbench.simulation.type.StringArrayType;
 import dev.trackbench.util.CountRegistry;
-import dev.trackbench.util.FileJsonTarget;
+import dev.trackbench.util.file.FileJsonTarget;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +64,7 @@ public abstract class Sensor extends Thread {
     public int counter = 0;
     @Getter
     private final SensorTemplate template;
+
     @Getter
     private final BenchmarkConfig config;
     @Getter

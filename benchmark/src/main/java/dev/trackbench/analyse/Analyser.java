@@ -1,11 +1,10 @@
 package dev.trackbench.analyse;
 
-import dev.trackbench.BenchmarkContext;
-import dev.trackbench.jsonHandler.JsonFileHandler;
+import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import dev.trackbench.util.Pair;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.protocol.types.Field;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -14,8 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static dev.trackbench.analyse.Comparer.*;
-import static dev.trackbench.jsonHandler.JsonFileHandler.writeFile;
-import static dev.trackbench.jsonHandler.JsonFileHandler.writeJsonFile;
+import static dev.trackbench.util.jsonHandler.JsonFileHandler.writeFile;
+import static dev.trackbench.util.jsonHandler.JsonFileHandler.writeJsonFile;
 
 @Slf4j
 public class Analyser {

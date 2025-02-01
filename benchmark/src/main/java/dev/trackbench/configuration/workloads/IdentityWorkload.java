@@ -1,10 +1,10 @@
-package dev.trackbench.workloads;
+package dev.trackbench.configuration.workloads;
 
-import dev.trackbench.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.simulation.processing.DistributionStep;
 import dev.trackbench.simulation.processing.Step;
-import dev.trackbench.util.FileJsonTarget;
-import dev.trackbench.util.FileStep;
+import dev.trackbench.util.file.FileJsonTarget;
+import dev.trackbench.util.file.FileStep;
 
 public class IdentityWorkload extends Workload {
 

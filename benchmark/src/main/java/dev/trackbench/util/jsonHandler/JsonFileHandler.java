@@ -1,4 +1,4 @@
-package dev.trackbench.jsonHandler;
+package dev.trackbench.util.jsonHandler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;

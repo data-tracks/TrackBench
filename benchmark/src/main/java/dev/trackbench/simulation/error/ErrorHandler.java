@@ -1,8 +1,7 @@
 package dev.trackbench.simulation.error;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.trackbench.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.simulation.sensor.Sensor;
 import java.io.IOException;
 import java.util.List;

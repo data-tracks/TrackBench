@@ -1,15 +1,15 @@
-package dev.trackbench.processing;
+package dev.trackbench.execution;
 
-import dev.trackbench.BenchmarkConfig;
-import dev.trackbench.BenchmarkContext;
-import dev.trackbench.receiver.ReceiveCoordinator;
-import dev.trackbench.sending.SendCoordinator;
+import dev.trackbench.configuration.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.execution.receiver.ReceiveCoordinator;
+import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.util.Clock;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ProcessingCoordinator {
+public class ExecutionCoordinator {
 
     public static void start( BenchmarkContext context ) {
         context.printProcessingTime();

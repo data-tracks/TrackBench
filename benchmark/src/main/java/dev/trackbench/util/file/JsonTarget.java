@@ -1,4 +1,4 @@
-package dev.trackbench.util;
+package dev.trackbench.util.file;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;

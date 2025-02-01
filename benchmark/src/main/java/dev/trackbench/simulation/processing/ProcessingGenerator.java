@@ -1,8 +1,8 @@
 package dev.trackbench.simulation.processing;
 
-import dev.trackbench.BenchmarkContext;
+import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.util.SimpleCountRegistry;
-import dev.trackbench.workloads.Workload;
+import dev.trackbench.configuration.workloads.Workload;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

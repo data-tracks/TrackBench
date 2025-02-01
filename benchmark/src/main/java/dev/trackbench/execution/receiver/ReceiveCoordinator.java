@@ -1,8 +1,8 @@
-package dev.trackbench.receiver;
+package dev.trackbench.execution.receiver;
 
-import dev.trackbench.BenchmarkContext;
-import dev.trackbench.util.FileJsonTarget;
-import dev.trackbench.workloads.Workload;
+import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.util.file.FileJsonTarget;
+import dev.trackbench.configuration.workloads.Workload;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;

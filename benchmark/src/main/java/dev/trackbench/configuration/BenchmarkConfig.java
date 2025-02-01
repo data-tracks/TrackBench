@@ -1,5 +1,6 @@
-package dev.trackbench;
+package dev.trackbench.configuration;
 
+import dev.trackbench.Main;
 import dev.trackbench.simulation.sensor.Sensor;
 import java.io.File;
 import java.util.Arrays;

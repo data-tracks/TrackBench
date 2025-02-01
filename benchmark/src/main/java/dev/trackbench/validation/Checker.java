@@ -1,7 +1,7 @@
 package dev.trackbench.validation;
 
 import dev.trackbench.util.DisplayUtils;
-import dev.trackbench.util.FileUtils;
+import dev.trackbench.util.file.FileUtils;
 import java.io.File;
 import java.util.Objects;
 
@@ -36,7 +36,7 @@ public class Checker {
             }
         } else {
             if ( file.getName().endsWith( ".json" ) ) {
-                return FileUtils.countLines( file );
+                return FileUtils.countLines( file, false );
             }
         }
         return lines;

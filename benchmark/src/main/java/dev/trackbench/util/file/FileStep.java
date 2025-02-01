@@ -1,4 +1,4 @@
-package dev.trackbench.util;
+package dev.trackbench.util.file;
 
 import dev.trackbench.simulation.processing.Step;
 import dev.trackbench.simulation.processing.Value;

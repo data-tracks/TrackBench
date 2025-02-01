@@ -1,11 +1,11 @@
 package dev.trackbench.simulation.processing;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dev.trackbench.BenchmarkConfig;
-import dev.trackbench.BenchmarkContext;
-import dev.trackbench.util.JsonIterator;
+import dev.trackbench.configuration.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.util.file.JsonIterator;
 import dev.trackbench.util.SimpleCountRegistry;
-import dev.trackbench.workloads.Workload;
+import dev.trackbench.configuration.workloads.Workload;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ProcessingHandler extends Thread {
 
     @Override
     public void run() {
-        List<JsonIterator> iterators = sources.stream().map( s -> new JsonIterator( config.readBatchSize(), s ) ).toList();
+        List<JsonIterator> iterators = sources.stream().map( s -> new JsonIterator( config.readBatchSize(), s, false ) ).toList();
 
         Step initialStep = workload.getProcessing( targetName );
 

@@ -1,12 +1,12 @@
-package dev.trackbench;
+package dev.trackbench.configuration;
 
 import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.TimeUtils;
-import dev.trackbench.workloads.IdentityWorkload;
-import dev.trackbench.workloads.Workload;
+import dev.trackbench.configuration.workloads.IdentityWorkload;
+import dev.trackbench.configuration.workloads.Workload;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

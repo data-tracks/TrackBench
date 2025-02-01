@@ -1,12 +1,12 @@
-package dev.trackbench.receiver;
+package dev.trackbench.execution.receiver;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
-import dev.trackbench.util.FileJsonTarget;
+import dev.trackbench.util.file.FileJsonTarget;
 import dev.trackbench.util.ObservableThread;
-import dev.trackbench.workloads.Workload;
+import dev.trackbench.configuration.workloads.Workload;
 
 public class Receiver extends ObservableThread {
 

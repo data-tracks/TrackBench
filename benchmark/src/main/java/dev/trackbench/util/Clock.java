@@ -1,6 +1,6 @@
 package dev.trackbench.util;
 
-import dev.trackbench.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkConfig;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

@@ -1,6 +1,6 @@
-package dev.trackbench.workloads;
+package dev.trackbench.configuration.workloads;
 
-import dev.trackbench.BenchmarkConfig;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.simulation.processing.Step;
 import lombok.Getter;
 

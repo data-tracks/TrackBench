@@ -3,12 +3,11 @@ package dev.trackbench.simulation.error;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.simulation.sensor.Sensor;
-import dev.trackbench.util.JsonTarget;
+import dev.trackbench.util.file.JsonTarget;
 import dev.trackbench.util.Pair;
 import java.util.List;
 import java.util.Random;
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 public abstract class Error {
@@ -37,6 +36,7 @@ public abstract class Error {
         this.target = target;
         this.errorTarget = errorTarget;
         this.sensor = sensor;
+        this.dynamicInterval = calcNextError();
     }
 
 

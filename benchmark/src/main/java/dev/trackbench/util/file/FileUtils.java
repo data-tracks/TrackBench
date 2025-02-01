@@ -1,4 +1,4 @@
-package dev.trackbench.util;
+package dev.trackbench.util.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class FileUtils {
         return files;
     }
 
-    public static long countLines( File target ) {
+    public static long countLines( File target, boolean debug ) {
         try ( RandomAccessFile file = new RandomAccessFile( target, "r" ); FileChannel channel = file.getChannel() ) {
 
             MappedByteBuffer buffer = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
@@ -63,7 +63,10 @@ public class FileUtils {
                 }
             }
 
-            log.info( "File {} has {} lines", target.getName(), lineCount );
+            if ( debug ) {
+                log.info( "File {} has {} lines", target.getName(), lineCount );
+            }
+
             return lineCount;
         } catch ( IOException e ) {
             throw new RuntimeException( e );

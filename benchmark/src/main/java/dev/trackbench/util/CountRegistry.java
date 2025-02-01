@@ -8,20 +8,20 @@ public class CountRegistry {
     Map<Long, Long> counts = new ConcurrentHashMap<>();
 
     long total;
-    long steps;
+    long stepSize;
 
     long last = 0;
 
-    public CountRegistry(long total, long steps, String units) {
+    public CountRegistry(long total, long stepSize, String units) {
         this.total = total;
-        this.steps = steps;
+        this.stepSize = stepSize;
         this.loadingBar = new LoadingBar(total, units);
     }
 
     public void update(long id, long count) {
         counts.put(id, count);
 
-        long next = last + steps;
+        long next = last + stepSize;
         if ( counts.values().stream().allMatch( v -> v > next ) ) {
             synchronized ( this ){
                 this.last = next;

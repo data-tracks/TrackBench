@@ -1,8 +1,8 @@
 package dev.trackbench.validation;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dev.trackbench.util.FileUtils;
-import dev.trackbench.util.JsonIterator;
+import dev.trackbench.util.file.FileUtils;
+import dev.trackbench.util.file.JsonIterator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,7 +61,7 @@ public class Sorter {
     private void sortFile( File file ) {
         PriorityQueue<JsonNode> nodes = new PriorityQueue<>( Comparator.comparing( comparator ));
 
-        JsonIterator iterator = new JsonIterator( readBatchSize, file );
+        JsonIterator iterator = new JsonIterator( readBatchSize, file, false );
 
         while ( iterator.hasNext() ) {
             nodes.add( iterator.next() );

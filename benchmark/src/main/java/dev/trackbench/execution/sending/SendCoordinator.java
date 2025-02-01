@@ -1,10 +1,10 @@
-package dev.trackbench.sending;
+package dev.trackbench.execution.sending;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.trackbench.BenchmarkContext;
+import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.util.ClockDisplay;
-import dev.trackbench.util.JsonIterator;
+import dev.trackbench.util.file.JsonIterator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class SendCoordinator extends Thread {
         for ( File sensor : files ) {
             Sender sender = new Sender( id++, context.getConfig(), getSender(), context.getClock() );
             senders.add( sender );
-            Filler filler = new Filler( sender.messageQueue, new JsonIterator( context.getConfig().readBatchSize(), sensor ), sender );
+            Filler filler = new Filler( sender.messageQueue, new JsonIterator( context.getConfig().readBatchSize(), sensor, true ), sender );
             fillers.add( filler );
 
             // they can start as they will wait for the clock
