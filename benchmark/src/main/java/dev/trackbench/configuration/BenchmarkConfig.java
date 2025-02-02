@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import dev.trackbench.util.file.FileUtils;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -35,6 +37,7 @@ public record BenchmarkConfig(
 
     public static final String DATA_PATH = "data";
     public static final String SIMULATION_PATH = "simulation";
+    public static final String VALIDATION_PATH = "validation";
     public static final String SENSORS_PATH = "sensors";
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
@@ -93,13 +96,7 @@ public record BenchmarkConfig(
 
     @NotNull
     private File getSensorJson( File path, Sensor sensor ) {
-        return getJson( path, "%d_%s".formatted( sensor.id, sensor.getTemplate().getType() ) );
-    }
-
-
-    @NotNull
-    private File getJson( File path, String name ) {
-        return new File( path, "%s.json".formatted( name.replace( ".json", "" ) ) );
+        return FileUtils.getJson( path, "%d_%s".formatted( sensor.id, sensor.getTemplate().getType() ) );
     }
 
 
@@ -116,7 +113,7 @@ public record BenchmarkConfig(
     public File getResultFile( String workflow, long num ) {
         File file = getResultFile(workflow);
 
-        return getJson( file, String.valueOf( num ) );
+        return FileUtils.getJson( file, String.valueOf( num ) );
     }
 
 
@@ -168,22 +165,26 @@ public record BenchmarkConfig(
         return Arrays.stream( Objects.requireNonNull( dir.listFiles() ) ).map( file -> new File( dir, file.getName() ) ).collect( Collectors.toList() );
     }
 
+    public File getResultPath() {
+        return getFileAndMkDirs( RESULT_PATH );
+    }
+
 
     public List<File> getResultFiles() {
-        File folder = getFileAndMkDirs( RESULT_PATH );
+        File folder = getResultPath();
         return getFilesInFolder( folder );
     }
 
 
     public File getSensorPath() {
         File parent = getFileAndMkDirs( DATA_PATH );
-        return getJson( parent, SENSORS_PATH );
+        return FileUtils.getJson( parent, SENSORS_PATH );
     }
 
 
     public File getSimulationFile( String workflow, String name ) {
         File parent = getSimulationPath( workflow );
-        return getJson( parent, name );
+        return FileUtils.getJson( parent, name );
     }
 
 
@@ -191,4 +192,12 @@ public record BenchmarkConfig(
         return getFileAndMkDirs( SIMULATION_PATH, workflow.toLowerCase() );
     }
 
+
+    public File getValidationFile( String name ) {
+        return getFileAndMkDirs( VALIDATION_PATH, name );
+    }
+
+    public File getValidationPath() {
+        return getFileAndMkDirs( VALIDATION_PATH );
+    }
 }

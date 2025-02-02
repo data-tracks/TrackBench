@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class FileUtils {
@@ -73,4 +74,8 @@ public class FileUtils {
         }
     }
 
+    @NotNull
+    public static File getJson(File path, String name) {
+        return new File( path, "%s.json".formatted( name.replace( ".json", "" ) ) );
+    }
 }

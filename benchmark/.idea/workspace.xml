@@ -6,14 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="added logic for defining fixed workloads and evaluation of results">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Accelerometer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Accelerometer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Brake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Brake.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/FuelPump.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/FuelPump.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Heat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Heat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Speed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Speed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Tire.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Tire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/TypeSplitter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/TypeSplitter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/ErrorCreator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/NoDataError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/NoDataError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/Sensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/Sensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Warnings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Warnings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Checker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/SimpleChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Comparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Comparator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/MaxCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/max/MaxCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Sorter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,12 +98,12 @@
     &quot;assignee&quot;: &quot;datomo&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:data-tracks/TrackBench.git&quot;,
-    &quot;accountId&quot;: &quot;def2c711-ae31-433a-9c89-91e4ce7daee9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:data-tracks/TrackBench.git",
+    "accountId": "0173a704-20ba-4f28-b3b1-423de30571b4"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -134,6 +142,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="dev.trackbench.util.file.FileUtils" />
+      <recent name="dev.trackbench.validation.max.MaxCounter" />
       <recent name="dev.trackbench.util.TimeUtils" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
@@ -215,8 +225,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
-        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -240,6 +250,7 @@
       <workItem from="1738087119532" duration="22200000" />
       <workItem from="1738254872096" duration="799000" />
       <workItem from="1738406095968" duration="13953000" />
+      <workItem from="1738516616536" duration="8980000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
@@ -327,11 +338,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/ErrorCreator.java</url>
-          <line>37</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/util/jsonHandler/JsonFileHandler.java</url>
           <line>78</line>
           <option name="timeStamp" value="31" />
@@ -343,7 +349,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java</url>
-          <line>68</line>
+          <line>70</line>
           <option name="timeStamp" value="63" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

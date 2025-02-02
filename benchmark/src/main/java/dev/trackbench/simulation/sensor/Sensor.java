@@ -16,12 +16,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import lombok.Getter;
 
 public abstract class Sensor extends Thread {
 
-    private static int idBuilder = 0;
+    private static final AtomicInteger sensorIdBuilder = new AtomicInteger();
+    private static final AtomicLong dpIdBuilder = new AtomicLong();
 
     //Info of all possible data types, with their possible configurations.
     public static Map<String, Supplier<DataType>> dataTypes = new HashMap<>() {{
@@ -84,7 +87,7 @@ public abstract class Sensor extends Thread {
         this.template = template;
         this.config = config;
         this.registry = registry;
-        this.id = idBuilder++;
+        this.id = sensorIdBuilder.getAndIncrement();
         this.random = new Random( config.seed() + id ); // this is still determinist as this is done in the same thread
 
         this.dataTarget = new FileJsonTarget( config.getSensorPath( this ), config );
@@ -122,7 +125,7 @@ public abstract class Sensor extends Thread {
                     registry.update( id, tick );
                 }
             }
-            errorHandler.getErrors().forEach( e -> metric.addError(e) );
+            errorHandler.getErrors().forEach(metric::addError);
             // emptying last batch
             dataTarget.close();
             dataWithErrorTarget.close();
@@ -140,7 +143,7 @@ public abstract class Sensor extends Thread {
             return;
         }
         ObjectNode data = JsonNodeFactory.instance.objectNode();
-        data.put( "id", id );
+        data.put( "sensorId", id );
         data.put( "type", template.getType() );
         attachDataPoint( data );
 
@@ -148,6 +151,7 @@ public abstract class Sensor extends Thread {
         ObjectNode dataWrapper = JsonNodeFactory.instance.objectNode();
         dataWrapper.putIfAbsent( "data", data );
         dataWrapper.put( "tick", tick );
+        dataWrapper.put("id", dpIdBuilder.incrementAndGet() );
 
         dataTarget.attach( dataWrapper );
 

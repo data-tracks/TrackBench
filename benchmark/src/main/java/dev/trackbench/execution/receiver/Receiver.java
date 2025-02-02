@@ -22,10 +22,11 @@ public class Receiver extends ObservableThread {
         this.workload = workload;
         this.clock = clock;
         this.buffer = new Buffer( ( tick, value ) -> {
-            ObjectNode node = JsonNodeFactory.instance.objectNode();
-            node.putIfAbsent( "data", value );
-            node.put( "tick", tick );
-            target.attach( node );
+            ((ObjectNode) value).put("arrived", tick);
+            //ObjectNode node = JsonNodeFactory.instance.objectNode();
+            //node.putIfAbsent( "data", value );
+            //node.put( "tick", tick );
+            target.attach( value );
         } );
     }
 

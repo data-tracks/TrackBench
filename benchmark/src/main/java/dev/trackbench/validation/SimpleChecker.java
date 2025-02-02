@@ -5,13 +5,13 @@ import dev.trackbench.util.file.FileUtils;
 import java.io.File;
 import java.util.Objects;
 
-public class Checker {
+public class SimpleChecker {
 
     final File left;
     final File right;
 
 
-    public Checker( File left, File right ) {
+    public SimpleChecker(File left, File right ) {
         this.left = left;
         this.right = right;
     }

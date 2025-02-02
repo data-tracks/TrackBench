@@ -50,6 +50,7 @@ public class Main {
         }
 
         if ( config.execute() ) {
+            JsonFileHandler.deleteFolder( config.getResultPath() );
             System.out.println( "Starting processing..." );
             ExecutionCoordinator.start(context);
             System.out.println( "Finished processing." );
@@ -57,6 +58,7 @@ public class Main {
         }
 
         if ( config.validate() ) {
+            JsonFileHandler.deleteFolder( config.getValidationPath() );
             System.out.println( "Starting validation..." );
             Validator.start(context);
         }

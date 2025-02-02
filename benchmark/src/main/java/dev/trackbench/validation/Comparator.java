@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import dev.trackbench.validation.max.MaxCounter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,7 +26,6 @@ public class Comparator {
     private final Function<JsonNode, Long> rightTickExtractor;
     
     private final BiFunction<JsonNode, JsonNode, String> comparator;
-            ;
 
     private Map<Long, String> issues;
 
@@ -40,38 +41,8 @@ public class Comparator {
         this.right = right;
         this.rightTickExtractor = rightTickExtractor;
         this.comparator = comparator;
-        this.maxTick = getMaxTick();
+        this.maxTick = MaxCounter.extractMax(left, t -> t.get("tick").asLong());
         log.info( "Max tick: {}", maxTick );
-    }
-
-
-    private long getMaxTick() {
-        long lines = left.countLines();
-
-        long chunks = lines / WORKERS;
-
-        List<MaxCounter> threads = new ArrayList<>();
-
-        for ( long i = 0; i < lines; i += chunks ) {
-            MaxCounter maxCounter = new MaxCounter( i, i + chunks, left.copy() );
-            maxCounter.start();
-            threads.add( maxCounter );
-        }
-
-        try {
-            for ( Thread thread : threads ) {
-                thread.join();
-            }
-        } catch ( InterruptedException e ) {
-            throw new RuntimeException( e );
-        }
-
-        long max = 0;
-        for ( MaxCounter thread : threads ) {
-            max = Math.max( max, thread.getMaxTick() );
-        }
-        return max;
-
     }
 
 

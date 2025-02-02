@@ -269,6 +269,7 @@ public class Warnings {
         error.put("data", jsonObject.getJSONObject("data"));
         error.put("WarningMessage", type + " id:" + jsonObject.getJSONObject("data").getInt("id") + " " + warning);
         error.put("tick", jsonObject.getInt("tick"));
+        error.put("id", jsonObject.getInt("id"));
         return error;
     }
 }

@@ -16,15 +16,15 @@ public class FileJsonTarget implements JsonTarget {
 
     final File file;
     final Writer writer;
-    final BenchmarkConfig config;
+    final long sensorBatchSize;
 
     long counter = 0;
     List<String> batch = new ArrayList<>();
 
 
-    public FileJsonTarget( File file, BenchmarkConfig config ) {
+    public FileJsonTarget( File file, long sensorBatchSize ) {
         this.file = file;
-        this.config = config;
+        this.sensorBatchSize = sensorBatchSize;
         try {
             this.writer = new BufferedWriter( new FileWriter( file, true ) );
         } catch ( IOException e ) {
@@ -32,10 +32,14 @@ public class FileJsonTarget implements JsonTarget {
         }
     }
 
+    public FileJsonTarget( File file, BenchmarkConfig config ) {
+        this(file, config.sensorBatchSize());
+    }
+
 
     @Override
     public void attach( JsonNode value ) {
-        if ( counter < config.sensorBatchSize() ) {
+        if ( counter < sensorBatchSize ) {
             batch.add( value.toString() );
             counter++;
             return;
