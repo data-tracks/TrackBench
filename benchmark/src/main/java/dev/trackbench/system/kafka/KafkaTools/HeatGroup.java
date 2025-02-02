@@ -1,8 +1,13 @@
 package dev.trackbench.system.kafka.KafkaTools;
 
-import dev.trackbench.system.kafka.AverageClass.AverageSpeed;
-import dev.trackbench.system.kafka.JsonClass.JsonSpeed;
-import dev.trackbench.system.kafka.Serde.AverageSpeedSerde;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.trackbench.system.kafka.AverageClass.AverageHeat;
+import dev.trackbench.system.kafka.AverageClass.AverageHeatGroup;
+import dev.trackbench.system.kafka.JsonClass.JsonHeat;
+import dev.trackbench.system.kafka.Serde.AverageHeatGroupSerde;
+import dev.trackbench.system.kafka.Serde.AverageHeatSerde;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -19,26 +24,28 @@ import java.time.Duration;
 import java.util.Properties;
 
 @Slf4j
-public class Speed {
+public class HeatGroup {
 
     static Properties props = new Properties();
     static Properties producerProps = new Properties();
     static Producer<String, String> producer;
     static long windowSize = 1000;
     static long advanceBy = 250;
+    static String inputTopic = "heat-group";
+    static String outputTopic = "output";
+    static ObjectMapper mapper = new ObjectMapper();
 
     public static void getProps(Properties props) {
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
-        props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
+        props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG,0);
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE); // Ensure exactly-once semantics
-//        props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4);
     }
 
     public static void main(String[] args) {
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "speed-app");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "heat-group-app");
         getProps(props);
 
         // Configure producer
@@ -55,26 +62,25 @@ public class Speed {
 
         try {
             StreamsBuilder builder = new StreamsBuilder();
-            String inputTopic = "speed";
-            String outputTopic = "output";
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
-//            sensorStream.foreach((key, value) -> {
-//                log.info("Key: " + key + " Value: " + value);
-//            });
-
-            KTable<Windowed<String>, AverageSpeed> aggregatedStream = sensorStream
-                    .groupBy((key, value) -> {
-//                        log.info("Key :" + key + " Value :" + value);
-                        return key;
+            KTable<Windowed<String>, AverageHeatGroup> aggregatedStream = sensorStream
+                    .mapValues(value -> {
+                        try {
+                            JsonNode node = mapper.readTree(value);
+                            return node.get("type").toString();
+                        } catch (Exception e) {
+                            return "unknown";
+                        }
                     })
+                    .selectKey((key, value) -> value) // Use "type" as the key
+                    .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
                     .windowedBy(TimeWindows.of(Duration.ofMillis(windowSize)).grace(Duration.ofMillis(0)).advanceBy(Duration.ofMillis(advanceBy)))
-                    .aggregate(() -> new AverageSpeed(0, 0, 0, 0, 0, -1), (key, value, agg) -> {
-                        JsonSpeed entry = new JsonSpeed(value);
+                    .aggregate(() -> new AverageHeatGroup(0, 0, 0, 0, -1), (key, value, agg) -> {
+                        JsonHeat entry = new JsonHeat(value);
                         if(!entry.error) {
                             agg.count += 1;
-                            agg.speed += entry.speed;
-                            agg.wind += entry.wind;
+                            agg.temp += entry.temp;
                             if(agg.tickEnd < entry.tick) {
                                 agg.tickEnd = entry.tick;
                             }
@@ -82,28 +88,23 @@ public class Speed {
                                 agg.id = entry.id;
                                 agg.tickStart = entry.tick;
                             }
+                            checkMinMax(agg, entry);
                         }
                         return agg;
-                    }, Materialized.with(Serdes.String(), new AverageSpeedSerde()))
-                    ;//.suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()));
+                    }, Materialized.with(Serdes.String(), new AverageHeatGroupSerde()))
+                    ;
 
             aggregatedStream
                     .toStream()
-//                    .filter((key, value) -> {
-//                        long windowEnd = key.window().end();
-//                        return value.getTickEnd() >= windowEnd;
-//                    })
                     .foreach((key, value) -> {
 
-                        double[] average = value.getAverage();
+                        double average = value.getAverage();
 
 //                        String message = "AverageTire Temp: " + average[0] + " AverageTire Pressure: " + average[1] + " Count: " + value.getCount();
                         JSONObject data = new JSONObject();
-                        data.put("averageSpeed kph", average[0]);
-                        data.put("averageSpeed mph", (average[0] / 1.609344));
-                        data.put("averageWindSpeed", average[1]);
+                        data.put("averageTemp", average);
                         data.put("id", value.getId());
-                        data.put("type", "speed");
+                        data.put("type", "heat");
 
                         JSONObject json = new JSONObject();
                         json.put("startTime", value.getTickStart());
@@ -116,11 +117,7 @@ public class Speed {
                         producer.send(new ProducerRecord<>(outputTopic, "0", jsonMessage), (metadata, exception) -> {
                             if (exception != null) {
                                 System.err.println("Failed to send message: " + exception.getMessage());
-                                // Optionally, handle the failure (e.g., retry logic)
                             }
-//                            else {
-//                                log.info("Message sent to topic " + outputTopic + ": AverageTire Temp" + average[0] + " AverageTire Pressure" + average[1]);
-//                            }
                         });
                     });
 
@@ -131,15 +128,24 @@ public class Speed {
 
             // Graceful shutdown
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try{
-                producer.flush();
-                streams.close();
-            } finally {
-                log.info("Shutting down");
-            }
+                try{
+                    producer.flush();
+                    streams.close();
+                } finally {
+                    log.info("Shutting down");
+                }
             }));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void checkMinMax(AverageHeatGroup agg, JsonHeat entry) {
+        if(agg.maxTemp < entry.temp) {
+            agg.maxTemp = entry.temp;
+        }
+        if(agg.minTemp > entry.temp) {
+            agg.minTemp = entry.temp;
         }
     }
 }

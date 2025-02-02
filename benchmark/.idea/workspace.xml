@@ -6,54 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="added logic for defining fixed workloads and evaluation of results">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/BenchmarkConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/BenchmarkContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Comparer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Comparer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/DelayCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/DelayCollector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/DelayWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/DelayWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/jsonHandler/JsonFileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/jsonHandler/JsonFileHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/processing/ProcessingCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/receiver/Buffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Buffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/receiver/ReceiveCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/ReceiveCoordinator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/sending/Filler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/sending/Filler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/sending/SendCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/sending/SendCoordinator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/sending/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/sending/Sender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/sending/Worker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/sending/Worker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/AveragedData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/AveragedData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/ErrorCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/ErrorCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/FinalData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/aggregate/FinalData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/DropError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/DropError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/Error.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/Error.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/ErrorHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/ErrorHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/NoDataError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/error/NoDataError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/DocSensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/DocSensor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/Sensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/Sensor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/SensorTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/sensor/SensorTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/DummySystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/DummySystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/System.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/Clock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/ClockDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/ClockDisplay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/FileJsonTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/FileStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileStep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/JsonIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonIterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/JsonTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonTarget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Checker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Checker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Sorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Sorter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/workloads/ErrorWorkload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/workloads/ErrorWorkload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/workloads/IdentityWorkload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/workloads/IdentityWorkload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/workloads/Workload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/workloads/Workload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Accelerometer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Accelerometer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Brake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Brake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Engine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/FuelPump.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/FuelPump.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Heat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Heat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Speed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Speed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Tire.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Tire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/TypeSplitter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/TypeSplitter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,12 +90,12 @@
     &quot;assignee&quot;: &quot;datomo&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:data-tracks/TrackBench.git",
-    "accountId": "def2c711-ae31-433a-9c89-91e4ce7daee9"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:data-tracks/TrackBench.git&quot;,
+    &quot;accountId&quot;: &quot;def2c711-ae31-433a-9c89-91e4ce7daee9&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -150,28 +110,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.benchmark [:dev.datageneration.Main.main()].executor": "Run",
-    "Gradle.benchmark [build].executor": "Run",
-    "Gradle.benchmark [run].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/danie/git/TrackBench/benchmark",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.benchmark [:dev.datageneration.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [run].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/danie/git/TrackBench/benchmark&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="dev.trackbench.util.TimeUtils" />

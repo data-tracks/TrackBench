@@ -80,7 +80,7 @@ public class TypeSplitter {
                         System.err.println("Failed to send message: " + exception.getMessage());
                         // Optionally, handle the failure (e.g., retry logic)
                     } else {
-                        log.info("Message sent to topic " + topicType + ": " + value);
+                        log.info("Message sent to output: " + value);
                     }
                 });
 
@@ -91,7 +91,7 @@ public class TypeSplitter {
                             System.err.println("Failed to send message: " + exception.getMessage());
                             // Optionally, handle the failure (e.g., retry logic)
                         } else {
-                            log.info("Message sent to topic " + topicType + ": " + value);
+                            log.info("Message sent to errorTopic: " + value);
                         }
                     });
                     return;
@@ -105,7 +105,7 @@ public class TypeSplitter {
                             System.err.println("Failed to send message: " + exception.getMessage());
                             // Optionally, handle the failure (e.g., retry logic)
                         } else {
-                            log.info("Message sent to topic " + topicType + ": " + value);
+                            log.info("Message sent to errorTopic due to wrong format: " + value);
                         }
                     });
                     return;
@@ -115,9 +115,19 @@ public class TypeSplitter {
                 producer.send(new ProducerRecord<>(topicType, id, value), (metadata, exception) -> {
                     if (exception != null) {
                         System.err.println("Failed to send message: " + exception.getMessage());
-                        // Optionally, handle the failure (e.g., retry logic)
                     } else {
                         log.info("Message sent to topic " + topicType + ": " + value);
+                    }
+                });
+
+                // Send the message to the appropriate topic for the group
+                String groupTopic = topicType + "-group";
+                producer.send(new ProducerRecord<>(groupTopic, id, value), (metadata, exception) -> {
+                    if (exception != null) {
+                        System.err.println("Failed to send message: " + exception.getMessage());
+                        // Optionally, handle the failure (e.g., retry logic)
+                    } else {
+                        log.info("Message sent to topic " + groupTopic + ": " + value);
                     }
                 });
 

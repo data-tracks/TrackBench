@@ -56,7 +56,7 @@ public class Accelerometer {
         try {
             StreamsBuilder builder = new StreamsBuilder();
             String inputTopic = "accelerometer";
-            String outputTopic = "f3";
+            String outputTopic = "output";
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
             KTable<Windowed<String>, AverageAccelerometer> aggregatedStream = sensorStream

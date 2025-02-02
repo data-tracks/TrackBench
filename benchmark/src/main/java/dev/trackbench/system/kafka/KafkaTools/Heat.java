@@ -56,7 +56,7 @@ public class Heat {
         try {
             StreamsBuilder builder = new StreamsBuilder();
             String inputTopic = "heat";
-            String outputTopic = "f3";
+            String outputTopic = "output";
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
             KTable<Windowed<String>, AverageHeat> aggregatedStream = sensorStream

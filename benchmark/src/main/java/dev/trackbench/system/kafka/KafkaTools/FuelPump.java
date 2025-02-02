@@ -57,7 +57,7 @@ public class FuelPump {
         try {
             StreamsBuilder builder = new StreamsBuilder();
             String inputTopic = "fuelPump";
-            String outputTopic = "f3";
+            String outputTopic = "output";
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
 //            sensorStream.foreach((key, value) -> {

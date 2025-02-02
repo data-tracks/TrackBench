@@ -1,7 +1,11 @@
 package dev.trackbench.system.kafka.KafkaTools;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.trackbench.system.kafka.AverageClass.AverageSpeed;
+import dev.trackbench.system.kafka.AverageClass.AverageSpeedGroup;
 import dev.trackbench.system.kafka.JsonClass.JsonSpeed;
+import dev.trackbench.system.kafka.Serde.AverageSpeedGroupSerde;
 import dev.trackbench.system.kafka.Serde.AverageSpeedSerde;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -19,13 +23,16 @@ import java.time.Duration;
 import java.util.Properties;
 
 @Slf4j
-public class Speed {
+public class SpeedGroup {
 
     static Properties props = new Properties();
     static Properties producerProps = new Properties();
     static Producer<String, String> producer;
     static long windowSize = 1000;
     static long advanceBy = 250;
+    static String inputTopic = "speed-group";
+    static String outputTopic = "output";
+    static ObjectMapper mapper = new ObjectMapper();
 
     public static void getProps(Properties props) {
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -34,7 +41,6 @@ public class Speed {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE); // Ensure exactly-once semantics
-//        props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4);
     }
 
     public static void main(String[] args) {
@@ -55,21 +61,21 @@ public class Speed {
 
         try {
             StreamsBuilder builder = new StreamsBuilder();
-            String inputTopic = "speed";
-            String outputTopic = "output";
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
-//            sensorStream.foreach((key, value) -> {
-//                log.info("Key: " + key + " Value: " + value);
-//            });
-
-            KTable<Windowed<String>, AverageSpeed> aggregatedStream = sensorStream
-                    .groupBy((key, value) -> {
-//                        log.info("Key :" + key + " Value :" + value);
-                        return key;
+            KTable<Windowed<String>, AverageSpeedGroup> aggregatedStream = sensorStream
+                    .mapValues(value -> {
+                        try {
+                            JsonNode node = mapper.readTree(value);
+                            return node.get("type").toString();
+                        } catch (Exception e) {
+                            return "unknown";
+                        }
                     })
+                    .selectKey((key, value) -> value) // Use "type" as the key
+                    .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
                     .windowedBy(TimeWindows.of(Duration.ofMillis(windowSize)).grace(Duration.ofMillis(0)).advanceBy(Duration.ofMillis(advanceBy)))
-                    .aggregate(() -> new AverageSpeed(0, 0, 0, 0, 0, -1), (key, value, agg) -> {
+                    .aggregate(() -> new AverageSpeedGroup(0, 0, 0, 0, 0, -1), (key, value, agg) -> {
                         JsonSpeed entry = new JsonSpeed(value);
                         if(!entry.error) {
                             agg.count += 1;
@@ -82,17 +88,14 @@ public class Speed {
                                 agg.id = entry.id;
                                 agg.tickStart = entry.tick;
                             }
+                            checkMinMax(agg, entry);
                         }
                         return agg;
-                    }, Materialized.with(Serdes.String(), new AverageSpeedSerde()))
+                    }, Materialized.with(Serdes.String(), new AverageSpeedGroupSerde()))
                     ;//.suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()));
 
             aggregatedStream
                     .toStream()
-//                    .filter((key, value) -> {
-//                        long windowEnd = key.window().end();
-//                        return value.getTickEnd() >= windowEnd;
-//                    })
                     .foreach((key, value) -> {
 
                         double[] average = value.getAverage();
@@ -116,11 +119,7 @@ public class Speed {
                         producer.send(new ProducerRecord<>(outputTopic, "0", jsonMessage), (metadata, exception) -> {
                             if (exception != null) {
                                 System.err.println("Failed to send message: " + exception.getMessage());
-                                // Optionally, handle the failure (e.g., retry logic)
                             }
-//                            else {
-//                                log.info("Message sent to topic " + outputTopic + ": AverageTire Temp" + average[0] + " AverageTire Pressure" + average[1]);
-//                            }
                         });
                     });
 
@@ -131,15 +130,30 @@ public class Speed {
 
             // Graceful shutdown
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try{
-                producer.flush();
-                streams.close();
-            } finally {
-                log.info("Shutting down");
-            }
+                try{
+                    producer.flush();
+                    streams.close();
+                } finally {
+                    log.info("Shutting down");
+                }
             }));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void checkMinMax(AverageSpeedGroup agg, JsonSpeed entry) {
+        if(agg.minSpeed > entry.speed) {
+            agg.minSpeed = entry.speed;
+        }
+        if(agg.maxSpeed < entry.speed) {
+            agg.maxSpeed = entry.speed;
+        }
+        if(agg.minWind > entry.wind) {
+            agg.minWind = entry.wind;
+        }
+        if(agg.maxWind < entry.wind) {
+            agg.maxWind = entry.wind;
         }
     }
 }

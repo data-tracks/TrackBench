@@ -1,8 +1,15 @@
 package dev.trackbench.system.kafka.KafkaTools;
 
-import dev.trackbench.system.kafka.AverageClass.AverageSpeed;
-import dev.trackbench.system.kafka.JsonClass.JsonSpeed;
-import dev.trackbench.system.kafka.Serde.AverageSpeedSerde;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.trackbench.system.kafka.AverageClass.AverageFuelPump;
+import dev.trackbench.system.kafka.AverageClass.AverageFuelPumpGroup;
+import dev.trackbench.system.kafka.AverageClass.AverageHeatGroup;
+import dev.trackbench.system.kafka.JsonClass.JsonFuelPump;
+import dev.trackbench.system.kafka.JsonClass.JsonHeat;
+import dev.trackbench.system.kafka.Serde.AverageFuelPumpGroupSerde;
+import dev.trackbench.system.kafka.Serde.AverageFuelPumpSerde;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -19,13 +26,16 @@ import java.time.Duration;
 import java.util.Properties;
 
 @Slf4j
-public class Speed {
+public class FuelPumpGroup {
 
     static Properties props = new Properties();
     static Properties producerProps = new Properties();
     static Producer<String, String> producer;
     static long windowSize = 1000;
     static long advanceBy = 250;
+    static String inputTopic = "fuelPump-group";
+    static String outputTopic = "output";
+    static ObjectMapper mapper = new ObjectMapper();
 
     public static void getProps(Properties props) {
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -38,7 +48,7 @@ public class Speed {
     }
 
     public static void main(String[] args) {
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "speed-app");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "fuelPump-group-app");
         getProps(props);
 
         // Configure producer
@@ -55,26 +65,31 @@ public class Speed {
 
         try {
             StreamsBuilder builder = new StreamsBuilder();
-            String inputTopic = "speed";
-            String outputTopic = "output";
+
             KStream<String, String> sensorStream = builder.stream(inputTopic);
 
 //            sensorStream.foreach((key, value) -> {
 //                log.info("Key: " + key + " Value: " + value);
 //            });
 
-            KTable<Windowed<String>, AverageSpeed> aggregatedStream = sensorStream
-                    .groupBy((key, value) -> {
-//                        log.info("Key :" + key + " Value :" + value);
-                        return key;
+            KTable<Windowed<String>, AverageFuelPumpGroup> aggregatedStream = sensorStream
+                    .mapValues(value -> {
+                        try {
+                            JsonNode node = mapper.readTree(value);
+                            return node.get("type").toString();
+                        } catch (Exception e) {
+                            return "unknown";
+                        }
                     })
+                    .selectKey((key, value) -> value) // Use "type" as the key
+                    .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
                     .windowedBy(TimeWindows.of(Duration.ofMillis(windowSize)).grace(Duration.ofMillis(0)).advanceBy(Duration.ofMillis(advanceBy)))
-                    .aggregate(() -> new AverageSpeed(0, 0, 0, 0, 0, -1), (key, value, agg) -> {
-                        JsonSpeed entry = new JsonSpeed(value);
+                    .aggregate(() -> new AverageFuelPumpGroup(0, 0, 0, 0, 0, -1), (key, value, agg) -> {
+                        JsonFuelPump entry = new JsonFuelPump(value);
                         if(!entry.error) {
                             agg.count += 1;
-                            agg.speed += entry.speed;
-                            agg.wind += entry.wind;
+                            agg.temp += entry.temp;
+                            agg.flowRate += entry.flowRate;
                             if(agg.tickEnd < entry.tick) {
                                 agg.tickEnd = entry.tick;
                             }
@@ -82,9 +97,10 @@ public class Speed {
                                 agg.id = entry.id;
                                 agg.tickStart = entry.tick;
                             }
+                            checkMinMax(agg, entry);
                         }
                         return agg;
-                    }, Materialized.with(Serdes.String(), new AverageSpeedSerde()))
+                    }, Materialized.with(Serdes.String(), new AverageFuelPumpGroupSerde()))
                     ;//.suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()));
 
             aggregatedStream
@@ -99,11 +115,10 @@ public class Speed {
 
 //                        String message = "AverageTire Temp: " + average[0] + " AverageTire Pressure: " + average[1] + " Count: " + value.getCount();
                         JSONObject data = new JSONObject();
-                        data.put("averageSpeed kph", average[0]);
-                        data.put("averageSpeed mph", (average[0] / 1.609344));
-                        data.put("averageWindSpeed", average[1]);
+                        data.put("averageTemp", average[0]);
+                        data.put("averageFlowRate", average[1]);
                         data.put("id", value.getId());
-                        data.put("type", "speed");
+                        data.put("type", "fuelPump");
 
                         JSONObject json = new JSONObject();
                         json.put("startTime", value.getTickStart());
@@ -131,15 +146,31 @@ public class Speed {
 
             // Graceful shutdown
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try{
-                producer.flush();
-                streams.close();
-            } finally {
-                log.info("Shutting down");
-            }
+                try{
+                    producer.flush();
+                    streams.close();
+                } finally {
+                    log.info("Shutting down");
+                }
             }));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void checkMinMax(AverageFuelPumpGroup agg, JsonFuelPump entry) {
+        if(agg.maxTemp < entry.temp) {
+            agg.maxTemp = entry.temp;
+        }
+        if(agg.minTemp > entry.temp) {
+            agg.minTemp = entry.temp;
+        }
+
+        if(agg.maxFlow < entry.flowRate) {
+            agg.maxFlow = entry.flowRate;
+        }
+        if(agg.minFlow > entry.flowRate) {
+            agg.minFlow = entry.flowRate;
         }
     }
 }
