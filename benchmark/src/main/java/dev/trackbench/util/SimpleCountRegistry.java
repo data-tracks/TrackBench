@@ -17,7 +17,6 @@ public class SimpleCountRegistry {
 
 
     public void finish() {
-
         synchronized ( this ) {
             this.loadingBar.next( count.incrementAndGet() );
         }

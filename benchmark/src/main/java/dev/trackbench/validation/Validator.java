@@ -19,17 +19,18 @@ public class Validator {
             SimpleChecker simpleChecker = new SimpleChecker( simulated, tested );
             simpleChecker.check();
 
-            ChunkSorter sorter = new ChunkSorter(JsonSource.of(simulated, context.getConfig().readBatchSize()), context.getConfig().getValidationFile("sorted"));
-            sorter.chunk();
+            ChunkSorter sorter = new ChunkSorter(
+                    JsonSource.of(tested, context.getConfig().readBatchSize()),
+                    context.getConfig().getValidationFile("sorted"),
+                    value -> value.get("id").asLong());
+            File sorted = sorter.sort();
 
-            /*Comparator comparator = new Comparator(
+            Comparator comparator = new Comparator(
                     JsonSource.of( simulated, context.getConfig().readBatchSize() ),
-                    j -> j.get( "tick" ).asLong(),
-                    JsonSource.of( tested, context.getConfig().readBatchSize() ),
-                    j -> j.get( "data" ).get( "tick" ).asLong(),
-                    (a,b) -> "Nothing");
+                    JsonSource.of( sorted, context.getConfig().readBatchSize() ),
+                    value -> value.get("id").asLong() );
 
-            comparator.compare();*/
+            comparator.compare();
 
         }
 

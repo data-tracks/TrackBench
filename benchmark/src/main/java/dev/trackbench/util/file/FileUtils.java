@@ -1,8 +1,6 @@
 package dev.trackbench.util.file;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -77,5 +75,25 @@ public class FileUtils {
     @NotNull
     public static File getJson(File path, String name) {
         return new File( path, "%s.json".formatted( name.replace( ".json", "" ) ) );
+    }
+
+    public static boolean hasJsonFile(File path, String name) {
+        return new File( path, "%s.json".formatted(name) ).exists();
+    }
+
+    public static void copy(File source, File target) {
+        try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(source));
+             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(target, true))) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException( e );
+        }
     }
 }

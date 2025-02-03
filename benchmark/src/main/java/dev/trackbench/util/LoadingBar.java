@@ -11,7 +11,6 @@ public class LoadingBar {
 
 
     public LoadingBar(long total, String unit ) {
-        System.out.println( "Loading..." );
         this.total = total;
         this.unit = unit;
         this.maxPercent = 100;
@@ -46,4 +45,8 @@ public class LoadingBar {
 
     }
 
+    public void done() {
+        this.next((long) total);
+        System.out.print( "\n" );
+    }
 }
