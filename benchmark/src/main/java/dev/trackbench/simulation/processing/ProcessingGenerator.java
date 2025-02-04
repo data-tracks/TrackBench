@@ -21,8 +21,6 @@ public class ProcessingGenerator {
         List<File> files = context.getConfig().getFilesInFolder( context.getConfig().getDataWithErrorPath() );
         List<ProcessingHandler> processingHandlers = new ArrayList<>();
 
-        //log.info( "found {}", files.stream().map(File::getAbsolutePath).collect(Collectors.joining("\n")));
-
         for ( Entry<Integer, Workload> entry : context.getWorkloads().entrySet() ) {
             SimpleCountRegistry registry = new SimpleCountRegistry( files.size(), " file(s)" );
             log.info( "Processing workload {} {}", entry.getKey(), entry.getValue().getName() );

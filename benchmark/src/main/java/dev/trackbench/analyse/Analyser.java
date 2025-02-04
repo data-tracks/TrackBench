@@ -181,8 +181,8 @@ public class Analyser {
     }
 
     private static void extractMetrics(BenchmarkContext context) {
-        DelayCollector delayCollector = new DelayCollector(context);
-        for (Pair<String, String> pair : delayCollector.start()) {
+        LatencyAnalyser latencyAnalyser = new LatencyAnalyser(context);
+        for (Pair<String, String> pair : latencyAnalyser.start()) {
             log.info("{}: {}", pair.left(), pair.right());
         }
     }

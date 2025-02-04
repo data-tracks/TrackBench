@@ -37,7 +37,7 @@ public class SensorGenerator {
     public static void createSensors( BenchmarkContext context ) {
         List<Sensor> sensors = new ArrayList<>();
 
-        CountRegistry registry = new CountRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual(), "%" );
+        CountRegistry registry = new CountRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual(), " ticks" );
 
         for ( int i = 0; i < context.getConfig().sensorAmount(); i++ ) {
             // pick random sensor
@@ -69,12 +69,14 @@ public class SensorGenerator {
             throw new RuntimeException( e );
         }
 
+        registry.done();
         log.info( "###\nDone generating..." );
 
         // we print the summary for debug purposes
         for ( Sensor sensor : sensors ) {
             log.info( "Sensor: {}, MetaData: {}", sensor.getTemplate().getType(), sensor.getMetric() );
         }
+        log.info("Max id is {}", Sensor.getDpIdBuilder().get());
 
 
     }

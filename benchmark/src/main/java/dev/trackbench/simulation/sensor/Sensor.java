@@ -24,6 +24,7 @@ import lombok.Getter;
 public abstract class Sensor extends Thread {
 
     private static final AtomicInteger sensorIdBuilder = new AtomicInteger();
+    @Getter
     private static final AtomicLong dpIdBuilder = new AtomicLong();
 
     //Info of all possible data types, with their possible configurations.
@@ -151,7 +152,7 @@ public abstract class Sensor extends Thread {
         ObjectNode dataWrapper = JsonNodeFactory.instance.objectNode();
         dataWrapper.putIfAbsent( "data", data );
         dataWrapper.put( "tick", tick );
-        dataWrapper.put("id", dpIdBuilder.incrementAndGet() );
+        dataWrapper.put("id", dpIdBuilder.getAndIncrement() );
 
         dataTarget.attach( dataWrapper );
 

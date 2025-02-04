@@ -1,5 +1,6 @@
 package dev.trackbench.configuration;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.Main;
 import dev.trackbench.simulation.sensor.Sensor;
 import java.io.File;
@@ -43,6 +44,7 @@ public record BenchmarkConfig(
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
     public static final String RESULT_PATH = "result";
     public static final long executionMaxMin = 2;
+    public static final String ARRIVED_TICK_KEY = "arrived";
 
 
     public static BenchmarkConfig fromFile() {
@@ -199,5 +201,9 @@ public record BenchmarkConfig(
 
     public File getValidationPath() {
         return getFileAndMkDirs( VALIDATION_PATH );
+    }
+
+    public static long getArrivedTick(JsonNode node) {
+        return node.get( ARRIVED_TICK_KEY ).asLong();
     }
 }

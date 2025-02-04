@@ -6,6 +6,8 @@ import dev.trackbench.execution.receiver.ReceiveCoordinator;
 import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.util.Clock;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,9 +34,11 @@ public class ExecutionCoordinator {
             context.getClock().start();
 
             sender.join();
-            log.info( "All send. Waiting for receiver to finish..." );
+            context.getClock().finishDisplay();
+            log.info( "All send. Waiting {} mins for receiver to finish...", BenchmarkConfig.executionMaxMin );
 
-            Thread.sleep( Duration.ofMinutes( BenchmarkConfig.executionMaxMin ) );
+            waitExecution(BenchmarkConfig.executionMaxMin);
+
             //we can start stopping threads, the target system takes too long to process or finished everything
             receiver.stopReceivers();
             receiver.join();
@@ -46,7 +50,18 @@ public class ExecutionCoordinator {
         }
     }
 
+    private static void waitExecution(long minutes) throws InterruptedException {
+        for (long remainingSeconds = minutes*60; remainingSeconds >= 0; remainingSeconds--) {
+            long displayMinutes = remainingSeconds / 60;
+            long displaySeconds = remainingSeconds % 60;
 
+            System.out.printf("\rTime left: %02d:%02d", displayMinutes, displaySeconds);
+
+            TimeUnit.SECONDS.sleep(1);
+        }
+        System.out.print("\n");
+
+    }
 
 
 }

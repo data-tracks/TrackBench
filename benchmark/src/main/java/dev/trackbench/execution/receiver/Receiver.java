@@ -1,13 +1,15 @@
 package dev.trackbench.execution.receiver;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.file.FileJsonTarget;
 import dev.trackbench.util.ObservableThread;
 import dev.trackbench.configuration.workloads.Workload;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Receiver extends ObservableThread {
 
 
@@ -22,10 +24,7 @@ public class Receiver extends ObservableThread {
         this.workload = workload;
         this.clock = clock;
         this.buffer = new Buffer( ( tick, value ) -> {
-            ((ObjectNode) value).put("arrived", tick);
-            //ObjectNode node = JsonNodeFactory.instance.objectNode();
-            //node.putIfAbsent( "data", value );
-            //node.put( "tick", tick );
+            ((ObjectNode) value).put(BenchmarkConfig.ARRIVED_TICK_KEY, tick);
             target.attach( value );
         } );
     }
@@ -41,6 +40,9 @@ public class Receiver extends ObservableThread {
     @Override
     public void interrupt() {
         this.buffer.interrupt();
+        if (!this.buffer.buffer.isEmpty()) {
+            log.info("Buffer size is {}", this.buffer.buffer.size());
+        }
         super.interrupt();
     }
 }

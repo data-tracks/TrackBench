@@ -19,25 +19,10 @@ import org.json.JSONArray;
 
 public class SendCoordinator extends Thread {
 
-    static JSONArray jsonArray;
-    @Setter
-    static File pathNormal;
-    static final String name = "/ALL_DATA.json";
-    static BlockingQueue<ObjectNode> messageQueue = new ArrayBlockingQueue<>( 200000000 );
-    static List<JSONArray> frequencyData;
-    //public static List<Worker> threads = new ArrayList<>();
-
-    //Kafka Topic
-    static String topic = "f1";
-    static KafkaProducer<String, String> producer;
-    private static final String KAFKA_BROKER = "localhost:9092";
-
     @Getter
     static int timeStep = 0;
     @Getter
     static boolean stop = false;
-    static int maxFrequency;
-    static long loopStart = 0;
 
     AtomicBoolean initialized = new AtomicBoolean( false );
 

@@ -32,7 +32,7 @@ public class Main {
         setPaths( config );
 
         if ( config.generate() ) {
-            System.out.println( "Generating sensors..." );
+            log.info( "Generating sensors..." );
             context.printGeneratingTime();
             //Delete all files in folder
             JsonFileHandler.deleteFolder( config.getDataPath() );
@@ -79,7 +79,6 @@ public class Main {
         Analyser.setFolder( config.path() );
         AveragedData.setFolderStore( config.path() );
         FinalData.setFolderStore( config.path() );
-        SendCoordinator.setPathNormal( config.path() );
         Comparer.setFolder( config.path() );
     }
 

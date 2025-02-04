@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.util.CountRegistry;
 import dev.trackbench.util.file.JsonSource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import dev.trackbench.validation.max.MaxCounter;
@@ -21,11 +18,12 @@ public class Comparator {
     private final long maxId;
     private final JsonSource truth;
 
-    private JsonSource test;
+    private final JsonSource test;
 
-    private Function<JsonNode, Long> extractor;
+    private final Function<JsonNode, Long> extractor;
 
-    private List<Long> missing = new ArrayList<>();
+    private final List<Long> missing = new ArrayList<>();
+    private final List<Long> nulls = new ArrayList<>();
 
 
     public Comparator(
@@ -43,23 +41,29 @@ public class Comparator {
 
         CountRegistry registry = new CountRegistry( maxId, 100_00, " id" );
         long testId = extractor.apply(test.next());
-        for (long i = 0; i < maxId; i++) {
+        long i = 0;
+        while (truth.hasNext()) {
             long id = extractor.apply(truth.next());
-            if( id != i){
-                throw new RuntimeException("Truth should contain all ids");
-            }
 
             if (id < testId) {
                 missing.add(i);
             }else {
-                testId = extractor.apply(test.next());
+                JsonNode testValue = test.next();
+                if( testValue == null) {
+                    nulls.add(i);
+                }else {
+                    testId = extractor.apply(testValue);
+                }
+
             }
             if( i % 100_000 == 0 ){
                 registry.update(0, i);
             }
+            i++;
         }
         registry.done();
-        log.info("Found {} missing entries", missing.size());
+        log.info("Found {} missing entries {}", missing.size(), missing);
+        log.info("Found {} null entries {}", nulls.size(), nulls);
 
     }
 
