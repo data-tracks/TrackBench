@@ -40,7 +40,7 @@ public class AverageSpeed {
         } else {
             return new double[]{speed, wind};
         }
-//        log.info(average[0] + " " + average[1] + " " + average[2]);
+//        Display.INSTANCE.info(average[0] + " " + average[1] + " " + average[2]);
         return average;
     }
 }

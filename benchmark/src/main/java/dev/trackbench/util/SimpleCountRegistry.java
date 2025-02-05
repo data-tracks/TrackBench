@@ -1,5 +1,7 @@
 package dev.trackbench.util;
 
+import dev.trackbench.display.LoadingBar;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SimpleCountRegistry {

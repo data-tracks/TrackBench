@@ -1,6 +1,7 @@
 package dev.trackbench.validation.chunksort;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import dev.trackbench.display.Display;
 import dev.trackbench.util.CountRegistry;
 import dev.trackbench.util.SimpleCountRegistry;
 import dev.trackbench.util.file.FileJsonTarget;
@@ -46,7 +47,7 @@ public class ChunkSorter {
         this.maxId = MaxCounter.extractMax(source, value -> value.get("id").asLong());
         this.lines = source.countLines();
         this.chunks = maxId / IDS_PER_CHUNK;
-        log.info("Chunks to create {} chunks", chunks);
+        Display.INSTANCE.info("Chunks to create {} chunks", chunks);
         this.workerSize = lines / WORKERS != 0 ? lines / WORKERS + 1 : lines / WORKERS;
 
     }
@@ -95,7 +96,7 @@ public class ChunkSorter {
             File current = FileUtils.getJson(sorted, String.valueOf(i * IDS_PER_CHUNK));
             FileUtils.copy(current, target);
         }
-        log.info("Sorted and merged {}", chunks);
+        Display.INSTANCE.info("Sorted and merged {}", chunks);
         return target;
     }
 
@@ -141,7 +142,7 @@ public class ChunkSorter {
             if (!coveredByOne) {
                 try {
                     chunkTarget.createNewFile();
-                    log.warn("Chunk {} was not covered", chunk);
+                    Display.INSTANCE.warn("Chunk {} was not covered", chunk);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

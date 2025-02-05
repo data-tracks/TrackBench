@@ -32,7 +32,7 @@ public final class Value {
             this.node = new DoubleNode(value);
             return List.of(this);
         } catch (Exception e) {
-            //log.warn("Inconsistent value {}", this.node);
+            //Display.INSTANCE.warn("Inconsistent value {}", this.node);
             return List.of();
         }
     }
@@ -46,7 +46,7 @@ public final class Value {
             this.node = new IntNode(value);
             return List.of(this);
         } catch (Exception e) {
-            //log.warn("Inconsistent value {}", this.node);
+            //Display.INSTANCE.warn("Inconsistent value {}", this.node);
             return List.of();
         }
     }

@@ -1,5 +1,6 @@
 package dev.trackbench.simulation.aggregate;
 
+import dev.trackbench.display.Display;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ public class AveragedData {
             JSONObject d = data.getJSONObject("data");
             int id = d.getNumber("id").intValue();
 
-            log.info( "starting aggregation {}", id );
+            Display.INSTANCE.info( "starting aggregation {}", id );
 
             switch (d.getString("type")) {
                 case "tire":

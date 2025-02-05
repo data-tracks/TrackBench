@@ -1,6 +1,7 @@
 package dev.trackbench.simulation.processing;
 
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.display.Display;
 import dev.trackbench.util.SimpleCountRegistry;
 import dev.trackbench.configuration.workloads.Workload;
 import java.io.File;
@@ -23,7 +24,7 @@ public class ProcessingGenerator {
 
         for ( Entry<Integer, Workload> entry : context.getWorkloads().entrySet() ) {
             SimpleCountRegistry registry = new SimpleCountRegistry( files.size(), " file(s)" );
-            log.info( "Processing workload {} {}", entry.getKey(), entry.getValue().getName() );
+            Display.INSTANCE.info( "Processing workload {} {}", entry.getKey(), entry.getValue().getName() );
 
             for ( File file : files ) {
                 if ( file.getName().endsWith( ".json" ) ) {

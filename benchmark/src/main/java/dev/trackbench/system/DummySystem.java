@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.execution.receiver.Buffer;
 import dev.trackbench.util.Clock;
 import dev.trackbench.configuration.workloads.Workload;
-import io.javalin.Javalin;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -13,10 +12,6 @@ import java.util.function.Consumer;
 public class DummySystem implements System {
 
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>( 2_000_000 );
-
-    Javalin app;
-
-    Thread thread;
 
 
     @Override

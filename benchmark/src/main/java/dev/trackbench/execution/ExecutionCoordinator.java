@@ -2,6 +2,7 @@ package dev.trackbench.execution;
 
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.display.Display;
 import dev.trackbench.execution.receiver.ReceiveCoordinator;
 import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.util.Clock;
@@ -30,12 +31,12 @@ public class ExecutionCoordinator {
             while ( !receiver.allReady() || !sender.allReady() ) {
                 Thread.sleep( Duration.ofSeconds( 5 ) );
             }
-            log.info( "All ready. Start the clock..." );
+            Display.INSTANCE.info( "All ready. Start the clock..." );
             context.getClock().start();
 
             sender.join();
             context.getClock().finishDisplay();
-            log.info( "All send. Waiting {} mins for receiver to finish...", BenchmarkConfig.executionMaxMin );
+            Display.INSTANCE.info( "All send. Waiting {} mins for receiver to finish...", BenchmarkConfig.executionMaxMin );
 
             waitExecution(BenchmarkConfig.executionMaxMin);
 

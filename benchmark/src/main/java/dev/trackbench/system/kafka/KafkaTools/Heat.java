@@ -61,7 +61,7 @@ public class Heat {
 
             KTable<Windowed<String>, AverageHeat> aggregatedStream = sensorStream
                     .groupBy((key, value) -> {
-//                        log.info("Key :" + key + " Value :" + value);
+//                        Display.INSTANCE.info("Key :" + key + " Value :" + value);
                         return key;
                     })
                     .windowedBy(TimeWindows.of(Duration.ofMillis(windowSize)).grace(Duration.ofMillis(0)).advanceBy(Duration.ofMillis(advanceBy)))
@@ -108,7 +108,7 @@ public class Heat {
                                 // Optionally, handle the failure (e.g., retry logic)
                             }
 //                            else {
-//                                log.info("Message sent to topic " + outputTopic + ": AverageTire Temp" + average[0] + " AverageTire Pressure" + average[1]);
+//                                Display.INSTANCE.info("Message sent to topic " + outputTopic + ": AverageTire Temp" + average[0] + " AverageTire Pressure" + average[1]);
 //                            }
                         });
                     });

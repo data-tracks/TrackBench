@@ -1,6 +1,7 @@
 package dev.trackbench.validation;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import dev.trackbench.display.Display;
 import dev.trackbench.util.CountRegistry;
 import dev.trackbench.util.file.JsonSource;
 import java.util.ArrayList;
@@ -62,8 +63,8 @@ public class Comparator {
             i++;
         }
         registry.done();
-        log.info("Found {} missing entries {}", missing.size(), missing);
-        log.info("Found {} null entries {}", nulls.size(), nulls);
+        Display.INSTANCE.info("Found {} missing entries {}", missing.size(), missing);
+        Display.INSTANCE.info("Found {} null entries {}", nulls.size(), nulls);
 
     }
 

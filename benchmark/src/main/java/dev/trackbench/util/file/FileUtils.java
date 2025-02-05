@@ -8,6 +8,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import dev.trackbench.display.Display;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +65,7 @@ public class FileUtils {
             }
 
             if ( debug ) {
-                log.info( "File {} has {} lines", target.getName(), lineCount );
+                Display.INSTANCE.info( "File {} has {} lines", target.getName(), lineCount );
             }
 
             return lineCount;

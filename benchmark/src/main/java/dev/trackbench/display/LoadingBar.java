@@ -1,6 +1,6 @@
-package dev.trackbench.util;
+package dev.trackbench.display;
 
-public class LoadingBar {
+public class LoadingBar implements Component{
 
 
     private final String unit;
@@ -14,7 +14,6 @@ public class LoadingBar {
         this.total = total;
         this.unit = unit;
         this.maxPercent = 100;
-        next( 0 );
     }
 
 
@@ -48,5 +47,10 @@ public class LoadingBar {
     public void done() {
         this.next((long) total);
         System.out.print( "\n" );
+    }
+
+    @Override
+    public void render() {
+        next( 0 );
     }
 }

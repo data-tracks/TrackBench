@@ -95,14 +95,14 @@ public class ReceiveCoordinator extends Thread {
                 } else {
                     long now = System.currentTimeMillis();
                     if ( now - inactivity > 10000 ) {
-                        log.info( "No messages received for 10 seconds. Ending loop." );
+                        Display.INSTANCE.info( "No messages received for 10 seconds. Ending loop." );
                         b = false;
                     }
                 }
 
             }
         } catch ( Exception e ) {
-            log.error( e.getMessage() );
+            Display.INSTANCE.error( e.getMessage() );
         }
         // Close the consumer
         Analyser.analyser(aggregated, dataReceived, startTime, lastReceivedTime, throughput);

@@ -1,5 +1,6 @@
 package dev.trackbench.execution.sending;
 
+import dev.trackbench.display.Display;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -39,13 +40,13 @@ public class Worker implements Runnable {
                         }
                         ProducerRecord<String, String> record = new ProducerRecord<>(topic, message.toString());
                         producer.send(record);
-//                        log.info("Sent: " + record.toString());
+//                        Display.INSTANCE.info("Sent: " + record.toString());
                     }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.info(Thread.currentThread().getName());
-                log.info("Thread interrupted");
+                Display.INSTANCE.info(Thread.currentThread().getName());
+                Display.INSTANCE.info("Thread interrupted");
                 break;
             }
         }

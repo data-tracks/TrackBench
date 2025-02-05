@@ -1,6 +1,7 @@
 package dev.trackbench.analyse;
 
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.display.Display;
 import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import dev.trackbench.util.Pair;
 import lombok.Setter;
@@ -41,7 +42,7 @@ public class Analyser {
                                 long lastReceivedTime, int throughput) throws IOException {
         if (aggregated) { //aggregated Data
             JsonFileHandler.readJsonFile(folder, file2, averagedData);
-            log.info("Aggregated data received");
+            Display.INSTANCE.info("Aggregated data received");
 
 
             List<JSONObject> onlyWindows = getOnlyWindows(dataReceived);
@@ -69,7 +70,7 @@ public class Analyser {
                 }
                 peekAnalyse.append("\n");
             }
-            log.info(peekAnalyse.toString());
+            Display.INSTANCE.info( peekAnalyse.toString());
 
             //Get Completeness of the peeks in the windows
             int amountWrongPeeks = getFalseWindow();
@@ -86,7 +87,7 @@ public class Analyser {
 
         } else {
             JsonFileHandler.readJsonFile(folder, file1, dataSent);
-            log.info("Normal data received");
+            Display.INSTANCE.info("Normal data received");
         }
 
         // End time
@@ -123,7 +124,7 @@ public class Analyser {
                 "\nWarning completeness: " + percentageCorrectWarnings +
                 "\nError completeness: " + percentageCorrectErrors +
                 "\n_________________________________________________________________________________________________";
-        log.info(output);
+        Display.INSTANCE.info(output);
 
         writeFile(folderResults, "analysis", output);
 
@@ -150,7 +151,7 @@ public class Analyser {
         int start;
         JSONObject json;
         for(int i = 0; i < dataReceived.size(); i++) {
-//            log.info(dataReceived.get(i).getJSONObject("data").getInt("id") + " " + dataReceived.get(i).getInt("startTime") + " " + dataReceived.get(i).getInt("endTime"));
+//            Display.INSTANCE.info(dataReceived.get(i).getJSONObject("data").getInt("id") + " " + dataReceived.get(i).getInt("startTime") + " " + dataReceived.get(i).getInt("endTime"));
             if(i == dataReceived.size() - 1) {
                 onlyMaxWindows.add(dataReceived.get(i));
                 break;
@@ -183,7 +184,7 @@ public class Analyser {
     private static void extractMetrics(BenchmarkContext context) {
         LatencyAnalyser latencyAnalyser = new LatencyAnalyser(context);
         for (Pair<String, String> pair : latencyAnalyser.start()) {
-            log.info("{}: {}", pair.left(), pair.right());
+            Display.INSTANCE.info("{}: {}", pair.left(), pair.right());
         }
     }
 }

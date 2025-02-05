@@ -1,6 +1,7 @@
 package dev.trackbench.execution.sending;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import dev.trackbench.display.Display;
 import dev.trackbench.simulation.processing.Value;
 import dev.trackbench.util.file.JsonIterator;
 import dev.trackbench.util.ObservableThread;
@@ -32,7 +33,7 @@ public class Filler extends ObservableThread {
                 long tick = node.get( TICK ).asLong();
                 queue.put( new Value( tick, node ) );
             }
-            log.info( "Filler for file {} finished", iterator.getFile().getName() );
+            Display.INSTANCE.info( "Filler for file {} finished", iterator.getFile().getName() );
 
             while ( !queue.isEmpty() ){
                 Thread.sleep( 100 );

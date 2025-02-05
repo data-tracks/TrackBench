@@ -38,7 +38,7 @@ public class AverageAccelerometerGroup {
         } else {
             return throttle;
         }
-//        log.info(average[0] + " " + average[1] + " " + average[2]);
+//        Display.INSTANCE.info(average[0] + " " + average[1] + " " + average[2]);
         return average;
     }
 }

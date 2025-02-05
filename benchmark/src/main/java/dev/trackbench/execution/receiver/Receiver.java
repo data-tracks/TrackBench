@@ -2,6 +2,7 @@ package dev.trackbench.execution.receiver;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.configuration.BenchmarkConfig;
+import dev.trackbench.display.Display;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.file.FileJsonTarget;
@@ -41,7 +42,7 @@ public class Receiver extends ObservableThread {
     public void interrupt() {
         this.buffer.interrupt();
         if (!this.buffer.buffer.isEmpty()) {
-            log.info("Buffer size is {}", this.buffer.buffer.size());
+            Display.INSTANCE.info("Buffer size is {}", this.buffer.buffer.size());
         }
         super.interrupt();
     }

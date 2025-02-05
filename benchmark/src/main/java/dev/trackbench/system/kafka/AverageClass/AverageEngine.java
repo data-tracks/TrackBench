@@ -62,7 +62,7 @@ public class AverageEngine {
         } else {
             return new double[]{temp,(double) rpm, oilPressure, fuelPressure, exhaust, id};
         }
-//        log.info(average[0] + " " + average[1] + " " + average[2] + " " + average[3] + " " + average[4] + " " + average[5]);
+//        Display.INSTANCE.info(average[0] + " " + average[1] + " " + average[2] + " " + average[3] + " " + average[4] + " " + average[5]);
         return average;
     }
 }

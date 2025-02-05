@@ -1,5 +1,6 @@
 package dev.trackbench.util;
 
+import dev.trackbench.display.LoadingBar;
 import lombok.Getter;
 
 import java.util.Map;

@@ -115,7 +115,7 @@ public class SpeedGroup {
 
                         String jsonMessage = json.toString();
 
-                        log.info("Message: " + jsonMessage);
+                        log.info("Message: {}", jsonMessage);
                         producer.send(new ProducerRecord<>(outputTopic, "0", jsonMessage), (metadata, exception) -> {
                             if (exception != null) {
                                 System.err.println("Failed to send message: " + exception.getMessage());

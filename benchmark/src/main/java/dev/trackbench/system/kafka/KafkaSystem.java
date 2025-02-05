@@ -2,6 +2,7 @@ package dev.trackbench.system.kafka;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.Main;
+import dev.trackbench.display.Display;
 import dev.trackbench.execution.receiver.Buffer;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
@@ -98,7 +99,7 @@ public class KafkaSystem implements System {
                     } else {
                         long now = clock.tick();
                         if ( now - tick > 10000 ) {
-                            log.info( "No messages received for 10 seconds. Ending loop." );
+                            Display.INSTANCE.info( "No messages received for 10 seconds. Ending loop." );
                             running.set( false );
                         }
                     }

@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.trackbench.display.Display;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +68,7 @@ public class JsonIterator {
                 }
                 JsonNode node = mapper.readTree( line );
                 if ( node == null ) {
-                    log.warn( "error parsing line: {}", line );
+                    Display.INSTANCE.warn( "error parsing line: {}", line );
                 }
                 cache.add(node);
             }

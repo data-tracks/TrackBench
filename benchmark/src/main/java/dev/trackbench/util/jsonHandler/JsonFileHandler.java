@@ -1,5 +1,6 @@
 package dev.trackbench.util.jsonHandler;
 
+import dev.trackbench.display.Display;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +40,7 @@ public class JsonFileHandler {
         try (FileWriter outputfile = new FileWriter(outputFile)) {
             JSONArray outputArray = new JSONArray(allData);  // Convert the list of JSONObjects back to JSONArray
             outputfile.write(outputArray.toString(4));  // Indented output for readability
-            log.info("Data successfully written to: " + outputFile.getAbsolutePath());
+            Display.INSTANCE.info("Data successfully written to: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error writing the output file: " + e.getMessage());
             throw e;
@@ -58,7 +59,7 @@ public class JsonFileHandler {
 
         try (FileWriter outputfile = new FileWriter(outputFile, append)) {
             outputfile.write(data);  // Indented output for readability
-            log.info("File successfully written to: {}", outputFile.getAbsolutePath());
+            Display.INSTANCE.info("File successfully written to: {}", outputFile.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error writing the output file: " + e.getMessage());
             throw e;

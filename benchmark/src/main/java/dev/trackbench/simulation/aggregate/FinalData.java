@@ -1,5 +1,6 @@
 package dev.trackbench.simulation.aggregate;
 
+import dev.trackbench.display.Display;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -26,7 +27,7 @@ public class FinalData {
 
         finalData.sort(Comparator.comparingInt(jsonObject -> jsonObject.getInt("tick")));
 
-        log.info("Amount of entries sent: " + finalData.size());
+        Display.INSTANCE.info("Amount of entries sent: " + finalData.size());
 
         writeJsonFile(folderStore, fName, finalData);
     }

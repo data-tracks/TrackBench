@@ -2,6 +2,7 @@ package dev.trackbench;
 
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.display.Display;
 import dev.trackbench.execution.ExecutionCoordinator;
 import dev.trackbench.simulation.aggregate.AveragedData;
 import dev.trackbench.simulation.aggregate.FinalData;
@@ -29,10 +30,12 @@ public class Main {
         // set to new seed
         RandomData.seed = config.seed();
 
+        Display display = Display.INSTANCE;
+
         setPaths( config );
 
         if ( config.generate() ) {
-            log.info( "Generating sensors..." );
+            Display.INSTANCE.info( "Generating sensors..." );
             context.printGeneratingTime();
             //Delete all files in folder
             JsonFileHandler.deleteFolder( config.getDataPath() );
@@ -68,7 +71,7 @@ public class Main {
             Analyser.start(context);
         }
 
-        log.info( "Finished everything" );
+        Display.INSTANCE.info( "Finished everything" );
     }
 
 

@@ -1,5 +1,6 @@
 package dev.trackbench.analyse;
 
+import dev.trackbench.display.Display;
 import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import lombok.Getter;
 import lombok.Setter;
@@ -207,7 +208,7 @@ public class Comparer {
                 }
             }
             for(JSONObject warning: warnings) {
-                log.info(warning.toString());
+                Display.INSTANCE.info(warning.toString());
             }
 
             return "\nThere are missing: " + errors.size() + " errors and " + warnings.size() + " warnings.\n";

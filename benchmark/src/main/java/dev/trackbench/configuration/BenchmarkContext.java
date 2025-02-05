@@ -1,5 +1,6 @@
 package dev.trackbench.configuration;
 
+import dev.trackbench.display.Display;
 import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.system.System;
@@ -45,10 +46,10 @@ public class BenchmarkContext {
 
     public void loadNecessities() {
         if(!sensors.isEmpty()) {
-            log.info("Sensors already loaded");
+            Display.INSTANCE.info("Sensors already loaded");
             return;
         }
-        log.info("Loading sensors...");
+        Display.INSTANCE.info("Loading sensors...");
         sensors.addAll( SensorGenerator.loadSensors( config ) );
     }
 
@@ -61,8 +62,8 @@ public class BenchmarkContext {
     }
 
     public void printTime(String prefix) {
-        log.info( "{} will take approx. {}...", prefix, tickToTime(config.ticks()));
-        log.info( "Ticks {} and {}ns per tick...", config.ticks(), config.stepDurationNs() );
+        Display.INSTANCE.info( "{} will take approx. {} to execute on the target system...", prefix, tickToTime(config.ticks()));
+        Display.INSTANCE.info( "Ticks {} and {}ns per tick...", config.ticks(), config.stepDurationNs() );
     }
 
     @NotNull

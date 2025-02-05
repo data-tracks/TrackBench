@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.display.Display;
 import dev.trackbench.simulation.sensor.DocSensor;
 import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.simulation.sensor.SensorTemplate;
@@ -63,20 +64,20 @@ public class SensorGenerator {
                 sensor.join();
             }
 
-            log.info( "###\nFinishing last batch..." );
+            Display.INSTANCE.info( "###\nFinishing last batch..." );
 
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
 
         registry.done();
-        log.info( "###\nDone generating..." );
+        Display.INSTANCE.info( "###\nDone generating..." );
 
         // we print the summary for debug purposes
         for ( Sensor sensor : sensors ) {
-            log.info( "Sensor: {}, MetaData: {}", sensor.getTemplate().getType(), sensor.getMetric() );
+            Display.INSTANCE.info( "Sensor: {}, MetaData: {}", sensor.getTemplate().getType(), sensor.getMetric() );
         }
-        log.info("Max id is {}", Sensor.getDpIdBuilder().get());
+        Display.INSTANCE.info("Max id is {}", Sensor.getDpIdBuilder().get());
 
 
     }
