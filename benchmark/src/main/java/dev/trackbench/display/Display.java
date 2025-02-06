@@ -9,7 +9,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Display extends Thread {
-
+    @Getter
     private Pair<Thread,Component> current;
     private final Queue<Component> next = new ConcurrentLinkedQueue<>();
 
@@ -97,5 +97,9 @@ public class Display extends Thread {
 
     public void info(String text, Object... args) {
         writeln( yellow( replace(text, args) ) );
+    }
+
+    public void line() {
+        writeln("-------------------------------");
     }
 }

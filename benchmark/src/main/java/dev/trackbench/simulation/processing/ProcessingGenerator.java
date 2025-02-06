@@ -41,7 +41,7 @@ public class ProcessingGenerator {
             } catch ( InterruptedException e ) {
                 throw new RuntimeException( e );
             }
-
+            registry.done();
             processingHandlers.clear();
         }
 

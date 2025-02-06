@@ -1,21 +1,16 @@
 package dev.trackbench.execution.sending;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.configuration.BenchmarkContext;
-import dev.trackbench.util.ClockDisplay;
+import dev.trackbench.display.Display;
+import dev.trackbench.display.ClockDisplay;
 import dev.trackbench.util.file.JsonIterator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import lombok.Getter;
-import lombok.Setter;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.json.JSONArray;
 
 public class SendCoordinator extends Thread {
 
@@ -62,7 +57,8 @@ public class SendCoordinator extends Thread {
             sender.start();
             filler.start();
         }
-        ClockDisplay clock = new ClockDisplay(context.getClock(), context.getConfig());
+        ClockDisplay clock = new ClockDisplay(context.getClock());
+        Display.INSTANCE.next(clock);
         initialized.set( true );
         try {
             for ( Sender sender : senders ) {

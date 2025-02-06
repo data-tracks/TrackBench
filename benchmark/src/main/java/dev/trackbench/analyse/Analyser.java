@@ -1,190 +1,112 @@
 package dev.trackbench.analyse;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.display.Display;
-import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import dev.trackbench.util.Pair;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-import static dev.trackbench.analyse.Comparer.*;
-import static dev.trackbench.util.jsonHandler.JsonFileHandler.writeFile;
-import static dev.trackbench.util.jsonHandler.JsonFileHandler.writeJsonFile;
 
-@Slf4j
 public class Analyser {
-    static List<JSONObject> dataSent = new LinkedList<>();
-    static List<JSONObject> averagedData = new LinkedList<>();
-    @Setter
-    static File folder;
-    static File folderResults = new File( "src/main/resources");
-    static final String file1 = "ALL_DATA.json";
-    static final String file2 = "averagedData.json";//"finalData.json";
-    static int amountErrors = 0;
-    static int amountWarnings;
-    static int amountPeeks;
-    @Setter
-    static int threadAmount;
-    @Setter
-    static int amountSensors;
-    static String message;
-    static double percentageCorrectErrors;
-    static double percentageCorrectWarnings;
-    static double percentageCorrectWindows;
-
-    public static void analyser(boolean aggregated, List<JSONObject> dataReceived, long startTime,
-                                long lastReceivedTime, int throughput) throws IOException {
-        if (aggregated) { //aggregated Data
-            JsonFileHandler.readJsonFile(folder, file2, averagedData);
-            Display.INSTANCE.info("Aggregated data received");
+    private final BenchmarkContext context;
+    Queue<Long> delays = new ConcurrentLinkedQueue<>();
+    Map<Long, Long> throughputs = new ConcurrentHashMap<>();
 
 
-            List<JSONObject> onlyWindows = getOnlyWindows(dataReceived);
+    public Analyser(BenchmarkContext context) {
+        this.context = context;
 
-            dataReceived.removeAll(onlyWindows);
-
-            List<JSONObject> onlyMaxWindows = getOnlyMaxWindows(onlyWindows);
-
-            writeJsonFile(folder, "maxWindowsFromSystem", onlyMaxWindows);
-            writeJsonFile(folder, "windowsFomSystem", onlyWindows);
-            writeJsonFile(folder, "error_warnings_system", dataReceived);
-
-            //send data to the comparer to validate the peeks
-            String message = comparing(onlyMaxWindows, dataReceived, aggregated);
-
-            List<String> peekStore = Comparer.getPeeksStore();
-            StringBuilder peekAnalyse = new StringBuilder();
-            for (String s : peekStore) {
-                String[] info = s.split(":");
-                for (int j = 0; j < info.length; j++) {
-                    peekAnalyse.append(info[j]).append(" ");
-                    if(j == 2 && info[0].equals("received")) {
-                        amountPeeks += Integer.parseInt(info[j]);
-                    }
-                }
-                peekAnalyse.append("\n");
-            }
-            Display.INSTANCE.info( peekAnalyse.toString());
-
-            //Get Completeness of the peeks in the windows
-            int amountWrongPeeks = getFalseWindow();
-            int amountRightPeeks = getRightWindow();
-            percentageCorrectWindows = 100 / (double) amountPeeks * amountRightPeeks;
-
-            analyseErrorAndWarnings(dataReceived);
-
-            //Get completeness of the errors and warnings
-            int errorMissing = getErrors().size();
-            int warningMissing = getWarnings().size();
-            percentageCorrectErrors =  100 - (100 / (double) amountErrors * errorMissing);
-            percentageCorrectWarnings = 100 - (100 / (double) amountWarnings * warningMissing);
-
-        } else {
-            JsonFileHandler.readJsonFile(folder, file1, dataSent);
-            Display.INSTANCE.info("Normal data received");
-        }
-
-        // End time
-        long elapsedTime = lastReceivedTime - startTime;
-        double elapsedTimeInSeconds = elapsedTime / 1000.0;
-        String time = String.format("%.5f", elapsedTimeInSeconds);
-        double timeInSeconds = Double.parseDouble(time);
-
-        // Get the Current Date and Time
-        long currentTimeMillis = System.currentTimeMillis();
-        Date currentDate = new Date(currentTimeMillis);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = formatter.format(currentDate);
-
-        // Information after Receiving Data
-        String output =
-                "\n_________________________________________________________________________________________________\n" +
-                formattedDate +
-                "\nData received in " + time + " seconds" +
-                "\nAmount Warnings in data: " + amountWarnings +
-                "\nAmount Errors in data: " + amountErrors +
-                "\nAmount of data received: " + throughput +
-                "\nAmount of Sensors used: " + amountSensors +
-                "\nAmount of Threads used: " + threadAmount +
-                "\n\n" + message +
-                "\n.................................................." +
-                "\nPerformance metrics:"+
-                "\nData latency: " + String.format("%.8f", (timeInSeconds / throughput)) + " seconds for one datapoint" +
-                "\nData throughput: " + String.format("%.3f", (throughput / elapsedTimeInSeconds)) + " per second" +
-                "\nThread efficiency: " + String.format("%.3f", (double) amountSensors / threadAmount) +
-                "\n.................................................." +
-                "\nData quality metrics:" +
-                "\nPeak completeness: " + percentageCorrectWindows +
-                "\nWarning completeness: " + percentageCorrectWarnings +
-                "\nError completeness: " + percentageCorrectErrors +
-                "\n_________________________________________________________________________________________________";
-        Display.INSTANCE.info(output);
-
-        writeFile(folderResults, "analysis", output);
-
-    }
-
-    private static void analyseErrorAndWarnings(List<JSONObject> receivedData) {
-        for (JSONObject json : receivedData) {
-            if (json.has("WarningMessage")) {
-                amountWarnings++;
-            }
-            if (json.getJSONObject("data").has("Error")) {
-                amountErrors++;
-            }
-        }
-    }
-
-
-    private static List<JSONObject> getOnlyMaxWindows(List<JSONObject> dataReceived) {
-        dataReceived.sort(Comparator.comparingInt((JSONObject obj) -> obj.getJSONObject("data").getInt("id"))
-                .thenComparingInt(obj -> obj.getInt("startTime")));
-
-        List<JSONObject> onlyMaxWindows = new LinkedList<>();
-        int id;
-        int start;
-        JSONObject json;
-        for(int i = 0; i < dataReceived.size(); i++) {
-//            Display.INSTANCE.info(dataReceived.get(i).getJSONObject("data").getInt("id") + " " + dataReceived.get(i).getInt("startTime") + " " + dataReceived.get(i).getInt("endTime"));
-            if(i == dataReceived.size() - 1) {
-                onlyMaxWindows.add(dataReceived.get(i));
-                break;
-            }
-            id = dataReceived.get(i).getJSONObject("data").getInt("id");
-            start = dataReceived.get(i).getInt("startTime");
-            json = dataReceived.get(i+1);
-            if(json.getInt("startTime") != start && id >= 0) {
-                onlyMaxWindows.add(dataReceived.get(i));
-            }
-        }
-        onlyMaxWindows.sort(Comparator.comparingInt((JSONObject obj) -> obj.getInt("startTime")));
-        return onlyMaxWindows;
-    }
-
-    private static List<JSONObject> getOnlyWindows(List<JSONObject> dataReceived) {
-        List<JSONObject> onlyWindows = new LinkedList<>();
-        for(JSONObject data : dataReceived) {
-            if(data.has("startTime")) {
-                onlyWindows.add(data);
-            }
-        }
-        return onlyWindows;
     }
 
     public static void start(BenchmarkContext context) {
-        extractMetrics(context);
-    }
+        Analyser analyser = new Analyser(context);
+        Display.INSTANCE.line();
 
-    private static void extractMetrics(BenchmarkContext context) {
-        LatencyAnalyser latencyAnalyser = new LatencyAnalyser(context);
-        for (Pair<String, String> pair : latencyAnalyser.start()) {
+        for (Pair<String, String> pair : analyser.analyseLatency()) {
             Display.INSTANCE.info("{}: {}", pair.left(), pair.right());
         }
+
+        Display.INSTANCE.line();
+
+        for (Pair<String, String> pair : analyser.analyseThroughput()) {
+            Display.INSTANCE.info("{}: {}", pair.left(), pair.right());
+        }
+
+        Display.INSTANCE.line();
     }
+
+    private List<Pair<String, String>> analyseThroughput() {
+        executeAnalysis( node -> {
+            long sendTick = node.get( "tick" ).asLong();
+
+            throughputs.putIfAbsent(sendTick, 0L);
+            throughputs.put(sendTick, throughputs.get(sendTick) + 1);
+        });
+
+        return avgMedianMinMax(throughputs.values(), "data points", false);
+    }
+
+    public List<Pair<String, String>> analyseLatency() {
+        executeAnalysis( node -> {
+            long receivedTick = BenchmarkConfig.getArrivedTick(Objects.requireNonNull( node ));
+            long sendTick = node.get( "tick" ).asLong();
+
+            delays.add( receivedTick - sendTick );
+        });
+
+        return avgMedianMinMax(delays, "ticks", true);
+    }
+
+    private @NotNull List<Pair<String, String>> avgMedianMinMax(Collection<Long> unsorted, String unit, boolean isTicks) {
+        if (unsorted.isEmpty()) {
+            throw new IllegalArgumentException("Empty collection for analysis");
+        }
+        Function<Long, String> ending = val -> " " + unit + ( isTicks ? " " + context.tickToTime(val) : "");
+
+        List<Long> sorted = unsorted.stream().sorted().toList();
+
+        long avgTicks = sorted.stream().reduce(0L, Long::sum) / sorted.size();
+        Pair<String, String> avg = new Pair<>("AvgThroughput", avgTicks + ending.apply(avgTicks) );
+
+        long medianTicks = sorted.size() % 2 == 0
+                ? (sorted.get(sorted.size() / 2) + sorted.get(sorted.size() / 2 + 1)) / 2
+                : sorted.get(sorted.size() / 2 + 1);
+        Pair<String, String> median = new Pair<>("MedianThroughput", medianTicks + ending.apply(avgTicks));
+
+        long maxTicks = sorted.stream().max(Long::compareTo).orElseThrow();
+        Pair<String, String> max = new Pair<>("MaxThroughput", maxTicks + ending.apply(avgTicks));
+
+        long minTicks = sorted.stream().min(Long::compareTo).orElseThrow();
+        Pair<String, String> min = new Pair<>("MinThroughput", minTicks + ending.apply(avgTicks));
+
+        return List.of(avg, median, max, min);
+    }
+
+    private void executeAnalysis(Consumer<ObjectNode> consumer) {
+        List<ResultWorker> workers = new ArrayList<>();
+
+        for (Map.Entry<Integer, Workload> entry : context.getWorkloads().entrySet()) {
+            workers.add(new ResultWorker(consumer, context.getConfig().getResultFile(entry.getValue().getName(), entry.getKey()), context, this));
+        }
+
+        workers.forEach(ResultWorker::start);
+
+        try {
+            for (ResultWorker w : workers) {
+                w.join();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

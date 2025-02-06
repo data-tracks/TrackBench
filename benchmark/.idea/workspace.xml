@@ -4,23 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="Added median delay metric and mostly finished validation logic">
+    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="Implemented custom terminal logic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Comparer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Comparer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/DelayWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/latency/ResultWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/LatencyAnalyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/latency/LatencyAnalyser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/DummySystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/DummySystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/sending/SendCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/sending/SendCoordinator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/processing/ProcessingHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/ClockDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/ClockDisplay.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/SimpleCountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/SimpleCountRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonIterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,7 +246,7 @@
       <workItem from="1738087119532" duration="22200000" />
       <workItem from="1738254872096" duration="799000" />
       <workItem from="1738406095968" duration="13953000" />
-      <workItem from="1738516616536" duration="39793000" />
+      <workItem from="1738516616536" duration="47331000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
@@ -331,7 +328,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738699489560</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Implemented custom terminal logic">
+      <option name="closed" value="true" />
+      <created>1738786575181</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1738786575181</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -358,14 +363,15 @@
     <MESSAGE value="added chunk separator for multithreaded sorting" />
     <MESSAGE value="implemented parallel chunk sort and missing comparator" />
     <MESSAGE value="Added median delay metric and mostly finished validation logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added median delay metric and mostly finished validation logic" />
+    <MESSAGE value="Implemented custom terminal logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented custom terminal logic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/util/jsonHandler/JsonFileHandler.java</url>
-          <line>78</line>
+          <line>79</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -418,19 +424,14 @@
           <option name="timeStamp" value="104" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java</url>
-          <line>69</line>
-          <option name="timeStamp" value="106" />
+          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="113" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java</url>
-          <line>81</line>
-          <option name="timeStamp" value="107" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java</url>
-          <line>85</line>
-          <option name="timeStamp" value="108" />
+          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="114" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.18.2/deef8697b92141fb6caf7aa86966cff4eec9b04f/jackson-databind-2.18.2.jar!/com/fasterxml/jackson/databind/node/NumericNode.class</url>

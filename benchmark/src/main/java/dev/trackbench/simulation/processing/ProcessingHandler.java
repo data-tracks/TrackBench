@@ -26,10 +26,15 @@ public class ProcessingHandler extends Thread {
     private final String targetName;
 
 
-    public ProcessingHandler( BenchmarkContext context, File source, String targetName, Workload workload, SimpleCountRegistry registry ) {
+    public ProcessingHandler(
+            BenchmarkContext context,
+            File source,
+            String targetName,
+            Workload workload,
+            SimpleCountRegistry registry) {
         this.config = context.getConfig();
         this.context = context;
-        this.sources = source.isFile() ? List.of( source ) : Arrays.asList( Objects.requireNonNull( source.listFiles() ) );
+        this.sources = source.isFile() ? List.of(source) : Arrays.asList(Objects.requireNonNull(source.listFiles()));
         this.registry = registry;
         this.workload = workload;
         this.targetName = targetName;
@@ -38,15 +43,15 @@ public class ProcessingHandler extends Thread {
 
     @Override
     public void run() {
-        List<JsonIterator> iterators = sources.stream().map( s -> new JsonIterator( config.readBatchSize(), s, false ) ).toList();
+        List<JsonIterator> iterators = sources.stream().map(s -> new JsonIterator(config.readBatchSize(), s, false)).toList();
 
-        Step initialStep = workload.getProcessing( targetName );
+        Step initialStep = workload.getProcessing(targetName);
 
-        for ( JsonIterator iterator : iterators ) {
-            while ( iterator.hasNext() ) {
+        for (JsonIterator iterator : iterators) {
+            while (iterator.hasNext()) {
                 JsonNode node = iterator.next();
-                JsonNode tick = Objects.requireNonNull( node ).get( "tick" );
-                initialStep.next( new Value( tick.asLong(), node ) );
+                JsonNode tick = Objects.requireNonNull(node).get("tick");
+                initialStep.next(new Value(tick.asLong(), node));
             }
         }
 

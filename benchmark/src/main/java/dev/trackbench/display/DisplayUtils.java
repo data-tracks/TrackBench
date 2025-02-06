@@ -1,4 +1,4 @@
-package dev.trackbench.util;
+package dev.trackbench.display;
 
 public class DisplayUtils {
 

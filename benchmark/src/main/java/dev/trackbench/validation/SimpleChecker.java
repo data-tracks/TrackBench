@@ -1,6 +1,6 @@
 package dev.trackbench.validation;
 
-import dev.trackbench.util.DisplayUtils;
+import dev.trackbench.display.DisplayUtils;
 import dev.trackbench.util.file.FileUtils;
 import java.io.File;
 import java.util.Objects;

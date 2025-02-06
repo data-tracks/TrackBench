@@ -1,30 +1,29 @@
-package dev.trackbench.util;
+package dev.trackbench.display;
 
-import dev.trackbench.configuration.BenchmarkConfig;
+import dev.trackbench.util.Clock;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ClockDisplay {
-
-    private final BenchmarkConfig config;
+public class ClockDisplay implements Component {
 
     final Clock clock;
     private final ScheduledExecutorService scheduler;
 
     long time = 0;
     long tick = 0;
+    private Runnable finish;
 
-    public ClockDisplay( Clock clock, BenchmarkConfig config ) {
+    public ClockDisplay( Clock clock ) {
         this.clock = clock;
-        this.config = config;
-        System.out.println( "🕙 Clock: " + clock.tick() );
         this.scheduler = Executors.newScheduledThreadPool( 1 );
-        scheduler.scheduleAtFixedRate( this::update, 100, 500, TimeUnit.MILLISECONDS);
     }
 
     public void stop(){
         this.scheduler.shutdownNow();
+        System.out.print("\n");
+        this.finish.run();
     }
 
 
@@ -42,4 +41,14 @@ public class ClockDisplay {
         }
     }
 
+    @Override
+    public void render() {
+        // nothing on purpose
+    }
+
+    @Override
+    public void start(Runnable runnable) {
+        scheduler.scheduleAtFixedRate( this::update, 100, 500, TimeUnit.MILLISECONDS);
+        this.finish = runnable;
+    }
 }

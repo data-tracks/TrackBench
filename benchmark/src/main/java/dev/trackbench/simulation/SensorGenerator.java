@@ -64,14 +64,14 @@ public class SensorGenerator {
                 sensor.join();
             }
 
-            Display.INSTANCE.info( "###\nFinishing last batch..." );
+            Display.INSTANCE.info( "Finishing last batch..." );
 
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
 
         registry.done();
-        Display.INSTANCE.info( "###\nDone generating..." );
+        Display.INSTANCE.info( "Done generating..." );
 
         // we print the summary for debug purposes
         for ( Sensor sensor : sensors ) {

@@ -1,39 +1,39 @@
 package dev.trackbench.analyse;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.util.ObservableThread;
 import dev.trackbench.util.file.JsonSource;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.function.Consumer;
 
-public class DelayWorker extends ObservableThread {
+public class ResultWorker extends ObservableThread {
 
     private final JsonSource source;
     private final BenchmarkContext context;
-    private final LatencyAnalyser collector;
+    private final Analyser collector;
+    private final Consumer<ObjectNode> nodeConsumer;
 
 
-    public DelayWorker(File source, BenchmarkContext context, LatencyAnalyser collector ) {
+    public ResultWorker(
+            Consumer<ObjectNode> nodeConsumer,
+            File source,
+            BenchmarkContext context,
+            Analyser collector ) {
         this.source = JsonSource.of(source, 10_000 );
         this.context = context;
         this.collector = collector;
+        this.nodeConsumer = nodeConsumer;
     }
 
 
     @Override
     public void run() {
-
         while ( source.hasNext() ) {
             ObjectNode node = (ObjectNode) source.next();
 
-            long receivedTick = BenchmarkConfig.getArrivedTick(Objects.requireNonNull( node ));
-            long sendTick = node.get( "tick" ).asLong();
-
-            collector.delays.add( receivedTick - sendTick );
-
+            nodeConsumer.accept(node);
         }
     }
 

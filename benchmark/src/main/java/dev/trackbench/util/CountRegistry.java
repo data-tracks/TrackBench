@@ -1,5 +1,6 @@
 package dev.trackbench.util;
 
+import dev.trackbench.display.Display;
 import dev.trackbench.display.LoadingBar;
 import lombok.Getter;
 
@@ -30,6 +31,7 @@ public class CountRegistry {
         this.total = total;
         this.stepSize = stepSize;
         this.loadingBar = new LoadingBar(total, units);
+        Display.INSTANCE.next(this.loadingBar);
         this.synchronize = synchronize;
     }
 

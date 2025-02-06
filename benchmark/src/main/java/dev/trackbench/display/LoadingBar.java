@@ -25,15 +25,18 @@ public class LoadingBar implements Component{
         bar.append( "[" );
         for ( int j = 0; j < totalSteps; j++ ) {
             if ( j < (percentage/2) ) {
-                bar.append( "=" );
+                bar.append( "█" );
             } else {
                 bar.append( " " );
             }
+            if( j == totalSteps/2){
+                String percent = String.valueOf(percentage);
+                int diff = 3 - percent.length();
+                bar.append(" ").repeat(" ", diff).append( percentage ).append( "% " );
+            }
+
         }
         bar.append( "] " )
-                .append( percentage )
-                .append( "%" )
-                .append( " | " )
                 .append( String.format( "%,d", count).replace( ",", "'" ) )
                 .append( " of " )
                 .append( String.format( "%,d", (long) total).replace( ",", "'" ) )

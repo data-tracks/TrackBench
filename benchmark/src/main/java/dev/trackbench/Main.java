@@ -1,16 +1,16 @@
 package dev.trackbench;
 
+import dev.trackbench.analyse.Analyser;
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.display.Display;
 import dev.trackbench.execution.ExecutionCoordinator;
 import dev.trackbench.simulation.aggregate.AveragedData;
 import dev.trackbench.simulation.aggregate.FinalData;
-import dev.trackbench.analyse.Analyser;
+import dev.trackbench.analyse.OldAnalyser;
 import dev.trackbench.analyse.Comparer;
 import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import dev.trackbench.simulation.processing.ProcessingGenerator;
-import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.simulation.RandomData;
 import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.system.DummySystem;
@@ -78,8 +78,8 @@ public class Main {
     private static void setPaths( BenchmarkConfig config ) {
         //Set data for all files
         RandomData.setPeek( config.factor() );
-        Analyser.setAmountSensors( config.sensorAmount() );
-        Analyser.setFolder( config.path() );
+        OldAnalyser.setAmountSensors( config.sensorAmount() );
+        OldAnalyser.setFolder( config.path() );
         AveragedData.setFolderStore( config.path() );
         FinalData.setFolderStore( config.path() );
         Comparer.setFolder( config.path() );

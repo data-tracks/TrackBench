@@ -3,6 +3,7 @@ package dev.trackbench.execution;
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.display.Display;
+import dev.trackbench.display.Timer;
 import dev.trackbench.execution.receiver.ReceiveCoordinator;
 import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.util.Clock;
@@ -52,16 +53,13 @@ public class ExecutionCoordinator {
     }
 
     private static void waitExecution(long minutes) throws InterruptedException {
-        for (long remainingSeconds = minutes*60; remainingSeconds >= 0; remainingSeconds--) {
-            long displayMinutes = remainingSeconds / 60;
-            long displaySeconds = remainingSeconds % 60;
+        Timer timer = new Timer(minutes);
+        Display.INSTANCE.next(timer);
 
-            System.out.printf("\rTime left: %02d:%02d", displayMinutes, displaySeconds);
-
-            TimeUnit.SECONDS.sleep(1);
+        while (Display.INSTANCE.getCurrent() == null || Display.INSTANCE.getCurrent().right() != timer) {
+            Thread.sleep( 1000 );
         }
-        System.out.print("\n");
-
+        Display.INSTANCE.getCurrent().left().join();
     }
 
 
