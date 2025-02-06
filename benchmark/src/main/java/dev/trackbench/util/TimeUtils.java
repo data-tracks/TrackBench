@@ -4,6 +4,10 @@ import java.time.Duration;
 
 public class TimeUtils {
 
+    public static String formatMillis(long millis) {
+        return formatNanoseconds(millis * 100_000);
+    }
+
     public static String formatNanoseconds( long nanoseconds ) {
         Duration duration = Duration.ofNanos( nanoseconds );
 

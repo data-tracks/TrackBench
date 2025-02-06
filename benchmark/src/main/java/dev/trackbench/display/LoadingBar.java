@@ -1,5 +1,11 @@
 package dev.trackbench.display;
 
+import dev.trackbench.util.TimeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 public class LoadingBar implements Component{
 
 
@@ -8,6 +14,8 @@ public class LoadingBar implements Component{
     // Total number of steps for the loading bar
     int totalSteps = 50;
     double total;
+    List<Long> times = new ArrayList<>();
+    long lastPercent = 0;
 
 
     public LoadingBar(long total, String unit ) {
@@ -18,7 +26,13 @@ public class LoadingBar implements Component{
 
 
     public void next(long count) {
+
+
         int percentage = (int) (count / total * maxPercent);
+        if( lastPercent != percentage ) {
+            this.lastPercent = percentage;
+            this.times.add(System.currentTimeMillis());
+        }
 
         // Build the loading bar
         StringBuilder bar = new StringBuilder();
@@ -41,6 +55,16 @@ public class LoadingBar implements Component{
                 .append( " of " )
                 .append( String.format( "%,d", (long) total).replace( ",", "'" ) )
                 .append( unit );
+
+        if(times.size() > 1) {
+            double avgPercent = IntStream.range(1, times.size())
+                    .mapToObj(i -> times.get(i) - times.get(i - 1))
+                    .mapToLong(Long::longValue)
+                    .average()
+                    .orElseThrow();
+            long duration = (long) ((100 - percentage) * avgPercent);
+            bar.append(" | approx. ").append(TimeUtils.formatMillis(duration)).append(" to 100%");
+        }
 
         // Print the loading bar
         System.out.print( "\r" + bar ); // '\r' returns the cursor to the beginning of the line
