@@ -182,9 +182,9 @@ public class OldAnalyser {
     }
 
     private static void extractMetrics(BenchmarkContext context) {
-        Analyser latencyAnalyser = new Analyser(context);
+        /*Analyser latencyAnalyser = new Analyser(context, workload);
         for (Pair<String, String> pair : latencyAnalyser.analyseLatency()) {
             Display.INSTANCE.info("{}: {}", pair.left(), pair.right());
-        }
+        }*/
     }
 }

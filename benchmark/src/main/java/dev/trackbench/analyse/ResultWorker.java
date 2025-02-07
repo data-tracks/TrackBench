@@ -14,14 +14,17 @@ public class ResultWorker extends ObservableThread {
     private final BenchmarkContext context;
     private final Analyser collector;
     private final Consumer<ObjectNode> nodeConsumer;
+    private final long chunkSize;
 
 
     public ResultWorker(
             Consumer<ObjectNode> nodeConsumer,
-            File source,
+            JsonSource source,
+            long chunkSize,
             BenchmarkContext context,
             Analyser collector ) {
-        this.source = JsonSource.of(source, 10_000 );
+        this.chunkSize = chunkSize;
+        this.source = source;
         this.context = context;
         this.collector = collector;
         this.nodeConsumer = nodeConsumer;
@@ -30,7 +33,10 @@ public class ResultWorker extends ObservableThread {
 
     @Override
     public void run() {
-        while ( source.hasNext() ) {
+        for (long i = 0; i < chunkSize; i++) {
+            if (!source.hasNext()){
+                break;
+            }
             ObjectNode node = (ObjectNode) source.next();
 
             nodeConsumer.accept(node);

@@ -64,8 +64,6 @@ public class SensorGenerator {
                 sensor.join();
             }
 
-            Display.INSTANCE.info( "Finishing last batch..." );
-
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
@@ -78,8 +76,6 @@ public class SensorGenerator {
             Display.INSTANCE.info( "Sensor: {}, MetaData: {}", sensor.getTemplate().getType(), sensor.getMetric() );
         }
         Display.INSTANCE.info("Max id is {}", Sensor.getDpIdBuilder().get());
-
-
     }
 
 

@@ -33,6 +33,6 @@ public class Clock extends Thread {
 
 
     public void finishDisplay() {
-        System.out.print("\n");
+        System.out.print("\r");
     }
 }

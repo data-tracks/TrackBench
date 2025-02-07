@@ -22,7 +22,7 @@ public class ClockDisplay implements Component {
 
     public void stop(){
         this.scheduler.shutdownNow();
-        System.out.print("\n");
+        System.out.print("\r");
         this.finish.run();
     }
 

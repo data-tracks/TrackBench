@@ -47,27 +47,27 @@ public class Main {
         if ( config.simulate() ) {
             context.loadNecessities();
             JsonFileHandler.deleteFolder( config.getSimulationPath() );
-            System.out.println( "Generating processing..." );
+            Display.INSTANCE.info( "Generating processing..." );
 
             ProcessingGenerator.process( context );
         }
 
         if ( config.execute() ) {
             JsonFileHandler.deleteFolder( config.getResultPath() );
-            System.out.println( "Starting processing..." );
+            Display.INSTANCE.info( "Starting processing..." );
             ExecutionCoordinator.start(context);
-            System.out.println( "Finished processing." );
+            Display.INSTANCE.info( "Finished processing." );
 
         }
 
         if ( config.validate() ) {
             JsonFileHandler.deleteFolder( config.getValidationPath() );
-            System.out.println( "Starting validation..." );
+            Display.INSTANCE.info( "Starting validation..." );
             Validator.start(context);
         }
 
         if( config.analyze() ) {
-            System.out.println( "Starting analyser..." );
+            Display.INSTANCE.info( "Starting analyser..." );
             Analyser.start(context);
         }
 

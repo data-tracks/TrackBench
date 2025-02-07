@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="Added throughput analysis and fixed display for complex components">
+    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="added approx. minutes until finish to loading bar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/TimeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/TimeUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/ClockDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/ClockDisplay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/execution/receiver/Receiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/Clock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -240,7 +247,7 @@
       <workItem from="1738087119532" duration="22200000" />
       <workItem from="1738254872096" duration="799000" />
       <workItem from="1738406095968" duration="13953000" />
-      <workItem from="1738516616536" duration="51432000" />
+      <workItem from="1738516616536" duration="59399000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
@@ -338,7 +345,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738865345681</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added approx. minutes until finish to loading bar">
+      <option name="closed" value="true" />
+      <created>1738866963469</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1738866963469</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,7 +382,8 @@
     <MESSAGE value="Added median delay metric and mostly finished validation logic" />
     <MESSAGE value="Implemented custom terminal logic" />
     <MESSAGE value="Added throughput analysis and fixed display for complex components" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added throughput analysis and fixed display for complex components" />
+    <MESSAGE value="added approx. minutes until finish to loading bar" />
+    <option name="LAST_COMMIT_MESSAGE" value="added approx. minutes until finish to loading bar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -419,24 +435,14 @@
           <option name="timeStamp" value="79" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java</url>
-          <line>56</line>
-          <option name="timeStamp" value="113" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/execution/ExecutionCoordinator.java</url>
-          <line>61</line>
-          <option name="timeStamp" value="114" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java</url>
-          <line>75</line>
+          <line>80</line>
           <option name="timeStamp" value="115" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java</url>
-          <line>65</line>
-          <option name="timeStamp" value="117" />
+          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/analyse/Analyser.java</url>
+          <line>101</line>
+          <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.18.2/deef8697b92141fb6caf7aa86966cff4eec9b04f/jackson-databind-2.18.2.jar!/com/fasterxml/jackson/databind/node/NumericNode.class</url>

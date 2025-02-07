@@ -6,10 +6,12 @@ import dev.trackbench.display.Display;
 import dev.trackbench.display.Timer;
 import dev.trackbench.execution.receiver.ReceiveCoordinator;
 import dev.trackbench.execution.sending.SendCoordinator;
+import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.util.Clock;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+import dev.trackbench.util.file.JsonSource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,7 +32,7 @@ public class ExecutionCoordinator {
             sender.start();
 
             while ( !receiver.allReady() || !sender.allReady() ) {
-                Thread.sleep( Duration.ofSeconds( 5 ) );
+                Thread.sleep( Duration.ofSeconds( 1 ) );
             }
             Display.INSTANCE.info( "All ready. Start the clock..." );
             context.getClock().start();
@@ -50,6 +52,7 @@ public class ExecutionCoordinator {
         } catch ( InterruptedException e ) {
             throw new RuntimeException( e );
         }
+        Display.INSTANCE.info("Max id is {}", JsonSource.of(context.getConfig().getResultFile(context.getWorkload(0).getName()), 10_000).countLines());
     }
 
     private static void waitExecution(long minutes) throws InterruptedException {

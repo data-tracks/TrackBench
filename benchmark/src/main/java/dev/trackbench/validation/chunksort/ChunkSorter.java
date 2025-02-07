@@ -3,7 +3,6 @@ package dev.trackbench.validation.chunksort;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.display.Display;
 import dev.trackbench.util.CountRegistry;
-import dev.trackbench.util.SimpleCountRegistry;
 import dev.trackbench.util.file.FileJsonTarget;
 import dev.trackbench.util.file.FileUtils;
 import dev.trackbench.util.file.JsonSource;
@@ -46,7 +45,7 @@ public class ChunkSorter {
         this.extractor = extractor;
         this.maxId = MaxCounter.extractMax(source, value -> value.get("id").asLong());
         this.lines = source.countLines();
-        this.chunks = maxId / IDS_PER_CHUNK;
+        this.chunks = Math.max( maxId / IDS_PER_CHUNK, 1);
         Display.INSTANCE.info("Chunks to create {} chunks", chunks);
         this.workerSize = lines / WORKERS != 0 ? lines / WORKERS + 1 : lines / WORKERS;
 
@@ -111,7 +110,7 @@ public class ChunkSorter {
         }
 
         List<SortWorker> workers = new ArrayList<>();
-        CountRegistry registry = new CountRegistry(this.chunks, 1," chunks", false);
+        CountRegistry registry = new CountRegistry(this.chunks, 1, " chunks", false);
         for (long i = 0; i < WORKERS; i++) {
             SortWorker worker = new SortWorker(chunks, source, target, extractor, registry);
             worker.start();
@@ -256,24 +255,30 @@ public class ChunkSorter {
 
         @Override
         public void run() {
-            Long chunk = chunks.poll();
-            while (chunk != null) {
-                JsonSource file = JsonSource.of(FileUtils.getJson(this.source, String.valueOf(chunk)), 10_000);
-                JsonTarget target = getJsonTarget(this.target, chunk);
+            try {
+                Long chunk = chunks.poll();
+                while (chunk != null) {
+                    JsonSource file = JsonSource.of(FileUtils.getJson(this.source, String.valueOf(chunk)), 10_000);
+                    JsonTarget target = getJsonTarget(this.target, chunk);
 
-                TreeSet<JsonNode> queue = new TreeSet<>(Comparator.comparing(extractor));
-                while (file.hasNext()) {
-                    JsonNode next = file.next();
-                    queue.add(next);
-                }
-                for (JsonNode jsonNode : queue) {
-                    target.attach(jsonNode);
-                }
-                synchronized (chunks) {
-                    this.registry.update(0, this.registry.getLast() + 1);
-                    chunk = chunks.poll();
-                }
+                    TreeSet<JsonNode> queue = new TreeSet<>(Comparator.comparing(extractor));
+                    while (file.hasNext()) {
+                        JsonNode next = file.next();
+                        queue.add(next);
+                    }
+                    for (JsonNode jsonNode : queue) {
+                        target.attach(jsonNode);
+                    }
 
+                    target.close();
+
+                    synchronized (chunks) {
+                        this.registry.update(0, this.registry.getLast() + 1);
+                        chunk = chunks.poll();
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }

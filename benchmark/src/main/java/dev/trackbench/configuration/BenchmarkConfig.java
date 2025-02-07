@@ -43,7 +43,7 @@ public record BenchmarkConfig(
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
     public static final String RESULT_PATH = "result";
-    public static final long executionMaxMin = 2;
+    public static final long executionMaxMin = 1;
     public static final String ARRIVED_TICK_KEY = "arrived";
 
 
@@ -156,7 +156,7 @@ public record BenchmarkConfig(
 
         long errorsTotal = (long) (ticksGenerated * rate);
 
-        return ticks / errorsTotal;
+        return ticks / Math.max(errorsTotal,1);
     }
 
 
