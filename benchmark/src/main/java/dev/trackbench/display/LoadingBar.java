@@ -1,10 +1,13 @@
 package dev.trackbench.display;
 
+import static dev.trackbench.display.Display.green;
+
 import dev.trackbench.util.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.jetbrains.annotations.NotNull;
 
 public class LoadingBar implements Component{
 
@@ -50,11 +53,10 @@ public class LoadingBar implements Component{
             }
 
         }
-        bar.append( "] " )
-                .append( String.format( "%,d", count).replace( ",", "'" ) )
+        bar.append( "] " );
+        bar.append( String.format( "%,d", count).replace( ",", "'" ) )
                 .append( " of " )
-                .append( String.format( "%,d", (long) total).replace( ",", "'" ) )
-                .append( unit );
+                .append( getTotal() );
 
         if(times.size() > 1) {
             double avgPercent = IntStream.range(1, times.size())
@@ -67,13 +69,19 @@ public class LoadingBar implements Component{
         }
 
         // Print the loading bar
-        System.out.print( "\r" + bar ); // '\r' returns the cursor to the beginning of the line
+        System.out.print( "\r" + bar );
 
     }
 
+
+    private @NotNull String getTotal() {
+        return String.format( "%,d", (long) total ).replace( ",", "'" ) + unit;
+    }
+
+
     public void done() {
         this.next((long) total);
-        System.out.print( "\n" );
+        System.out.println( "\r" + green(getTotal()) );
     }
 
     @Override

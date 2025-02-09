@@ -2,13 +2,13 @@ package dev.trackbench.validation;
 
 import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.configuration.workloads.Workload;
+import dev.trackbench.display.Display;
+import dev.trackbench.display.DisplayUtils;
 import dev.trackbench.util.file.JsonSource;
 import dev.trackbench.validation.chunksort.ChunkSorter;
-import dev.trackbench.validation.splitter.Splitter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.util.Map.Entry;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Validator {
@@ -16,28 +16,31 @@ public class Validator {
     public static void start( BenchmarkContext context ) {
 
         for ( Entry<Integer, Workload> entry : context.getWorkloads().entrySet() ) {
-            File simulated = context.getConfig().getSimulationPath( entry.getValue().getName() );
-            File tested = context.getConfig().getResultFile( entry.getValue().getName() );
+            Display.INSTANCE.line();
+            Display.INSTANCE.info( "Analysis Workload: " + entry.getValue().getName() );
+            Display.INSTANCE.line();
+            JsonSource simulated = JsonSource.of( context.getConfig().getSimulationPath( entry.getValue().getName() ), context.getConfig().readBatchSize() );
+            JsonSource tested = JsonSource.of( context.getConfig().getResultFile( entry.getValue().getName() ), context.getConfig().readBatchSize() );
 
             SimpleChecker simpleChecker = new SimpleChecker( simulated, tested );
             simpleChecker.check();
 
             ChunkSorter sorter = new ChunkSorter(
-                    JsonSource.of(tested, context.getConfig().readBatchSize()),
-                    context.getConfig().getValidationFile("sortedTested"),
-                    value -> value.get("id").asLong());
+                    tested.copy(),
+                    context.getConfig().getValidationFile( "sortedTested" ),
+                    value -> value.get( "id" ).asLong() );
             File sortedTested = sorter.sort();
 
             sorter = new ChunkSorter(
-                    JsonSource.of(simulated, context.getConfig().readBatchSize()),
-                    context.getConfig().getValidationFile("sortedTruth"),
-                    value -> value.get("id").asLong());
+                    simulated.copy(),
+                    context.getConfig().getValidationFile( "sortedTruth" ),
+                    value -> value.get( "id" ).asLong() );
             File sortedTruth = sorter.sort();
 
             Comparator comparator = new Comparator(
                     JsonSource.of( sortedTruth, context.getConfig().readBatchSize() ),
                     JsonSource.of( sortedTested, context.getConfig().readBatchSize() ),
-                    value -> value.get("id").asLong() );
+                    value -> value.get( "id" ).asLong() );
 
             comparator.compare();
 

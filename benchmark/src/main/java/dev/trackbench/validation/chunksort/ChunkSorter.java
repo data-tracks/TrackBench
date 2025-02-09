@@ -48,7 +48,6 @@ public class ChunkSorter {
         this.chunks = Math.max( maxId / IDS_PER_CHUNK, 1);
         Display.INSTANCE.info("Chunks to create {} chunks", chunks);
         this.workerSize = lines / WORKERS != 0 ? lines / WORKERS + 1 : lines / WORKERS;
-
     }
 
     public void chunk() {

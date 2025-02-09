@@ -37,7 +37,7 @@ public class ClockDisplay implements Component {
         time = nowTime;
 
         synchronized ( this ) {
-            System.out.print( "\r🕙 Clock: " + tick + " per Tick " + delay + " ms" );
+            System.out.print( "\r🕙 Clock: " + DisplayUtils.printNumber( tick ) + " per Tick " + delay + " ms" );
         }
     }
 

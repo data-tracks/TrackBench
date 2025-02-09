@@ -2,44 +2,30 @@ package dev.trackbench.validation;
 
 import dev.trackbench.display.DisplayUtils;
 import dev.trackbench.util.file.FileUtils;
+import dev.trackbench.util.file.JsonSource;
 import java.io.File;
 import java.util.Objects;
 
 public class SimpleChecker {
 
-    final File left;
-    final File right;
+    final JsonSource left;
+    final JsonSource right;
 
 
-    public SimpleChecker(File left, File right ) {
+    public SimpleChecker( JsonSource left, JsonSource right ) {
         this.left = left;
         this.right = right;
     }
 
 
     public void check() {
-        long left = countLines( this.left );
-        long right = countLines( this.right );
+        long left = this.left.countLines();
+        long right = this.right.countLines();
 
         long diff = Math.abs( right - left );
         long percent =  Math.abs( right - left ) * 100 / Math.max( left, right );
         System.out.printf( "%s data points in %s and %s data points in %s, difference %s data points | %d%%\n",
                 DisplayUtils.printNumber(left), this.left, DisplayUtils.printNumber(right), this.right, DisplayUtils.printNumber(diff), percent );
-    }
-
-
-    private long countLines( File file ) {
-        long lines = 0;
-        if ( file.isDirectory() ) {
-            for ( File f : Objects.requireNonNull( file.listFiles() ) ) {
-                lines += countLines( f );
-            }
-        } else {
-            if ( file.getName().endsWith( ".json" ) ) {
-                return FileUtils.countLines( file, false );
-            }
-        }
-        return lines;
     }
 
 }
