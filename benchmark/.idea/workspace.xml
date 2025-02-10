@@ -5,11 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="added approx. minutes until finish to loading bar">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_02_2025_15_00_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_02_2025_15_00__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/ClockDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/ClockDisplay.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/SimpleChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/SimpleChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/SimpleCountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/SimpleCountRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/DirSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/DirSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Comparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Comparator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
     </list>
@@ -88,12 +96,12 @@
     &quot;assignee&quot;: &quot;datomo&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:data-tracks/TrackBench.git&quot;,
-    &quot;accountId&quot;: &quot;0173a704-20ba-4f28-b3b1-423de30571b4&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:data-tracks/TrackBench.git",
+    "accountId": "def2c711-ae31-433a-9c89-91e4ce7daee9"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -218,8 +226,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
       </set>
     </attachedChunks>
   </component>
@@ -244,6 +252,7 @@
       <workItem from="1738254872096" duration="799000" />
       <workItem from="1738406095968" duration="13953000" />
       <workItem from="1738516616536" duration="59399000" />
+      <workItem from="1739194615312" duration="21889000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
@@ -407,7 +416,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/DirSource.java</url>
-          <line>46</line>
+          <line>49</line>
           <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -417,13 +426,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java</url>
-          <line>83</line>
+          <line>81</line>
           <option name="timeStamp" value="130" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java</url>
-          <line>48</line>
-          <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.18.2/deef8697b92141fb6caf7aa86966cff4eec9b04f/jackson-databind-2.18.2.jar!/com/fasterxml/jackson/databind/node/NumericNode.class</url>

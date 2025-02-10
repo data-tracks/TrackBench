@@ -14,7 +14,7 @@ public class SimpleCountRegistry {
 
     public SimpleCountRegistry( long total, String units ) {
         this.total = total;
-        this.loadingBar = new LoadingBar( total, units );
+        this.loadingBar = new LoadingBar( total, "", units );
     }
 
 

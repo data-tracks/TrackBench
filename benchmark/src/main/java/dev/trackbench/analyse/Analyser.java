@@ -90,7 +90,7 @@ public class Analyser {
         String capName = StringUtils.capitalize(name);
         Function<Long, String> ending = val -> " " + unit + ( isTicks ? " " + context.tickToTime(val) : "");
 
-        List<Long> sorted = unsorted.stream().sorted().toList();
+        List<Long> sorted = unsorted.stream().parallel().sorted().toList();
 
         long avgTicks = sorted.stream().reduce(0L, Long::sum) / sorted.size();
         Pair<String, String> avg = new Pair<>("Avg" + capName, avgTicks + ending.apply(avgTicks) );

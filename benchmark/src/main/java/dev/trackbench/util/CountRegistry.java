@@ -27,16 +27,16 @@ public class CountRegistry {
      * @param synchronize if multiple threads are working on it,
      * which need to finish each step separately before progress can be updated or if they work together
      */
-    public CountRegistry(long total, long stepSize, String units, boolean synchronize) {
+    public CountRegistry(long total, long stepSize, String units, String task, boolean synchronize) {
         this.total = total;
         this.stepSize = stepSize;
-        this.loadingBar = new LoadingBar(total, units);
+        this.loadingBar = new LoadingBar(total, task, units);
         Display.INSTANCE.next(this.loadingBar);
         this.synchronize = synchronize;
     }
 
-    public CountRegistry(long total, long stepSize, String units) {
-        this(total, stepSize, units, true);
+    public CountRegistry(long total, long stepSize, String units, String task) {
+        this(total, stepSize, units, task, true);
     }
 
     public void update(long id, long count) {

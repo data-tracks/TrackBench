@@ -22,8 +22,7 @@ import java.util.function.Function;
 public class ChunkSorter {
 
     public final static long IDS_PER_CHUNK = 100_000;
-    public final static long WORKERS = 64;
-    public final static long BATCH_SIZE = 100_000;
+    public final static long WORKERS = 32;
     public static final String MERGED = "merged";
     public static final String SORTED = "sorted";
     public static final String FINAL = "final";
@@ -51,7 +50,7 @@ public class ChunkSorter {
     }
 
     public void chunk() {
-        CountRegistry registry = new CountRegistry(this.workerSize, 1_000, " lines");
+        CountRegistry registry = new CountRegistry(this.workerSize, 1_000, " lines", "chunked");
 
         List<ChunkWorker> workers = new ArrayList<>();
         for (long i = 0; i < WORKERS; i++) {
@@ -60,7 +59,6 @@ public class ChunkSorter {
                     registry,
                     i * this.workerSize,
                     this.workerSize,
-                    chunks,
                     source,
                     FileUtils.createFolder(target, getWorkerFolder(i)),
                     v -> v.get("id").asLong());
@@ -109,7 +107,7 @@ public class ChunkSorter {
         }
 
         List<SortWorker> workers = new ArrayList<>();
-        CountRegistry registry = new CountRegistry(this.chunks, 1, " chunks", false);
+        CountRegistry registry = new CountRegistry(this.chunks, 1, " chunks", "sorted", false);
         for (long i = 0; i < WORKERS; i++) {
             SortWorker worker = new SortWorker(chunks, source, target, extractor, registry);
             worker.start();
@@ -126,7 +124,10 @@ public class ChunkSorter {
     }
 
     private void collect(File target) {
+        CountRegistry registry = new CountRegistry(this.chunks, 1, " chunks", "merged", false);
+
         for (long chunk = 0; chunk < chunks; chunk++) {
+            registry.update( 0, chunk );
             long chunkStart = chunk * IDS_PER_CHUNK;
             File chunkTarget = FileUtils.getJson(target, String.valueOf(chunkStart));
             boolean coveredByOne = false;
@@ -162,7 +163,7 @@ public class ChunkSorter {
     }
 
     private static JsonTarget getJsonTarget(File target, long start) {
-        return new FileJsonTarget(FileUtils.getJson(target, String.valueOf(start)), 10_000);
+        return new FileJsonTarget(FileUtils.getJson(target, String.valueOf(start)), 1_000);
     }
 
     public static class ChunkWorker extends Thread {
@@ -172,7 +173,6 @@ public class ChunkSorter {
         private final Map<Long, JsonTarget> targets = new HashMap<>();
         private final JsonSource source;
         private final Function<JsonNode, Long> tickExtractor;
-        private final long chunks;
         private final CountRegistry registry;
 
 
@@ -181,7 +181,6 @@ public class ChunkSorter {
                 CountRegistry registry,
                 long start,
                 long lines,
-                long chunks,
                 JsonSource source,
                 File target,
                 Function<JsonNode, Long> tickExtractor) {
@@ -191,7 +190,6 @@ public class ChunkSorter {
             this.source = source.copy();
             this.source.offset(start);
             this.tickExtractor = tickExtractor;
-            this.chunks = chunks;
             this.registry = registry;
         }
 
@@ -208,10 +206,11 @@ public class ChunkSorter {
                 JsonNode current = source.next();
                 long id = tickExtractor.apply(current);
                 long chunk = id / IDS_PER_CHUNK;
-                JsonTarget target = targets.get(chunk * IDS_PER_CHUNK);
+                long currentChunk = chunk * IDS_PER_CHUNK;
+                JsonTarget target = targets.get( currentChunk );
                 if (target == null) {
-                    target = getJsonTarget(this.target, chunk * IDS_PER_CHUNK);
-                    targets.put(chunk * IDS_PER_CHUNK, target);
+                    target = getJsonTarget(this.target, currentChunk );
+                    targets.put( currentChunk, target);
                 }
                 target.attach(current);
 

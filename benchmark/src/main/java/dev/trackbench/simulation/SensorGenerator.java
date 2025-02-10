@@ -38,7 +38,7 @@ public class SensorGenerator {
     public static void createSensors( BenchmarkContext context ) {
         List<Sensor> sensors = new ArrayList<>();
 
-        CountRegistry registry = new CountRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual(), " ticks" );
+        CountRegistry registry = new CountRegistry( context.getConfig().ticks(), context.getConfig().updateTickVisual(), " ticks", "simulated" );
 
         for ( int i = 0; i < context.getConfig().sensorAmount(); i++ ) {
             // pick random sensor

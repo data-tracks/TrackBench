@@ -8,6 +8,7 @@ public class FileSource implements JsonSource {
     private final File file;
     private JsonIterator json;
     private final long readBatchSize;
+    private Long count;
 
 
     public FileSource( File file, long readBatchSize ) {
@@ -31,13 +32,18 @@ public class FileSource implements JsonSource {
 
     @Override
     public long countLines() {
-        return json.countLines();
+        if (count == null) {
+            count = json.countLines();
+        }
+        return count;
     }
 
 
     @Override
     public JsonSource copy() {
-        return new FileSource( file, readBatchSize );
+        FileSource source = new FileSource( file, readBatchSize );
+        source.count = count;
+        return source;
     }
 
 

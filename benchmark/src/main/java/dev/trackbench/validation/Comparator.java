@@ -39,8 +39,7 @@ public class Comparator {
 
 
     public void compare() {
-
-        CountRegistry registry = new CountRegistry( maxId, 100_00, " id" );
+        CountRegistry registry = new CountRegistry( maxId, 10_000, "compared", " id" );
         long testId = extractor.apply(test.next());
         long i = 0;
         while (truth.hasNext()) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,7 +16,9 @@ public class DirSource implements JsonSource {
     private final File directory;
     private final List<File> files;
     private final List<JsonIterator> iters;
+    private final List<Long> counts = new ArrayList<>();
     private final long readBatchSize;
+    private Long count = null;
 
 
     public DirSource( File directory, long readBatchSize ) {
@@ -52,13 +55,22 @@ public class DirSource implements JsonSource {
 
     @Override
     public long countLines() {
-        return files.stream().map( ( File target ) -> FileUtils.countLines( target, false ) ).reduce( 0L, Long::sum );
+        if ( count == null ) {
+            for ( File file : files ) {
+                counts.add( FileUtils.countLines( file, false ) );
+            }
+
+            count = counts.stream().reduce( 0L, Long::sum );
+        }
+        return count;
     }
 
 
     @Override
     public JsonSource copy() {
-        return new DirSource( directory, readBatchSize );
+        DirSource dir = new DirSource( directory, readBatchSize );
+        dir.count = count;
+        return dir;
     }
 
 
@@ -67,8 +79,9 @@ public class DirSource implements JsonSource {
         long currentOffset = offset;
 
         long toRemove = 0;
-        for ( JsonIterator iter : iters ) {
-            currentOffset -= iter.countLines();
+
+        for ( long count : counts ) {
+            currentOffset -= count;
             if ( currentOffset < 0 ) {
                 iters.getFirst().offset( currentOffset );
                 break;
@@ -79,6 +92,7 @@ public class DirSource implements JsonSource {
 
         for ( long i = 0; i < toRemove; i++ ) {
             iters.removeFirst();
+            counts.removeFirst();
         }
     }
 
@@ -87,6 +101,12 @@ public class DirSource implements JsonSource {
     public void reset() {
         this.iters.clear();
         this.iters.addAll( files.stream().map( f -> new JsonIterator( readBatchSize, f, false ) ).toList() );
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format( "directory: %s", directory  );
     }
 
 }

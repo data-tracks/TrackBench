@@ -7,6 +7,7 @@ import dev.trackbench.util.TimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class LoadingBar implements Component{
@@ -14,6 +15,7 @@ public class LoadingBar implements Component{
 
     private final String unit;
     private final long maxPercent;
+    private final String task;
     // Total number of steps for the loading bar
     int totalSteps = 50;
     double total;
@@ -21,9 +23,10 @@ public class LoadingBar implements Component{
     long lastPercent = 0;
 
 
-    public LoadingBar(long total, String unit ) {
+    public LoadingBar(long total, String task, String unit ) {
         this.total = total;
         this.unit = unit;
+        this.task = task;
         this.maxPercent = 100;
     }
 
@@ -54,7 +57,7 @@ public class LoadingBar implements Component{
 
         }
         bar.append( "] " );
-        bar.append( String.format( "%,d", count).replace( ",", "'" ) )
+        bar.append( WordUtils.capitalize(task) ).append( String.format( " %,d", count).replace( ",", "'" ) )
                 .append( " of " )
                 .append( getTotal() );
 
@@ -81,7 +84,7 @@ public class LoadingBar implements Component{
 
     public void done() {
         this.next((long) total);
-        System.out.println( "\r" + green(getTotal()) );
+        System.out.println( "\rSuccessfully " + task + " " + green(getTotal()) );
     }
 
     @Override
