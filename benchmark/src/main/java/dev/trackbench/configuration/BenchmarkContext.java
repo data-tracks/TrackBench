@@ -1,8 +1,12 @@
 package dev.trackbench.configuration;
 
+import dev.trackbench.configuration.workloads.ErrorWorkload;
+import dev.trackbench.configuration.workloads.WindowGroupWorkload;
+import dev.trackbench.configuration.workloads.WindowWorkload;
 import dev.trackbench.display.Display;
 import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.simulation.sensor.Sensor;
+import dev.trackbench.simulation.window.SlidingWindow;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.TimeUtils;
@@ -32,7 +36,7 @@ public class BenchmarkContext {
     @Setter
     private Clock clock;
 
-    private Map<Integer, Workload> workloads = new HashMap<>();
+    private final Map<Integer, Workload> workloads = new HashMap<>();
 
 
     public BenchmarkContext( BenchmarkConfig config, System system ) {
@@ -40,7 +44,10 @@ public class BenchmarkContext {
         this.system = system;
 
         workloads.put( 0, new IdentityWorkload( config ) );
-        //workloads.put( 1, new ErrorWorkload( config ) );
+        workloads.put( 1, new ErrorWorkload( config ) );
+        workloads.put( 2, new WindowWorkload( config ) );
+        workloads.put( 3, new WindowGroupWorkload( "tire", config ) );
+        workloads.put( 4, new WindowGroupWorkload( "break", config ) );
     }
 
 

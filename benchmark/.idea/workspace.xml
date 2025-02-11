@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="added approx. minutes until finish to loading bar">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_02_2025_15_00_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_02_2025_15_00__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/simulation/SensorGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/CountRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/SimpleCountRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/SimpleCountRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/DirSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/DirSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileJsonTarget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/JsonSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Comparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Comparator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/chunksort/ChunkSorter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,12 +85,12 @@
     &quot;assignee&quot;: &quot;datomo&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:data-tracks/TrackBench.git",
-    "accountId": "def2c711-ae31-433a-9c89-91e4ce7daee9"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:data-tracks/TrackBench.git&quot;,
+    &quot;accountId&quot;: &quot;def2c711-ae31-433a-9c89-91e4ce7daee9&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -118,9 +107,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.Build benchmark.executor": "Run",
     "Gradle.benchmark [:dev.datageneration.Main.main()].executor": "Run",
     "Gradle.benchmark [build].executor": "Run",
-    "Gradle.benchmark [run].executor": "Debug",
+    "Gradle.benchmark [run].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
