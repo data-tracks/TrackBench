@@ -7,6 +7,7 @@ import dev.trackbench.simulation.processing.Step;
 import dev.trackbench.simulation.window.SlidingWindow;
 import dev.trackbench.util.file.FileJsonTarget;
 import dev.trackbench.util.file.FileStep;
+import java.util.Optional;
 
 public class WindowWorkload extends Workload {
 
@@ -16,8 +17,11 @@ public class WindowWorkload extends Workload {
 
 
     @Override
-    public Step getProcessing( String fileName ) {
-        return new DistributionStep().after( new SlidingWindow( AvgAggregator::new, 1_000 ) ).after( new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) );
+    public Optional<Step> getProcessing( String fileName ) {
+        return Optional.ofNullable(
+                new DistributionStep()
+                        .after( new SlidingWindow( AvgAggregator::new, 1_000 ) )
+                        .after( new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) ) );
     }
 
 }

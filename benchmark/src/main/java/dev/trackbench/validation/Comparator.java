@@ -1,7 +1,6 @@
 package dev.trackbench.validation;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dev.trackbench.display.Display;
 import dev.trackbench.util.CountRegistry;
 import dev.trackbench.util.file.JsonSource;
 import dev.trackbench.validation.max.MaxCounter;
@@ -37,8 +36,8 @@ public class Comparator {
     }
 
 
-    public void compare() {
-        CountRegistry registry = new CountRegistry( maxId, 10_000, "compared", " id" );
+    public List<String> compare() {
+        CountRegistry registry = new CountRegistry( maxId, 10_000, " id", "compared" );
         long testId = extractor.apply( test.next() );
         long i = 0;
         while ( truth.hasNext() ) {
@@ -61,8 +60,10 @@ public class Comparator {
             i++;
         }
         registry.done();
-        Display.INSTANCE.info( "Found {} missing entries {}", missing.size(), missing.subList( 0, Math.min( 20, missing.size() ) ) );
-        Display.INSTANCE.info( "Found {} null entries {}", nulls.size(), nulls );
+
+        return List.of(
+                String.format( "Found %s missing entries %s", missing.size(), missing.subList( 0, Math.min( 20, missing.size() ) ) ),
+                String.format( "Found %d null entries %s", nulls.size(), nulls ) );
 
     }
 

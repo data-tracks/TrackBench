@@ -43,7 +43,7 @@ public class Analyser {
     private static void analyseWorkload(BenchmarkContext context, Workload workload) {
         Analyser analyser = new Analyser(context, workload);
         Display.INSTANCE.line();
-        Display.INSTANCE.info("Workload {} Results", workload.getName());
+        Display.INSTANCE.bold("Workload {} Results", workload.getName());
         Display.INSTANCE.line();
 
         for (Pair<String, String> pair : analyser.analyseLatency()) {
@@ -84,8 +84,9 @@ public class Analyser {
     }
 
     private @NotNull List<Pair<String, String>> avgMedianMinMax(Collection<Long> unsorted, String name, String unit, boolean isTicks) {
-        if (unsorted.isEmpty()) {
-            throw new IllegalArgumentException("Empty collection for analysis");
+        if ( unsorted.isEmpty() ) {
+            Display.INSTANCE.error("Empty collection for analysis");
+            return List.of();
         }
         String capName = StringUtils.capitalize(name);
         Function<Long, String> ending = val -> " " + unit + ( isTicks ? " " + context.tickToTime(val) : "");

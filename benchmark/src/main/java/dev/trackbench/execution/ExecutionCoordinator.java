@@ -2,16 +2,15 @@ package dev.trackbench.execution;
 
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
+import dev.trackbench.display.Component;
 import dev.trackbench.display.Display;
 import dev.trackbench.display.Timer;
 import dev.trackbench.execution.receiver.ReceiveCoordinator;
 import dev.trackbench.execution.sending.SendCoordinator;
-import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.util.Clock;
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
+import dev.trackbench.util.Pair;
 import dev.trackbench.util.file.JsonSource;
+import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,28 +40,32 @@ public class ExecutionCoordinator {
             context.getClock().finishDisplay();
             Display.INSTANCE.info( "All send. Waiting {} mins for receiver to finish...", BenchmarkConfig.executionMaxMin );
 
-            waitExecution(BenchmarkConfig.executionMaxMin);
+            waitExecution( BenchmarkConfig.executionMaxMin );
 
             //we can start stopping threads, the target system takes too long to process or finished everything
             receiver.stopReceivers();
             receiver.join();
 
-            context.getClock().shutdown();;
+            context.getClock().shutdown();
+            ;
             context.getClock().join();
         } catch ( InterruptedException e ) {
             throw new RuntimeException( e );
         }
-        Display.INSTANCE.info("Max id is {}", JsonSource.of(context.getConfig().getResultFile(context.getWorkload(0).getName()), 10_000).countLines());
+        //Display.INSTANCE.info( "Max id is {}", JsonSource.of( context.getConfig().getResultFile( context.getWorkload( 0 ).getName() ), 10_000 ).countLines() );
     }
 
-    private static void waitExecution(long minutes) throws InterruptedException {
-        Timer timer = new Timer(minutes);
-        Display.INSTANCE.next(timer);
 
-        while (Display.INSTANCE.getCurrent() == null || Display.INSTANCE.getCurrent().right() != timer) {
+    private static void waitExecution( long minutes ) throws InterruptedException {
+        Timer timer = new Timer( minutes );
+        Display.INSTANCE.next( timer );
+
+        Pair<Thread, Component> current = Display.INSTANCE.getCurrent();
+        while ( current == null || current.right() != timer ) {
             Thread.sleep( 1000 );
+            current = Display.INSTANCE.getCurrent();
         }
-        Display.INSTANCE.getCurrent().left().join();
+        current.left().join();
     }
 
 

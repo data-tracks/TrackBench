@@ -3,14 +3,13 @@ package dev.trackbench.display;
 import static dev.trackbench.display.Display.green;
 
 import dev.trackbench.util.TimeUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class LoadingBar implements Component{
+public class LoadingBar implements Component {
 
 
     private final String unit;
@@ -23,7 +22,7 @@ public class LoadingBar implements Component{
     long lastPercent = 0;
 
 
-    public LoadingBar(long total, String task, String unit ) {
+    public LoadingBar( long total, String task, String unit ) {
         this.total = total;
         this.unit = unit;
         this.task = task;
@@ -31,44 +30,43 @@ public class LoadingBar implements Component{
     }
 
 
-    public void next(long count) {
-
+    public void next( long count ) {
 
         int percentage = (int) (count / total * maxPercent);
-        if( lastPercent != percentage ) {
+        if ( lastPercent != percentage ) {
             this.lastPercent = percentage;
-            this.times.add(System.currentTimeMillis());
+            this.times.add( System.currentTimeMillis() );
         }
 
         // Build the loading bar
         StringBuilder bar = new StringBuilder();
         bar.append( "[" );
         for ( int j = 0; j < totalSteps; j++ ) {
-            if ( j < (percentage/2) ) {
+            if ( j < (percentage / 2) ) {
                 bar.append( "█" );
             } else {
                 bar.append( " " );
             }
-            if( j == totalSteps/2){
-                String percent = String.valueOf(percentage);
+            if ( j == totalSteps / 2 ) {
+                String percent = String.valueOf( percentage );
                 int diff = 3 - percent.length();
-                bar.append(" ").repeat(" ", diff).append( percentage ).append( "% " );
+                bar.append( " " ).repeat( " ", diff ).append( percentage ).append( "% " );
             }
 
         }
         bar.append( "] " );
-        bar.append( WordUtils.capitalize(task) ).append( String.format( " %,d", count).replace( ",", "'" ) )
+        bar.append( WordUtils.capitalize( task ) ).append( String.format( " %,d", count ).replace( ",", "'" ) )
                 .append( " of " )
                 .append( getTotal() );
 
-        if(times.size() > 1) {
-            double avgPercent = IntStream.range(1, times.size())
-                    .mapToObj(i -> times.get(i) - times.get(i - 1))
-                    .mapToLong(Long::longValue)
+        if ( times.size() > 1 ) {
+            double avgPercent = IntStream.range( 1, times.size() )
+                    .mapToObj( i -> times.get( i ) - times.get( i - 1 ) )
+                    .mapToLong( Long::longValue )
                     .average()
                     .orElseThrow();
             long duration = (long) ((100 - percentage) * avgPercent);
-            bar.append(" | approx. ").append(TimeUtils.formatMillis(duration)).append(" to 100%");
+            bar.append( " | approx. " ).append( TimeUtils.formatMillis( duration ) ).append( " to 100%" );
         }
 
         // Print the loading bar
@@ -83,12 +81,14 @@ public class LoadingBar implements Component{
 
 
     public void done() {
-        this.next((long) total);
-        System.out.println( "\rSuccessfully " + task + " " + green(getTotal()) );
+        this.next( (long) total );
+        System.out.println( "\r" + Display.indent() + "Successfully " + task + " " + green( getTotal() )  );
     }
+
 
     @Override
     public void render() {
         next( 0 );
     }
+
 }

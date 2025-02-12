@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -45,17 +46,21 @@ public class ProcessingHandler extends Thread {
     public void run() {
         List<JsonIterator> iterators = sources.stream().map(s -> new JsonIterator(config.readBatchSize(), s, false)).toList();
 
-        Step initialStep = workload.getProcessing(targetName);
+        Optional<Step> initialStep = workload.getProcessing(targetName);
+
+         if ( initialStep.isEmpty() ) {
+             return;
+         }
 
         for (JsonIterator iterator : iterators) {
             while (iterator.hasNext()) {
                 JsonNode node = iterator.next();
                 JsonNode tick = Objects.requireNonNull(node).get("tick");
-                initialStep.next(new Value(tick.asLong(), node));
+                initialStep.orElseThrow().next(new Value(tick.asLong(), node));
             }
         }
 
-        initialStep.close();
+        initialStep.orElseThrow().close();
         this.registry.finish();
     }
 

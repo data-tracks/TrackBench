@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.simulation.error.ErrorHandler;
+import dev.trackbench.simulation.processing.Step;
 import dev.trackbench.simulation.type.DataType;
 import dev.trackbench.simulation.type.DoubleType;
 import dev.trackbench.simulation.type.LongType;
@@ -14,7 +15,9 @@ import dev.trackbench.util.CountRegistry;
 import dev.trackbench.util.file.FileJsonTarget;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -183,5 +186,6 @@ public abstract class Sensor extends Thread {
         SensorTemplate template = SensorTemplate.fromJson(node.get( "template" ));
         return new DocSensor( id, template, config );
     }
+
 
 }

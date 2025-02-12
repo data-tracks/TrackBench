@@ -6,6 +6,7 @@ import dev.trackbench.simulation.processing.Filter;
 import dev.trackbench.simulation.processing.Step;
 import dev.trackbench.util.file.FileJsonTarget;
 import dev.trackbench.util.file.FileStep;
+import java.util.Optional;
 
 public class ErrorWorkload extends Workload {
 
@@ -15,13 +16,13 @@ public class ErrorWorkload extends Workload {
 
 
     @Override
-    public Step getProcessing(String filename) {
+    public Optional<Step> getProcessing(String filename) {
         String path = "/data/Error";
-        return new DistributionStep().after(
+        return Optional.ofNullable( new DistributionStep().after(
                 new Filter( v -> !v.getNode().at( path ).isMissingNode() ).after(
                         new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), filename ), getConfig() ) )
                 )
-        );
+        ) );
     }
 
 }

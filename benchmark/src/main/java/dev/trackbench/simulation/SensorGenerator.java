@@ -69,13 +69,12 @@ public class SensorGenerator {
         }
 
         registry.done();
-        Display.INSTANCE.info( "Done generating..." );
 
         // we print the summary for debug purposes
         for ( Sensor sensor : sensors ) {
             Display.INSTANCE.info( "Sensor: {}, MetaData: {}", sensor.getTemplate().getType(), sensor.getMetric() );
         }
-        Display.INSTANCE.info("Max id is {}", Sensor.getDpIdBuilder().get());
+        Display.INSTANCE.info( "Max id is {}", Sensor.getDpIdBuilder().get() );
     }
 
 

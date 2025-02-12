@@ -33,7 +33,8 @@ public class Filler extends ObservableThread {
                 long tick = node.get( TICK ).asLong();
                 queue.put( new Value( tick, node ) );
             }
-            Display.INSTANCE.info( "Filler for file {} finished", iterator.getFile().getName() );
+
+            //Display.INSTANCE.info( "Filler for file {} finished", iterator.getFile().getName() );
 
             while ( !queue.isEmpty() ){
                 Thread.sleep( 100 );
