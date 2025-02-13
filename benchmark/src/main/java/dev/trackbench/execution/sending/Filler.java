@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Filler extends ObservableThread {
 
     public static final String TICK = "tick";
+    public static final String ID = "id";
     private final BlockingQueue<Value> queue;
     private final JsonIterator iterator;
     private final Thread afterRunning;
@@ -31,7 +32,8 @@ public class Filler extends ObservableThread {
             while ( iterator.hasNext() && running.get() ) {
                 JsonNode node = iterator.next();
                 long tick = node.get( TICK ).asLong();
-                queue.put( new Value( tick, node ) );
+                long id = node.get( ID ).asLong();
+                queue.put( new Value( id, tick, node ) );
             }
 
             //Display.INSTANCE.info( "Filler for file {} finished", iterator.getFile().getName() );

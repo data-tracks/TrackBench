@@ -14,6 +14,7 @@ public class ClockDisplay implements Component {
     long time = 0;
     long tick = 0;
     private Runnable finish;
+    boolean notShowing = false;
 
     public ClockDisplay( Clock clock ) {
         this.clock = clock;
@@ -23,6 +24,10 @@ public class ClockDisplay implements Component {
     public void stop(){
         this.scheduler.shutdownNow();
         System.out.print("\r");
+        if ( finish == null ) {
+            notShowing = true;
+            return;
+        }
         this.finish.run();
     }
 
@@ -48,6 +53,10 @@ public class ClockDisplay implements Component {
 
     @Override
     public void start(Runnable runnable) {
+        if ( notShowing ) {
+            runnable.run();
+            return;
+        }
         scheduler.scheduleAtFixedRate( this::update, 100, 500, TimeUnit.MILLISECONDS);
         this.finish = runnable;
     }

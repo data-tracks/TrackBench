@@ -8,9 +8,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import dev.trackbench.simulation.RandomData;
 import dev.trackbench.simulation.error.ErrorRates;
-import dev.trackbench.simulation.processing.Project;
-import dev.trackbench.simulation.processing.Step;
 import dev.trackbench.simulation.type.DataType;
+import dev.trackbench.util.ValueHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +35,9 @@ public class SensorTemplate {
             () -> SensorTemplate.of( "fuelPump", "0", ErrorRates.of( 0.001, 0.001 ), "temperature fuelP", "ml/min" ),//fuel_pump_sensor
             () -> SensorTemplate.of( "DRS", "0", ErrorRates.of( 0.001, 0.001 ), "on/off", "drs-zone" ),//drs_sensor
             () -> SensorTemplate.of( "brake", "0", ErrorRates.of( 0.001, 0.001 ), "temperature brake", "brake_pressure", "wear" ),//front_left_brake
-            () -> SensorTemplate.of( "accelerometer", "0", ErrorRates.of( 0.001, 0.001 ), "throttlepedall" ),
+            //() -> SensorTemplate.of( "accelerometer", "0", ErrorRates.of( 0.001, 0.001 ), "throttlepedall" ),
             () -> SensorTemplate.of( "engine", "0", ErrorRates.of( 0.001, 0.001 ), "temperature engine", "rpm", "fuelFlow", "oil_pressure", "fuel_pressure", "exhaust" ),
-            () -> SensorTemplate.of( "blackbox", "0", ErrorRates.of( 0.001, 0.001 ), "array_of_data" ),
+            //() -> SensorTemplate.of( "blackbox", "0", ErrorRates.of( 0.001, 0.001 ), "array_of_data" ),
             () -> SensorTemplate.of( "steering", "0", ErrorRates.of( 0.001, 0.001 ), "direction", "turning_degree" ) );
 
     public static Map<String, Integer> tickLength = new HashMap<>() {{
@@ -128,13 +127,24 @@ public class SensorTemplate {
     }
 
 
-    public Optional<Step> pickHeader( List<Class<? extends DataType>> possibleTypes ) {
+    public Optional<ValueHandler> pickHeader( List<Class<? extends DataType>> possibleTypes ) {
         List<Entry<String, DataType>> possible = this.headerTypes.entrySet().stream().filter( pair -> possibleTypes.contains( pair.getValue().getClass() ) ).toList();
         if ( possible.isEmpty() ) {
             return Optional.empty();
         }
         Entry<String, DataType> picked = possible.get( RandomData.random.nextInt( possible.size() ) );
-        return Optional.of( new Project( v -> new dev.trackbench.simulation.processing.Value( v.getTick(), v.getNode().get( "data" ).get( picked.getKey() ) ) ));
+
+        return Optional.of( new ValueHandler(
+                v -> new dev.trackbench.simulation.processing.Value( v.getId(), v.getTick(), v.getNode().get( "data" ).get( picked.getKey() ) ),
+                v -> {
+                    ObjectNode node = JsonNodeFactory.instance.objectNode();
+                    node.put( "id", v.getId() );
+                    node.put( "tick", v.getTick() );
+                    ObjectNode data = JsonNodeFactory.instance.objectNode();
+                    data.putIfAbsent( picked.getKey(), v.getNode() );
+                    node.putIfAbsent( "data", data );
+                    return new dev.trackbench.simulation.processing.Value( v.getId(), v.getTick(), node );
+                } ) );
 
     }
 

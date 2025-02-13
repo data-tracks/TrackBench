@@ -19,9 +19,9 @@ public class WindowWorkload extends Workload {
     @Override
     public Optional<Step> getProcessing( String fileName ) {
         return Optional.ofNullable(
-                new DistributionStep()
-                        .after( new SlidingWindow( AvgAggregator::new, 1_000 ) )
-                        .after( new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) ) );
+                new DistributionStep().after(
+                        new SlidingWindow( AvgAggregator::new, 1_000 ).after(
+                                new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) ) ) );
     }
 
 }

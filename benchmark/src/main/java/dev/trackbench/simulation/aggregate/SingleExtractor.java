@@ -18,7 +18,7 @@ public class SingleExtractor extends Extractor {
 
     @Override
     public void next( List<Value> values ) {
-        toAllSteps( values.stream().map( v -> new Value( v.getTick(), v.getNode().at( path ) ) ).toList() );
+        toAllSteps( values.stream().map( v -> new Value( v.getId(), v.getTick(), v.getNode().at( path ) ) ).toList() );
     }
 
 }

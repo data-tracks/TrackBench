@@ -31,8 +31,6 @@ public class Main {
         // set to new seed
         RandomData.seed = config.seed();
 
-        Display display = Display.INSTANCE;
-
         setPaths( config );
 
         if ( config.generate() ) {

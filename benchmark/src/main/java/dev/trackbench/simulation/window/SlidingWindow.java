@@ -18,7 +18,7 @@ public class SlidingWindow extends Window {
     List<Pair<Long, Aggregator>> aggregators = new ArrayList<>();
 
 
-    public SlidingWindow(Supplier<Aggregator> aggregateCreator, long relevantTicks ) {
+    public SlidingWindow( Supplier<Aggregator> aggregateCreator, long relevantTicks ) {
         this.aggregateCreator = aggregateCreator;
         this.relevantTicks = relevantTicks;
     }
@@ -42,10 +42,10 @@ public class SlidingWindow extends Window {
             if ( current.left() < lowestTick ) {
                 // to remove later
                 count++;
-            }else {
+            } else {
                 // first usable value
                 pair = current;
-                pair.right().next(value.getNode());
+                pair.right().next( value.getNode() );
                 break;
             }
         }
@@ -56,13 +56,11 @@ public class SlidingWindow extends Window {
         }
 
         // remove old
-        for (long i = 0; i < count; i++) {
+        for ( long i = 0; i < count; i++ ) {
             aggregators.removeFirst();
         }
 
-
-        toAllSteps( pair.right().get().stream().map( v -> new Value( value.getTick(), v ) ).toList() );
-
+        toAllSteps( pair.right().get().stream().map( v -> new Value( value.getId(), value.getTick(), v ) ).toList() );
     }
 
 

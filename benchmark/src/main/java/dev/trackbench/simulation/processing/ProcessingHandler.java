@@ -3,9 +3,9 @@ package dev.trackbench.simulation.processing;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
-import dev.trackbench.util.file.JsonIterator;
-import dev.trackbench.util.SimpleCountRegistry;
 import dev.trackbench.configuration.workloads.Workload;
+import dev.trackbench.util.SimpleCountRegistry;
+import dev.trackbench.util.file.JsonIterator;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -32,10 +32,10 @@ public class ProcessingHandler extends Thread {
             File source,
             String targetName,
             Workload workload,
-            SimpleCountRegistry registry) {
+            SimpleCountRegistry registry ) {
         this.config = context.getConfig();
         this.context = context;
-        this.sources = source.isFile() ? List.of(source) : Arrays.asList(Objects.requireNonNull(source.listFiles()));
+        this.sources = source.isFile() ? List.of( source ) : Arrays.asList( Objects.requireNonNull( source.listFiles() ) );
         this.registry = registry;
         this.workload = workload;
         this.targetName = targetName;
@@ -44,19 +44,20 @@ public class ProcessingHandler extends Thread {
 
     @Override
     public void run() {
-        List<JsonIterator> iterators = sources.stream().map(s -> new JsonIterator(config.readBatchSize(), s, false)).toList();
+        List<JsonIterator> iterators = sources.stream().map( s -> new JsonIterator( config.readBatchSize(), s, false ) ).toList();
 
-        Optional<Step> initialStep = workload.getProcessing(targetName);
+        Optional<Step> initialStep = workload.getProcessing( targetName );
 
-         if ( initialStep.isEmpty() ) {
-             return;
-         }
+        if ( initialStep.isEmpty() ) {
+            return;
+        }
 
-        for (JsonIterator iterator : iterators) {
-            while (iterator.hasNext()) {
+        for ( JsonIterator iterator : iterators ) {
+            while ( iterator.hasNext() ) {
                 JsonNode node = iterator.next();
-                JsonNode tick = Objects.requireNonNull(node).get("tick");
-                initialStep.orElseThrow().next(new Value(tick.asLong(), node));
+                long tick = Objects.requireNonNull( node ).get( "tick" ).asLong();
+                Long id = Objects.requireNonNull( node ).get( "id" ).asLong();
+                initialStep.orElseThrow().next( new Value( id, tick, node ) );
             }
         }
 

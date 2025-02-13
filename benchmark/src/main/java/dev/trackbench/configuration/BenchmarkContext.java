@@ -11,6 +11,7 @@ import dev.trackbench.simulation.sensor.Sensor;
 import dev.trackbench.simulation.sensor.SensorTemplate;
 import dev.trackbench.simulation.type.DoubleType;
 import dev.trackbench.simulation.type.LongType;
+import dev.trackbench.simulation.type.NumberType;
 import dev.trackbench.system.System;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.TimeUtils;
@@ -57,7 +58,7 @@ public class BenchmarkContext {
 
     public void setSensors( List<Sensor> sensors ) {
         this.sensors = sensors;
-        List<SensorTemplate> distinct = sensors.stream().map( Sensor::getTemplate ).filter( t -> t.pickHeader( List.of( LongType.class, DoubleType.class ) ).isPresent() ).filter( distinctByKey( template -> template.getType().toLowerCase() ) ).toList();
+        List<SensorTemplate> distinct = sensors.stream().map( Sensor::getTemplate ).filter( t -> t.pickHeader( List.of( LongType.class, DoubleType.class, NumberType.class ) ).isPresent() ).filter( distinctByKey( template -> template.getType().toLowerCase() ) ).toList();
         for ( SensorTemplate template : distinct ) {
             workloads.put( workloads.size(), new WindowGroupWorkload( template, config ) );
         }

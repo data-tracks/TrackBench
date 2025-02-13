@@ -15,10 +15,13 @@ import java.util.Objects;
 @Setter
 @Slf4j
 public final class Value {
+
+    private final Long id;
     JsonNode node;
     long tick;
 
-    public Value(long tick, JsonNode node) {
+    public Value(Long id, long tick, JsonNode node) {
+        this.id = id;
         this.tick = tick;
         this.node = node;
     }
