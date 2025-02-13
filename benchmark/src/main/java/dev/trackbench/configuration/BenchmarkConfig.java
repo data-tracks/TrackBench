@@ -3,13 +3,12 @@ package dev.trackbench.configuration;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.Main;
 import dev.trackbench.simulation.sensor.Sensor;
+import dev.trackbench.util.file.FileUtils;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import dev.trackbench.util.file.FileUtils;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -45,6 +44,8 @@ public record BenchmarkConfig(
     public static final String RESULT_PATH = "result";
     public static final long executionMaxMin = 1;
     public static final String ARRIVED_TICK_KEY = "arrived";
+
+    public static final String OUTPUT_PATH = "summary.txt";
 
 
     public static BenchmarkConfig fromFile() {
@@ -107,13 +108,13 @@ public record BenchmarkConfig(
     }
 
 
-    public File getResultFile(String workflow) {
+    public File getResultFile( String workflow ) {
         return getFileAndMkDirs( RESULT_PATH, workflow );
     }
 
 
     public File getResultFile( String workflow, long num ) {
-        File file = getResultFile(workflow);
+        File file = getResultFile( workflow );
 
         return FileUtils.getJson( file, String.valueOf( num ) );
     }
@@ -156,7 +157,7 @@ public record BenchmarkConfig(
 
         long errorsTotal = (long) (ticksGenerated * rate);
 
-        return ticks / Math.max(errorsTotal,1);
+        return ticks / Math.max( errorsTotal, 1 );
     }
 
 
@@ -166,6 +167,7 @@ public record BenchmarkConfig(
         }
         return Arrays.stream( Objects.requireNonNull( dir.listFiles() ) ).map( file -> new File( dir, file.getName() ) ).collect( Collectors.toList() );
     }
+
 
     public File getResultPath() {
         return getFileAndMkDirs( RESULT_PATH );
@@ -184,6 +186,11 @@ public record BenchmarkConfig(
     }
 
 
+    public File getSummeryFile() {
+        return new File( path.toString(), OUTPUT_PATH );
+    }
+
+
     public File getSimulationFile( String workflow, String name ) {
         File parent = getSimulationPath( workflow );
         return FileUtils.getJson( parent, name );
@@ -199,11 +206,15 @@ public record BenchmarkConfig(
         return getFileAndMkDirs( VALIDATION_PATH, name );
     }
 
+
     public File getValidationPath() {
         return getFileAndMkDirs( VALIDATION_PATH );
     }
 
-    public static long getArrivedTick(JsonNode node) {
+
+    public static long getArrivedTick( JsonNode node ) {
         return node.get( ARRIVED_TICK_KEY ).asLong();
     }
+
+
 }

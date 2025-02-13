@@ -1,6 +1,8 @@
 package dev.trackbench.display;
 
-public class BlockingMessage implements Component{
+import java.util.function.Consumer;
+
+public class BlockingMessage extends Component {
 
     private final String msg;
     private Runnable finish;
@@ -12,7 +14,7 @@ public class BlockingMessage implements Component{
     }
 
     @Override
-    public void start( Runnable runnable ) {
+    public void start( Runnable runnable, Consumer<String> msgConsumer ) {
         if (unpublished) {
             // we ignore
             runnable.run();

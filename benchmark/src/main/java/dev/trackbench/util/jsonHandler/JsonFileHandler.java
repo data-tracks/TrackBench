@@ -66,28 +66,4 @@ public class JsonFileHandler {
         }
     }
 
-    public static void deleteFolder(File folder) {
-        if (!folder.exists()) {
-            return;
-        }
-        deleteFolderOrFile(folder);
-    }
-
-    private static void deleteFolderOrFile(File file) {
-        if(file.isFile()){
-            boolean success = file.delete();
-            if ( !success ) {
-                throw new RuntimeException("Error deleting file: " + file.getAbsolutePath());
-            }
-            return;
-        }
-        for (File f : Objects.requireNonNull(file.listFiles())) {
-            deleteFolderOrFile(f);
-        }
-        boolean success = file.delete();
-        if ( !success ) {
-            throw new RuntimeException("Error deleting file: " + file.getAbsolutePath());
-        }
-
-    }
 }

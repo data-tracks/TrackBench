@@ -2,6 +2,10 @@ package dev.trackbench.display;
 
 
 import dev.trackbench.util.Pair;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.Getter;
@@ -15,6 +19,8 @@ public class Display extends Thread {
 
 
     public static final Display INSTANCE = new Display();
+
+    public File fileToWrite = null;
 
     private static int indent = 0;
 
@@ -54,12 +60,12 @@ public class Display extends Thread {
     }
 
 
-    public static void bold( String text ) {
+    public void bold( String text ) {
         INSTANCE.next( new Message( indent() + Ansi.ON.string( "@|bold " + text + "|@\n" ) ) );
     }
 
 
-    public static void bold( String text, Object... args ) {
+    public void bold( String text, Object... args ) {
         bold( replace( text, args ) );
     }
 
@@ -103,7 +109,38 @@ public class Display extends Thread {
     public void next( Component component ) {
         if ( current == null ) {
             Thread thread = new Thread( () -> {
-                component.start( this::finish );
+                if ( fileToWrite == null ) {
+                    component.start( this::finish, System.out::print );
+                } else {
+                    try {
+                        Writer writer = new FileWriter( fileToWrite, true );
+                        Runnable finish = () -> {
+                            try {
+                                writer.flush();
+                            } catch ( IOException e ) {
+                                throw new RuntimeException( e );
+                            }
+                            try {
+                                writer.close();
+                            } catch ( IOException e ) {
+                                throw new RuntimeException( e );
+                            }
+                            this.finish();
+                        };
+
+                        component.start( finish, val -> {
+                            System.out.print( val );
+                            try {
+                                writer.append( Ansi.OFF.string( val ).replaceAll("\u001B\\[[;\\d]*m", "") );
+                            } catch ( IOException e ) {
+                                throw new RuntimeException( e );
+                            }
+                        } );
+                    } catch ( IOException e ) {
+                        throw new RuntimeException( e );
+                    }
+                }
+
             } );
             thread.start();
             current = new Pair<>( thread, component );
@@ -136,6 +173,7 @@ public class Display extends Thread {
         indent = 1;
     }
 
+
     public void setIndent( int indent ) {
         Display.indent = indent;
     }
@@ -160,6 +198,11 @@ public class Display extends Thread {
 
     public static String indent() {
         return "  ".repeat( indent );
+    }
+
+
+    public void setFile( File file ) {
+        this.fileToWrite = file;
     }
 
 }

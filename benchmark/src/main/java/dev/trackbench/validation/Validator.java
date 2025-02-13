@@ -3,6 +3,7 @@ package dev.trackbench.validation;
 import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.display.Display;
+import dev.trackbench.util.file.FileUtils;
 import dev.trackbench.util.file.JsonSource;
 import dev.trackbench.validation.chunksort.ChunkSorter;
 import java.io.File;
@@ -14,11 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 public class Validator {
 
     public static void start( BenchmarkContext context ) {
+        FileUtils.deleteFile( context.getConfig().getSummeryFile() );
 
         for ( Entry<Integer, Workload> entry : context.getWorkloads().entrySet() ) {
             Display.INSTANCE.nextLine();
+            Display.INSTANCE.setFile(context.getConfig().getSummeryFile());
             Display.INSTANCE.line();
-            Display.bold( "📌 Analysis Workload: " + entry.getValue().getName() );
+            Display.INSTANCE.bold( "📌 Analysis Workload: " + entry.getValue().getName() );
             Display.INSTANCE.line();
             Display.INSTANCE.setIndent( 1 );
             JsonSource simulated = JsonSource.of( context.getConfig().getSimulationPath( entry.getValue().getName() ), context.getConfig().readBatchSize() );

@@ -5,8 +5,9 @@ import dev.trackbench.util.Clock;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
-public class ClockDisplay implements Component {
+public class ClockDisplay extends Component {
 
     final Clock clock;
     private final ScheduledExecutorService scheduler;
@@ -52,7 +53,7 @@ public class ClockDisplay implements Component {
     }
 
     @Override
-    public void start(Runnable runnable) {
+    public void start(Runnable runnable, Consumer<String> msgConsumer) {
         if ( notShowing ) {
             runnable.run();
             return;

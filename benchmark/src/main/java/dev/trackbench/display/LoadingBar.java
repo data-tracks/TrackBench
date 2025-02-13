@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class LoadingBar implements Component {
+public class LoadingBar extends Component {
 
 
     private final String unit;

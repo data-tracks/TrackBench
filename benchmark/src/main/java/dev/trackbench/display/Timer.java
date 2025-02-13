@@ -2,7 +2,7 @@ package dev.trackbench.display;
 
 import java.util.concurrent.TimeUnit;
 
-public class Timer implements Component {
+public class Timer extends Component {
 
     private final long minutes;
 

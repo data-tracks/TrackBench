@@ -1,10 +1,16 @@
 package dev.trackbench.display;
 
-public record Message(String text) implements Component {
+public final class Message extends Component {
+
+    private final String text;
+
+    public Message( String text ) {
+        this.text = text;
+    }
 
     @Override
     public void render() {
-        System.out.print(text);
+        this.getConsumer().accept( text );
     }
 
 }

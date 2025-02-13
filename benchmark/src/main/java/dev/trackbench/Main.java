@@ -14,7 +14,6 @@ import dev.trackbench.simulation.aggregate.FinalData;
 import dev.trackbench.simulation.processing.ProcessingGenerator;
 import dev.trackbench.system.DummySystem;
 import dev.trackbench.util.file.FileUtils;
-import dev.trackbench.util.jsonHandler.JsonFileHandler;
 import dev.trackbench.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +36,7 @@ public class Main {
             Display.INSTANCE.preInfo( "Generating sensors..." );
             context.printGeneratingTime();
             //Delete all files in folder
-            JsonFileHandler.deleteFolder( config.getDataPath() );
+            FileUtils.deleteFolder( config.getDataPath() );
 
             //create files
             SensorGenerator.start( context );
@@ -45,14 +44,14 @@ public class Main {
 
         if ( config.simulate() ) {
             context.loadNecessities();
-            JsonFileHandler.deleteFolder( config.getSimulationPath() );
+            FileUtils.deleteFolder( config.getSimulationPath() );
             Display.INSTANCE.preInfo( "Generating processing..." );
 
             ProcessingGenerator.process( context );
         }
 
         if ( config.execute() ) {
-            JsonFileHandler.deleteFolder( config.getResultPath() );
+            FileUtils.deleteFolder( config.getResultPath() );
             Display.INSTANCE.preInfo( "Starting processing..." );
             ExecutionCoordinator.start( context );
             Display.INSTANCE.preInfo( "Finished processing." );
@@ -60,7 +59,7 @@ public class Main {
         }
 
         if ( config.validate() ) {
-            JsonFileHandler.deleteFolder( config.getValidationPath() );
+            FileUtils.deleteFolder( config.getValidationPath() );
             Display.INSTANCE.preInfo( "Starting validation..." );
             Validator.start( context );
         }
@@ -72,6 +71,7 @@ public class Main {
 
         cleanUp();
 
+        Display.INSTANCE.setFile( null );
         Display.INSTANCE.nextLine();
         Display.INSTANCE.doubleLine();
         Display.INSTANCE.preInfo( "🎉 All Processes Finished Successfully 🎉" );

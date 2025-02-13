@@ -1,10 +1,17 @@
 package dev.trackbench.display;
 
-public interface Component {
+import java.util.function.Consumer;
+import lombok.Getter;
 
-    void render();
+public abstract class Component {
 
-    default void start(Runnable runnable) {
+    @Getter
+    private Consumer<String> consumer;
+
+    abstract void render();
+
+    void start(Runnable runnable, Consumer<String> msgConsumer) {
+        this.consumer = msgConsumer;
         render();
         runnable.run();
     }
