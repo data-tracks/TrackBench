@@ -4,21 +4,71 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="fixed complex aggregates">
+    <list default="true" id="6766ef58-934d-4558-973b-41fb2a72eadb" name="Changes" comment="fixed analysis of workloads and added missing multithreading">
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/configuration/BenchmarkConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/BlockingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/BlockingMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/ClockDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/ClockDisplay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Component.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Component.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Display.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/LoadingBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/display/Timer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/file/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/jsonHandler/JsonFileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/util/jsonHandler/JsonFileHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/trackbench/validation/Validator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageAccelerometer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageAccelerometer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageAccelerometerGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageAccelerometerGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageBrake.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageBrake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageBrakeGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageBrakeGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageEngineGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageEngineGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageFuelPump.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageFuelPump.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageFuelPumpGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageFuelPumpGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageHeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageHeat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageHeatGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageHeatGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageSpeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageSpeed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageSpeedGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageSpeedGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageTire.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageTire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/AverageClass/AverageTireGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/average/AverageTireGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonAccelerometer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonAccelerometer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonBrake.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonBrake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonFuelPump.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonFuelPump.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonHeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonHeat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonSpeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonSpeed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/JsonClass/JsonTire.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/json/JsonTire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Accelerometer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Accelerometer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/AccelerometerGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/AccelerometerGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Brake.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Brake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/BrakeGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/BrakeGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Engine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/EngineGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/EngineGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/FuelPump.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/FuelPump.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/FuelPumpGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/FuelPumpGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Heat.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Heat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/HeatGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/HeatGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Speed.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Speed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/SpeedGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/SpeedGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Tire.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Tire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/TireGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/TireGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/TypeSplitter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/TypeSplitter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/KafkaTools/Warnings.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/tools/Warnings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageAccelerometerGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageAccelerometerGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageAccelerometerSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageAccelerometerSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageBrakeGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageBrakeGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageBrakeSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageBrakeSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageEngineGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageEngineGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageEngineSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageEngineSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageFuelPumpGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageFuelPumpGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageFuelPumpSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageFuelPumpSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageHeatGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageHeatGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageHeatSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageHeatSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageSpeedGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageSpeedGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageSpeedSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageSpeedSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageTireGroupSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageTireGroupSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/Serde/AverageTireSerde.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/src/main/java/dev/kafka/serialize/AverageTireSerde.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/trackbench/system/kafka/docker/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafkaDocker/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka/utils/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafkaDocker/src/main/java/KafkaAggregator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/AverageClass/AverageEngine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/JsonClass/JsonEngine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/KafkaTools/Engine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/KafkaTools/Tire.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/KafkaTools/Warnings.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/Serde/AverageEngineSerde.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../processing/src/main/java/org/example/Serde/AverageTireSerde.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,12 +145,12 @@
     &quot;assignee&quot;: &quot;datomo&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:data-tracks/TrackBench.git&quot;,
-    &quot;accountId&quot;: &quot;def2c711-ae31-433a-9c89-91e4ce7daee9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:data-tracks/TrackBench.git",
+    "accountId": "0173a704-20ba-4f28-b3b1-423de30571b4"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -115,29 +165,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build benchmark.executor": "Run",
-    "Gradle.benchmark [:dev.datageneration.Main.main()].executor": "Run",
-    "Gradle.benchmark [build].executor": "Run",
-    "Gradle.benchmark [run].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/danie/git/TrackBench/benchmark",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build benchmark.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [:dev.datageneration.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.benchmark [run].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/danie/git/TrackBench/benchmark&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="dev.trackbench.util.file.FileUtils" />
@@ -226,8 +276,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -256,6 +306,7 @@
       <workItem from="1739368811687" duration="17794000" />
       <workItem from="1739430016002" duration="109000" />
       <workItem from="1739430144292" duration="14971000" />
+      <workItem from="1739528573849" duration="2008000" />
     </task>
     <task id="LOCAL-00001" summary="moved to gradle, changed sensor design">
       <option name="closed" value="true" />
