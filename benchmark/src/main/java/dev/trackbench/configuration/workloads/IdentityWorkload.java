@@ -20,6 +20,4 @@ public class IdentityWorkload extends Workload {
         return Optional.ofNullable( new DistributionStep().after( new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) ) );
     }
 
-
-
 }

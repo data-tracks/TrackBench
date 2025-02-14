@@ -1,12 +1,12 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageBrake;
+import dev.kafka.util.SerdeUtil;
+import java.nio.ByteBuffer;
+import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
-
-import java.nio.ByteBuffer;
-import java.util.Map;
 
 public class AverageBrakeSerde implements Serde<AverageBrake> {
 
@@ -15,48 +15,53 @@ public class AverageBrakeSerde implements Serde<AverageBrake> {
         return new AverageSerializer();
     }
 
+
     @Override
     public Deserializer<AverageBrake> deserializer() {
         return new AverageDeserializer();
     }
 
+
     public static class AverageSerializer implements Serializer<AverageBrake> {
 
         @Override
-        public byte[] serialize(String topic, AverageBrake data) {
-            if (data == null) {
+        public byte[] serialize( String topic, AverageBrake data ) {
+            if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES * 7);
-            buffer.putInt(data.temp);
-            buffer.putInt(data.pressure);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
-            buffer.putInt(data.wear);
+            ByteBuffer buffer = ByteBuffer.allocate( Integer.BYTES * 7 );
+            buffer.putInt( data.temp );
+            buffer.putInt( data.pressure );
+            buffer.putLong( data.count );
+            buffer.putInt( data.wear );
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
+
         @Override
-        public void configure(Map<String, ?> configs, boolean isKey) {
+        public void configure( Map<String, ?> configs, boolean isKey ) {
             // No configuration needed
         }
+
 
         @Override
         public void close() {
             // No resources to close
         }
+
     }
+
 
     public static class AverageDeserializer implements Deserializer<AverageBrake> {
 
         @Override
-        public AverageBrake deserialize(String topic, byte[] data) {
-            if (data == null || data.length == 0) {
+        public AverageBrake deserialize( String topic, byte[] data ) {
+            if ( data == null || data.length == 0 ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.wrap(data);
+            ByteBuffer buffer = ByteBuffer.wrap( data );
             int temp = buffer.getInt();
             int pressure = buffer.getInt();
             int count = buffer.getInt();
@@ -64,17 +69,21 @@ public class AverageBrakeSerde implements Serde<AverageBrake> {
             int tickE = buffer.getInt();
             int id = buffer.getInt();
             int wear = buffer.getInt();
-            return new AverageBrake(temp, pressure, count, tickS, tickE, id, wear);
+            return new AverageBrake( temp, pressure, count, tickS, tickE, id, wear );
         }
 
+
         @Override
-        public void configure(Map<String, ?> configs, boolean isKey) {
+        public void configure( Map<String, ?> configs, boolean isKey ) {
             // No configuration needed
         }
+
 
         @Override
         public void close() {
             // No resources to close
         }
+
     }
+
 }

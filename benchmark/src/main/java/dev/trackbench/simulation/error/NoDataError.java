@@ -19,11 +19,11 @@ public class NoDataError extends Error {
     @Override
     public Pair<List<JsonNode>, List<JsonNode>> produceError( long tick, List<JsonNode> previous, ObjectNode data ) {
         ObjectNode errorData = JsonNodeFactory.instance.objectNode();
-        errorData.put( "type", getSensor().getTemplate().getType() );
         errorData.put( "sensorId", getSensor().id );
         errorData.put( "Error", "No Data" );
 
         ObjectNode error = JsonNodeFactory.instance.objectNode();
+        errorData.put( "type", getSensor().getTemplate().getType() );
         error.put( "tick", tick );
         error.put( "id", data.get("id").asLong() );
         error.putIfAbsent( "data", errorData );

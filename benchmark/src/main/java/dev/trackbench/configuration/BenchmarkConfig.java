@@ -3,6 +3,7 @@ package dev.trackbench.configuration;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.Main;
 import dev.trackbench.simulation.sensor.Sensor;
+import dev.trackbench.system.System;
 import dev.trackbench.util.file.FileUtils;
 import java.io.File;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.jetbrains.annotations.NotNull;
 
 public record BenchmarkConfig(
+        System system,
         int seed,
         File path,
         boolean generate,
@@ -59,6 +61,7 @@ public record BenchmarkConfig(
         }
 
         return new BenchmarkConfig(
+                System.from(props.getString( "system" )),
                 props.getInt( "seed" ),
                 new File( props.getString( "path" ) ),
                 props.getBoolean( "generate" ),

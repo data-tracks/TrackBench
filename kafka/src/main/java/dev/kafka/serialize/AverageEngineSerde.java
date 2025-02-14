@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageEngine;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -36,10 +37,8 @@ public class AverageEngineSerde implements Serde<AverageEngine> {
                 buffer.putDouble(data.oilPressure);
                 buffer.putDouble(data.fuelPressure);
                 buffer.putDouble(data.exhaust);
-                buffer.putInt(data.count);
-                buffer.putInt(data.tickStart);
-                buffer.putInt(data.tickEnd);
-                buffer.putInt(data.id);
+
+                SerdeUtil.addDefault( buffer, data );
                 return buffer.array();
             } catch (Exception e) {
                 System.err.println("Serialization error: " + e.getMessage());

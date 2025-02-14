@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageFuelPumpGroup;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -30,14 +31,12 @@ public class AverageFuelPumpGroupSerde implements Serde<AverageFuelPumpGroup> {
             ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 6 + Integer.BYTES * 4);
             buffer.putDouble(data.temp);
             buffer.putDouble(data.flowRate);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
             buffer.putDouble(data.maxTemp);
             buffer.putDouble(data.minTemp);
             buffer.putDouble(data.maxFlow);
             buffer.putDouble(data.minFlow);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 

@@ -2,10 +2,15 @@
 
 docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic f1
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic mini-window
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic f2
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic large-window
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic "mini-window"
+
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic "large-window"
 
 docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic errors
 
 docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# listen
+# docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic f2

@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageTireGroup;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -30,16 +31,14 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
             ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 6 + Integer.BYTES * 6);
             buffer.putDouble(data.temp);
             buffer.putDouble(data.pressure);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
             buffer.putInt(data.position);
             buffer.putInt(data.wear);
             buffer.putDouble(data.minTemp);
             buffer.putDouble(data.maxTemp);
             buffer.putDouble(data.minPressure);
             buffer.putDouble(data.maxPressure);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 

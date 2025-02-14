@@ -20,13 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Main {
 
-    static final String tire = "src/main/java/dev/datageneration/kafka/KafkaTools/Tire.java";
 
-
-    public static void main( String[] args ) throws Exception {
+    public static void main( String[] args ) {
         //Get Data from Settings file
         BenchmarkConfig config = BenchmarkConfig.fromFile();
-        BenchmarkContext context = new BenchmarkContext( config, new DummySystem() );
+        BenchmarkContext context = new BenchmarkContext( config );
         // set to new seed
         RandomData.seed = config.seed();
 

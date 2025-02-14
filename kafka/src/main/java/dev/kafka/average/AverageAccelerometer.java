@@ -1,26 +1,27 @@
 package dev.kafka.average;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dev.kafka.sensor.Accelerometer;
+import dev.kafka.sensor.Sensor;
 import lombok.Getter;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
-public class AverageAccelerometer {
+@Getter
+public class AverageAccelerometer extends Average {
+
     public double throttle;
-    @Getter
-    public int count;
-    @Getter
-    public int tickStart;
-    @Getter
-    public int tickEnd;
-    @Getter
-    public int id;
 
 
-    public AverageAccelerometer(double throttle, int count, int tickStart, int tickEnd, int id) {
-        this.throttle = throttle;
-        this.count = count;
-        this.tickStart = tickStart;
-        this.tickEnd = tickEnd;
-        this.id = id;
+    public AverageAccelerometer() {
     }
+
+
+    public AverageAccelerometer( double throttle, int count, int tickS, int tickE, int id ) {
+        super( count, tickS, tickE, id );
+        this.throttle = throttle;
+    }
+
 
     public double getTemp() {
         return throttle;
@@ -29,12 +30,29 @@ public class AverageAccelerometer {
 
     public double getAverage() {
         double average;
-        if (count != 0) {
+        if ( count != 0 ) {
             average = throttle / count;
         } else {
             return throttle;
         }
-//        Display.INSTANCE.info(average[0] + " " + average[1] + " " + average[2]);
         return average;
     }
+
+
+    @Override
+    public ProducerRecord<String, String> getRecord( String topic ) {
+        double average = getAverage();
+
+        ObjectNode data = JsonNodeFactory.instance.objectNode();
+        data.put( "averageThrottlepedall", average );
+
+        return wrapRecord( "accelerometer", topic, data );
+    }
+
+
+    @Override
+    public void next( Sensor entry ) {
+        throttle += ((Accelerometer) entry).throttle;
+    }
+
 }

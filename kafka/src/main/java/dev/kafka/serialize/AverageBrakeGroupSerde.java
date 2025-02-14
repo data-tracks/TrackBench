@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageBrakeGroup;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -30,15 +31,13 @@ public class AverageBrakeGroupSerde implements Serde<AverageBrakeGroup> {
             ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES * 11);
             buffer.putInt(data.temp);
             buffer.putInt(data.pressure);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
             buffer.putInt(data.wear);
             buffer.putInt(data.minTemp);
             buffer.putInt(data.maxTemp);
             buffer.putInt(data.minPressure);
             buffer.putInt(data.maxPressure);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 

@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageAccelerometerGroup;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -29,12 +30,10 @@ public class AverageAccelerometerGroupSerde implements Serde<AverageAcceleromete
             }
             ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 3 + Integer.BYTES * 4);
             buffer.putDouble(data.throttle);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
             buffer.putDouble(data.maxThrottle);
             buffer.putDouble(data.minThrottle);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 

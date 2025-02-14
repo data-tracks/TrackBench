@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageTire;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -30,12 +31,10 @@ public class AverageTireSerde implements Serde<AverageTire> {
             ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 2 + Integer.BYTES * 6);
             buffer.putDouble(data.temp);
             buffer.putDouble(data.pressure);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
             buffer.putInt(data.position);
             buffer.putInt(data.wear);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 

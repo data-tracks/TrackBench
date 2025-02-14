@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageSpeedGroup;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -30,14 +31,12 @@ public class AverageSpeedGroupSerde implements Serde<AverageSpeedGroup> {
             ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 6 + Integer.BYTES * 4);
             buffer.putDouble(data.speed);
             buffer.putDouble(data.wind);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
             buffer.putDouble(data.minSpeed);
             buffer.putDouble(data.maxSpeed);
             buffer.putDouble(data.minWind);
             buffer.putDouble(data.maxWind);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 

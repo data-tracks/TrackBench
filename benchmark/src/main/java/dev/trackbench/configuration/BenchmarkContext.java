@@ -3,7 +3,6 @@ package dev.trackbench.configuration;
 import dev.trackbench.configuration.workloads.ErrorWorkload;
 import dev.trackbench.configuration.workloads.IdentityWorkload;
 import dev.trackbench.configuration.workloads.WindowGroupWorkload;
-import dev.trackbench.configuration.workloads.WindowWorkload;
 import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.display.Display;
 import dev.trackbench.simulation.SensorGenerator;
@@ -44,14 +43,14 @@ public class BenchmarkContext {
     private final Map<Integer, Workload> workloads = new HashMap<>();
 
 
-    public BenchmarkContext( BenchmarkConfig config, System system ) {
+    public BenchmarkContext( BenchmarkConfig config ) {
         this.config = config;
-        this.system = system;
+        this.system = config.system();
 
-        //workloads.put( 0, new IdentityWorkload( config ) );
-        //workloads.put( 1, new ErrorWorkload( config ) );
+        workloads.put( 0, new IdentityWorkload( config ) );
+        workloads.put( 1, new ErrorWorkload( config ) );
         //workloads.put( 2, new WindowWorkload( config ) );
-        setSensors( new ArrayList<>() );
+        //setSensors( new ArrayList<>() );
 
     }
 

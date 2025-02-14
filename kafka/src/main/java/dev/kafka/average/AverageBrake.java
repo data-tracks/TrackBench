@@ -1,49 +1,70 @@
 package dev.kafka.average;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dev.kafka.sensor.Brake;
+import dev.kafka.sensor.Sensor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
-public class AverageBrake {
-    @Getter
+@Getter
+@NoArgsConstructor
+public class AverageBrake extends Average {
+
     public int temp;
-    @Getter
     public int pressure;
-    @Getter
-    public int count;
-    @Getter
-    public int tickStart;
-    @Getter
-    public int tickEnd;
-    @Getter
-    public int id;
     public int wear;
 
-    public AverageBrake(int temp, int pressure, int count, int tickStart, int tickEnd, int id, int wear) {
+
+    public AverageBrake( int temp, int pressure, int count, int tickStart, int tickEnd, int id, int wear ) {
+        super( count, tickStart, tickEnd, id );
         this.temp = temp;
         this.pressure = pressure;
-        this.count = count;
-        this.tickStart = tickStart;
-        this.tickEnd = tickEnd;
-        this.id = id;
         this.wear = wear;
     }
 
 
     public double[] getAverage() {
-        double[] average = new double[]{0, 0, 0};
-        if (count != 0) {
-            if (temp != 0) {
+        double[] average = new double[]{ 0, 0, 0 };
+        if ( count != 0 ) {
+            if ( temp != 0 ) {
                 average[0] = (double) temp / count;
             }
-            if (pressure != 0) {
+            if ( pressure != 0 ) {
                 average[1] = (double) pressure / count;
             }
-            if (wear != 0) {
+            if ( wear != 0 ) {
                 average[2] = (double) wear / count;
             }
         } else {
-            return new double[]{temp, pressure, wear};
+            return new double[]{ temp, pressure, wear };
         }
-//        Display.INSTANCE.info(average[0] + " " + average[1] + " " + average[2]);
+
         return average;
     }
+
+
+    @Override
+    public ProducerRecord<String, String> getRecord( String topic ) {
+        double[] average = getAverage();
+
+        ObjectNode data = JsonNodeFactory.instance.objectNode();
+        data.put( "averageTemp", average[0] );
+        data.put( "averagePressure", average[1] );
+        data.put( "averageWear", average[2] );
+
+        return wrapRecord( "brake", topic, data );
+    }
+
+
+    @Override
+    public void next( Sensor sensor ) {
+        Brake entry = (Brake) sensor;
+
+        temp += entry.temp;
+        pressure += entry.pressure;
+        wear += entry.wear;
+    }
+
 }

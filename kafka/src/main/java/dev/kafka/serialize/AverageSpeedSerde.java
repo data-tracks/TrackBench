@@ -1,6 +1,7 @@
 package dev.kafka.serialize;
 
 import dev.kafka.average.AverageSpeed;
+import dev.kafka.util.SerdeUtil;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -30,10 +31,8 @@ public class AverageSpeedSerde implements Serde<AverageSpeed> {
             ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 2 + Integer.BYTES * 4);
             buffer.putDouble(data.speed);
             buffer.putDouble(data.wind);
-            buffer.putInt(data.count);
-            buffer.putInt(data.tickStart);
-            buffer.putInt(data.tickEnd);
-            buffer.putInt(data.id);
+
+            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
