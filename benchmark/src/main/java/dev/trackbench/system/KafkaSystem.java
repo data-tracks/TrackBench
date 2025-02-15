@@ -154,11 +154,11 @@ public class KafkaSystem implements System {
         if ( workload instanceof IdentityWorkload ) {
             return "f2";
         } else if ( workload instanceof WindowGroupWorkload ) {
-            return "large-group";
+            return "window";
         } else if ( workload instanceof ErrorWorkload ) {
             return "errors";
         } else if ( workload != null ) {
-            return "small-group";
+            return "mini-group";
         }
         throw new RuntimeException( "Unknown workload: " + null );
     }

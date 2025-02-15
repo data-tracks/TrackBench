@@ -59,7 +59,8 @@ public class AverageAccelerometerSerde implements Serde<AverageAccelerometer> {
             int tickS = buffer.getInt();
             int tickE = buffer.getInt();
             int id = buffer.getInt();
-            return new AverageAccelerometer(throttle, count, tickS, tickE, id);
+            long tick = buffer.getLong();
+            return new AverageAccelerometer(throttle, count, tickS, tickE, id, tick);
         }
 
         @Override

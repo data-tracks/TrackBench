@@ -17,8 +17,8 @@ public class AverageHeatGroup extends Average {
     public double maxTemp;
 
 
-    public AverageHeatGroup( double temp, int count, int tickStart, int tickEnd, int id ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageHeatGroup( double temp, int count, int tickStart, int tickEnd, int id, long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.temp = temp;
         this.minTemp = Double.MAX_VALUE;
         this.maxTemp = Double.MIN_VALUE;

@@ -23,8 +23,8 @@ public class AverageTireGroup extends Average {
     public double maxPressure;
 
 
-    public AverageTireGroup( double temp, double pressure, int count, int tickStart, int tickEnd, int id, int position, int wear ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageTireGroup( double temp, double pressure, int count, int tickStart, int tickEnd, int id, int position, int wear, long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.temp = temp;
         this.pressure = pressure;
         this.position = position;

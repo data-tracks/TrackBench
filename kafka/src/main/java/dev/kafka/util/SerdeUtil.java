@@ -10,6 +10,7 @@ public class SerdeUtil {
         buffer.putLong( average.tickStart );
         buffer.putLong( average.tickEnd );
         buffer.putLong( average.id );
+        buffer.putLong( average.tick );
     }
 
 }

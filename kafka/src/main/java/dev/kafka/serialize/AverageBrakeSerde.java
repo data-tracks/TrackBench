@@ -69,7 +69,8 @@ public class AverageBrakeSerde implements Serde<AverageBrake> {
             int tickE = buffer.getInt();
             int id = buffer.getInt();
             int wear = buffer.getInt();
-            return new AverageBrake( temp, pressure, count, tickS, tickE, id, wear );
+            long tick = buffer.getLong();
+            return new AverageBrake( temp, pressure, count, tickS, tickE, id, wear, tick );
         }
 
 

@@ -38,8 +38,9 @@ public class AverageEngineGroup extends Average {
             int count,
             int tickStart,
             int tickEnd,
-            int id ) {
-        super( count, tickStart, tickEnd, id );
+            int id,
+            long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.temp = temp;
         this.rpm = rpm;
         this.fuelFlow = fuelFlow;

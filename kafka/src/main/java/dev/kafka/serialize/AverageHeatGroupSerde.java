@@ -63,7 +63,8 @@ public class AverageHeatGroupSerde implements Serde<AverageHeatGroup> {
             int id = buffer.getInt();
             double minTemp = buffer.getDouble();
             double maxTemp = buffer.getDouble();
-            return new AverageHeatGroup(temp, count, tickS, tickE, id);
+            long tick = buffer.getLong();
+            return new AverageHeatGroup(temp, count, tickS, tickE, id, tick);
         }
 
         @Override

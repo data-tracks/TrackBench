@@ -7,7 +7,6 @@ import dev.kafka.sensor.Sensor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.json.JSONObject;
 
 @Getter
 @NoArgsConstructor
@@ -22,8 +21,8 @@ public class AverageBrakeGroup extends Average {
     public int maxPressure;
 
 
-    public AverageBrakeGroup( int temp, int pressure, long count, long tickStart, long tickEnd, long id, int wear ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageBrakeGroup( int temp, int pressure, long count, long tickStart, long tickEnd, long id, int wear, long tick ) {
+        super( count, tickStart, tickEnd, tick, id );
         this.temp = temp;
         this.pressure = pressure;
         this.wear = wear;

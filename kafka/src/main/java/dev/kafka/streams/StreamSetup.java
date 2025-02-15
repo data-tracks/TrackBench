@@ -78,31 +78,31 @@ public class StreamSetup {
     public static void run() {
         setupStreams( "accelerometer", false, Accelerometer::from, AverageAccelerometer::new, new AverageAccelerometerSerde() );
 
-        setupStreams( "accelerometer", true, Accelerometer::from, AverageAccelerometerGroup::new, new AverageAccelerometerGroupSerde() );
+        //setupStreams( "accelerometer", true, Accelerometer::from, AverageAccelerometerGroup::new, new AverageAccelerometerGroupSerde() );
 
         setupStreams( "break", false, Brake::from, AverageBrake::new, new AverageBrakeSerde() );
 
-        setupStreams( "break", true, Brake::from, AverageBrakeGroup::new, new AverageBrakeGroupSerde() );
+        //setupStreams( "break", true, Brake::from, AverageBrakeGroup::new, new AverageBrakeGroupSerde() );
 
         setupStreams( "engine", false, Engine::from, AverageEngine::new, new AverageEngineSerde() );
 
-        setupStreams( "engine", true, Engine::from, AverageEngineGroup::new, new AverageEngineGroupSerde() );
+        //setupStreams( "engine", true, Engine::from, AverageEngineGroup::new, new AverageEngineGroupSerde() );
 
-        setupStreams( "fuel", false, FuelPump::from, AverageFuelPump::new, new AverageFuelPumpSerde() );
+        setupStreams( "fuelPump", false, FuelPump::from, AverageFuelPump::new, new AverageFuelPumpSerde() );
 
-        setupStreams( "fuel", true, FuelPump::from, AverageFuelPumpGroup::new, new AverageFuelPumpGroupSerde() );
+        //setupStreams( "fuelPump", true, FuelPump::from, AverageFuelPumpGroup::new, new AverageFuelPumpGroupSerde() );
 
         setupStreams( "heat", false, Heat::from, AverageHeat::new, new AverageHeatSerde() );
 
-        setupStreams( "heat", true, Heat::from, AverageHeatGroup::new, new AverageHeatGroupSerde() );
+        //setupStreams( "heat", true, Heat::from, AverageHeatGroup::new, new AverageHeatGroupSerde() );
 
         setupStreams( "speed", false, Speed::from, AverageSpeed::new, new AverageSpeedSerde() );
 
-        setupStreams( "speed", true, Speed::from, AverageSpeedGroup::new, new AverageSpeedGroupSerde() );
+        //setupStreams( "speed", true, Speed::from, AverageSpeedGroup::new, new AverageSpeedGroupSerde() );
 
         setupStreams( "tire", false, Tire::from, AverageTire::new, new AverageTireSerde() );
 
-        setupStreams( "tire", true, Tire::from, AverageTireGroup::new, new AverageTireGroupSerde() );
+        //setupStreams( "tire", true, Tire::from, AverageTireGroup::new, new AverageTireGroupSerde() );
 
         threads.add( WarningStream.run() );
 
@@ -163,12 +163,12 @@ public class StreamSetup {
         String id = String.format( "%s%s-app", type, grouped ? "-group" : "" );
 
         if ( grouped ) {
-            /*runGroupedWindow( Connection.getProducer( "mini-" + id ), type, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
-            runGroupedWindow( Connection.getProducer( "large-" + id ), type, Duration.ofMillis( LARGE_WINDOW_MS ), "large-group", sensorFunction, avgSupplier, serde );*/
+            //runGroupedWindow( Connection.getProducer( "mini-" + id ), type, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
+            runGroupedWindow( Connection.getProducer( "large-" + id ), type, Duration.ofMillis( LARGE_WINDOW_MS ), "window", sensorFunction, avgSupplier, serde );
         } else {
             runAsIs( Connection.getProducer( id ), type, sensorFunction ); // only do it for "ungrouped"
-            /*runWindow( Connection.getProducer( "mini-" + id ), type, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
-            runWindow( Connection.getProducer( "large-" + id ), type, Duration.ofMillis( LARGE_WINDOW_MS ), "large-group", sensorFunction, avgSupplier, serde );*/
+            //runWindow( Connection.getProducer( "mini-" + id ), type, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
+            runWindow( Connection.getProducer( "large-" + id ), type, Duration.ofMillis( LARGE_WINDOW_MS ), "window", sensorFunction, avgSupplier, serde );
         }
 
     }

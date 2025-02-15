@@ -17,8 +17,8 @@ public class AverageAccelerometer extends Average {
     }
 
 
-    public AverageAccelerometer( double throttle, int count, int tickS, int tickE, int id ) {
-        super( count, tickS, tickE, id );
+    public AverageAccelerometer( double throttle, int count, int tickS, int tickE, int id, long tick ) {
+        super( count, tickS, tickE, tick, id );
         this.throttle = throttle;
     }
 

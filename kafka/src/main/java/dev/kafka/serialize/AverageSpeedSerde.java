@@ -61,7 +61,8 @@ public class AverageSpeedSerde implements Serde<AverageSpeed> {
             int tickS = buffer.getInt();
             int tickE = buffer.getInt();
             int id = buffer.getInt();
-            return new AverageSpeed(speed, wind, count, tickS, tickE, id);
+            long tick = buffer.getLong();
+            return new AverageSpeed(speed, wind, count, tickS, tickE, id, tick);
         }
 
         @Override

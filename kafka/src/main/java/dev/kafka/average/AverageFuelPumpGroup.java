@@ -7,7 +7,6 @@ import dev.kafka.sensor.Sensor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.json.JSONObject;
 
 @Getter
 @NoArgsConstructor
@@ -27,8 +26,9 @@ public class AverageFuelPumpGroup extends Average {
             long count,
             long tickStart,
             long tickEnd,
-            long id ) {
-        super( count, tickStart, tickEnd, id );
+            long id,
+            long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.temp = temp;
         this.flowRate = flowRate;
         this.maxTemp = Double.MAX_VALUE;

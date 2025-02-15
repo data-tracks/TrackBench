@@ -17,8 +17,8 @@ public class AverageBrake extends Average {
     public int wear;
 
 
-    public AverageBrake( int temp, int pressure, int count, int tickStart, int tickEnd, int id, int wear ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageBrake( int temp, int pressure, int count, int tickStart, int tickEnd, int id, int wear, long tick ) {
+        super( count, tickStart, tickEnd, tick, id );
         this.temp = temp;
         this.pressure = pressure;
         this.wear = wear;

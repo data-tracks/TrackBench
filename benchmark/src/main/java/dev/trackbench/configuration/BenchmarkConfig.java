@@ -77,7 +77,7 @@ public record BenchmarkConfig(
                 props.getInt( "sensorAmount" ),
                 getNumber( props, "ticks" ),
                 getNumber( props, "receivers" ),
-                props.getInt( "stepDurationNs" ),
+                getNumber( props, "stepDurationNs" ),
                 getNumber( props, "updateTickVisual" )
         );
         config.system.setConfig( config );

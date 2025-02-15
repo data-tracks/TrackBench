@@ -64,7 +64,8 @@ public class AverageHeatSerde implements Serde<AverageHeat> {
             int tickS = buffer.getInt();
             int tickE = buffer.getInt();
             int id = buffer.getInt();
-            return new AverageHeat( temp, count, tickS, tickE, id );
+            long tick = buffer.getLong();
+            return new AverageHeat( temp, count, tickS, tickE, id, tick );
         }
 
 

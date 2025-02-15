@@ -15,6 +15,7 @@ public abstract class Average {
     public long count;
     public long tickStart;
     public long tickEnd;
+    public long tick;
     public long id;
 
 
@@ -56,6 +57,7 @@ public abstract class Average {
         ObjectNode json = JsonNodeFactory.instance.objectNode();
         json.put( "id", id );
         json.put( "type", key );
+        json.put( "tick", tickEnd );
         //json.put( "startTime", tickStart );
         //json.put( "endTime", tickEnd );
         json.putIfAbsent( "data", data );

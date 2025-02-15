@@ -16,8 +16,8 @@ public class AverageFuelPump extends Average {
     public double flowRate;
 
 
-    public AverageFuelPump( double temp, double flowRate, long count, long tickStart, long tickEnd, long id ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageFuelPump( double temp, double flowRate, long count, long tickStart, long tickEnd, long id, long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.temp = temp;
         this.flowRate = flowRate;
     }

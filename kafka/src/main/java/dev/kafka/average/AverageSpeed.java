@@ -16,8 +16,8 @@ public class AverageSpeed extends Average {
     public double wind;
 
 
-    public AverageSpeed( double speed, double wind, int count, int tickStart, int tickEnd, int id ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageSpeed( double speed, double wind, int count, int tickStart, int tickEnd, int id, long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.speed = speed;
         this.wind = wind;
     }

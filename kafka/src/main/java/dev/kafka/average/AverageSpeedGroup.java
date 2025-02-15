@@ -20,8 +20,8 @@ public class AverageSpeedGroup extends Average {
     public double maxWind;
 
 
-    public AverageSpeedGroup( double speed, double wind, int count, int tickStart, int tickEnd, int id ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageSpeedGroup( double speed, double wind, int count, int tickStart, int tickEnd, int id, long tick ) {
+        super( count, tickStart, tickEnd, id, tick );
         this.speed = speed;
         this.wind = wind;
         this.minSpeed = Double.MAX_VALUE;

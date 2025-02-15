@@ -20,8 +20,8 @@ public class AverageAccelerometerGroup extends Average {
     }
 
 
-    public AverageAccelerometerGroup( double throttle, long count, long tickStart, long tickEnd, long id ) {
-        super( count, tickStart, tickEnd, id );
+    public AverageAccelerometerGroup( double throttle, long count, long tickStart, long tickEnd, long tick, long id ) {
+        super( count, tickStart, tickEnd, tick, id );
         this.throttle = throttle;
         this.maxThrottle = Double.MAX_VALUE;
         this.minThrottle = Double.MAX_VALUE;

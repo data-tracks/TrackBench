@@ -2,12 +2,11 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageTireGroup;
 import dev.kafka.util.SerdeUtil;
+import java.nio.ByteBuffer;
+import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
-
-import java.nio.ByteBuffer;
-import java.util.Map;
 
 public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
 
@@ -16,51 +15,57 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
         return new AverageSerializer();
     }
 
+
     @Override
     public Deserializer<AverageTireGroup> deserializer() {
         return new AverageDeserializer();
     }
 
+
     public static class AverageSerializer implements Serializer<AverageTireGroup> {
 
         @Override
-        public byte[] serialize(String topic, AverageTireGroup data) {
-            if (data == null) {
+        public byte[] serialize( String topic, AverageTireGroup data ) {
+            if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES * 6 + Integer.BYTES * 6);
-            buffer.putDouble(data.temp);
-            buffer.putDouble(data.pressure);
-            buffer.putInt(data.position);
-            buffer.putInt(data.wear);
-            buffer.putDouble(data.minTemp);
-            buffer.putDouble(data.maxTemp);
-            buffer.putDouble(data.minPressure);
-            buffer.putDouble(data.maxPressure);
+            ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 6 + Integer.BYTES * 6 );
+            buffer.putDouble( data.temp );
+            buffer.putDouble( data.pressure );
+            buffer.putInt( data.position );
+            buffer.putInt( data.wear );
+            buffer.putDouble( data.minTemp );
+            buffer.putDouble( data.maxTemp );
+            buffer.putDouble( data.minPressure );
+            buffer.putDouble( data.maxPressure );
 
             SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
+
         @Override
-        public void configure(Map<String, ?> configs, boolean isKey) {
+        public void configure( Map<String, ?> configs, boolean isKey ) {
             // No configuration needed
         }
+
 
         @Override
         public void close() {
             // No resources to close
         }
+
     }
+
 
     public static class AverageDeserializer implements Deserializer<AverageTireGroup> {
 
         @Override
-        public AverageTireGroup deserialize(String topic, byte[] data) {
-            if (data == null || data.length == 0) {
+        public AverageTireGroup deserialize( String topic, byte[] data ) {
+            if ( data == null || data.length == 0 ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.wrap(data);
+            ByteBuffer buffer = ByteBuffer.wrap( data );
             double temp = buffer.getDouble();
             double pressure = buffer.getDouble();
             int count = buffer.getInt();
@@ -73,17 +78,22 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
             double maxTemp = buffer.getDouble();
             double minPressure = buffer.getDouble();
             double maxPressure = buffer.getDouble();
-            return new AverageTireGroup(temp, pressure, count, tickS, tickE, id, position, wear);
+            long tick = buffer.getLong();
+            return new AverageTireGroup( temp, pressure, count, tickS, tickE, id, position, wear, tick );
         }
 
+
         @Override
-        public void configure(Map<String, ?> configs, boolean isKey) {
+        public void configure( Map<String, ?> configs, boolean isKey ) {
             // No configuration needed
         }
+
 
         @Override
         public void close() {
             // No resources to close
         }
+
     }
+
 }
