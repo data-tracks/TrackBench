@@ -74,12 +74,22 @@ public class FileUtils {
         Display.INSTANCE.next( msg );
         try ( AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open( target.toPath(), StandardOpenOption.READ ) ) {
             long fileSize = fileChannel.size();
+            if ( fileSize <= 0 ) {
+                return 0;
+            }
+
             long chunkSize = fileSize / NUM_THREADS;
+
+            if ( chunkSize * NUM_THREADS < fileSize ) {
+                // we correct this
+                chunkSize++;
+            }
+
             List<Future<Long>> futures = new ArrayList<>();
 
             for ( int i = 0; i < NUM_THREADS; i++ ) {
                 long startPos = i * chunkSize;
-                long endPos = (i == NUM_THREADS - 1) ? fileSize : startPos + chunkSize;
+                long endPos = Math.min( fileSize, startPos + chunkSize );
                 futures.add( FileUtils.executor.submit( () -> countLinesInChunk( fileChannel, startPos, endPos ) ) );
             }
 
@@ -91,7 +101,7 @@ public class FileUtils {
             if ( debug ) {
                 Display.INSTANCE.info( "File {} has {} lines", target.getName(), totalLineCount );
             }
-            return totalLineCount;
+            return totalLineCount + 1; // we did not find a \n but als the file was not empty to one line
         } catch ( ExecutionException | InterruptedException | IOException e ) {
             throw new RuntimeException( e );
         } finally {
@@ -102,17 +112,19 @@ public class FileUtils {
 
     private static long countLinesInChunk( AsynchronousFileChannel fileChannel, long position, long endPos ) {
         long lineCount = 0;
-        ByteBuffer buffer = ByteBuffer.allocate( BUFFER_SIZE );
-        long bytesReadTotal = 0;
-
         long chunkSize = endPos - position;
+        if ( chunkSize <= 0 ) {
+            return lineCount;
+        }
+        ByteBuffer buffer = ByteBuffer.allocate( Math.min( (int) chunkSize, BUFFER_SIZE ) );
+        long bytesReadTotal = 0;
 
         while ( bytesReadTotal < chunkSize ) {
             Future<Integer> future = fileChannel.read( buffer, position + bytesReadTotal );
             try {
                 int bytesRead = future.get();
                 if ( bytesRead == -1 ) {
-                    break; // End of file
+                    return lineCount; // End of file
                 }
 
                 bytesReadTotal += bytesRead;
@@ -120,7 +132,7 @@ public class FileUtils {
                 byte[] data = new byte[bytesRead];
                 buffer.get( data );
 
-                if ( bytesReadTotal >= chunkSize ) {
+                if ( bytesReadTotal > chunkSize ) {
                     // we have read too much
                     bytesRead -= (int) (bytesReadTotal - chunkSize);
                 }
@@ -207,6 +219,8 @@ public class FileUtils {
     public static void deleteFile( File file ) {
         if ( file.isFile() ) {
             boolean success = file.delete();
+        } else if ( !file.exists() ) {
+            return;
         } else {
             throw new RuntimeException( "Error deleting file: " + file.getAbsolutePath() );
         }

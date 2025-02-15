@@ -20,6 +20,7 @@ public class FileJsonTarget implements JsonTarget {
 
     long counter = 0;
     List<String> batch = new ArrayList<>();
+    boolean first = true;
 
 
     public FileJsonTarget( File file, long sensorBatchSize ) {
@@ -32,8 +33,9 @@ public class FileJsonTarget implements JsonTarget {
         }
     }
 
+
     public FileJsonTarget( File file, BenchmarkConfig config ) {
-        this(file, config.sensorBatchSize());
+        this( file, config.sensorBatchSize() );
     }
 
 
@@ -58,7 +60,12 @@ public class FileJsonTarget implements JsonTarget {
         StringBuilder builder = new StringBuilder();
 
         for ( String entry : batch ) {
-            builder.append( entry ).append( "\n" );
+            if ( first ) {
+                first = false;
+            } else {
+                builder.append( "\n" );
+            }
+            builder.append( entry );
         }
         writer.append( builder.toString() );
         writer.flush();

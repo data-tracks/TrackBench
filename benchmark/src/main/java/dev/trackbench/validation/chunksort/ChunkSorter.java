@@ -8,15 +8,19 @@ import dev.trackbench.util.file.FileUtils;
 import dev.trackbench.util.file.JsonSource;
 import dev.trackbench.util.file.JsonTarget;
 import dev.trackbench.validation.max.MaxCounter;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class ChunkSorter {
@@ -35,138 +39,151 @@ public class ChunkSorter {
     private final long lines;
     private final Function<JsonNode, Long> extractor;
 
-    public ChunkSorter(JsonSource source, File target, Function<JsonNode, Long> extractor) {
+
+    public ChunkSorter( JsonSource source, File target, Function<JsonNode, Long> extractor ) {
         this.source = source;
         this.target = target;
-        if (!target.isDirectory()) {
-            throw new IllegalArgumentException("Chunk target must be a directory");
+        if ( !target.isDirectory() ) {
+            throw new IllegalArgumentException( "Chunk target must be a directory" );
         }
         this.extractor = extractor;
-        this.maxId = MaxCounter.extractMax(source, value -> value.get("id").asLong());
+        this.maxId = MaxCounter.extractMax( source, value -> value.get( "id" ).asLong() );
         this.lines = source.countLines();
-        this.chunks = Math.max( maxId / IDS_PER_CHUNK, 1);
-        Display.INSTANCE.info("Chunks to create {} chunks", chunks);
-        this.workerSize = lines / WORKERS != 0 ? lines / WORKERS + 1 : lines / WORKERS;
+        this.chunks = Math.max( maxId / IDS_PER_CHUNK, 1 );
+        Display.INSTANCE.info( "Chunks to create {} chunks", chunks );
+        this.workerSize = Math.max( 1, lines / WORKERS != 0 ? lines / WORKERS + 1 : lines / WORKERS );
     }
 
+
     public void chunk() {
-        CountRegistry registry = new CountRegistry(this.workerSize, 1_000, " lines", "chunked");
+        CountRegistry registry = new CountRegistry( this.workerSize, 1_000, " lines", "chunked" );
 
         List<ChunkWorker> workers = new ArrayList<>();
-        for (long i = 0; i < WORKERS; i++) {
+        for ( long i = 0; i < WORKERS; i++ ) {
             ChunkWorker worker = new ChunkWorker(
                     i,
                     registry,
                     i * this.workerSize,
                     this.workerSize,
                     source,
-                    FileUtils.createFolder(target, getWorkerFolder(i)),
-                    v -> v.get("id").asLong());
+                    FileUtils.createFolder( target, getWorkerFolder( i ) ),
+                    v -> v.get( "id" ).asLong() );
             worker.start();
-            workers.add(worker);
+            workers.add( worker );
         }
 
         try {
-            for (ChunkWorker worker : workers) {
+            for ( ChunkWorker worker : workers ) {
                 worker.join();
             }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch ( InterruptedException e ) {
+            throw new RuntimeException( e );
         }
         registry.done();
 
     }
+
 
     public File sort() {
         chunk();
         File merged = createMergedFolder();
-        collect(merged);
+        collect( merged );
         File sorted = createSortedFolder();
-        sortChunks(merged, sorted);
-        return intoOneFile(sorted);
+        sortChunks( merged, sorted );
+        return intoOneFile( sorted );
     }
 
-    private File intoOneFile(File sorted) {
+
+    private File intoOneFile( File sorted ) {
         File target = createFinalFile();
-        for (long i = 0; i < chunks; i++) {
-            File current = FileUtils.getJson(sorted, String.valueOf(i * IDS_PER_CHUNK));
-            FileUtils.copy(current, target);
+        for ( long i = 0; i < chunks; i++ ) {
+            File current = FileUtils.getJson( sorted, String.valueOf( i * IDS_PER_CHUNK ) );
+            FileUtils.copy( current, target );
         }
-        Display.INSTANCE.info("Sorted and merged {}", chunks);
+        Display.INSTANCE.info( "Sorted and merged {}", chunks );
         return target;
     }
 
+
     private File createFinalFile() {
-        return FileUtils.getJson(target, FINAL);
+        return FileUtils.getJson( target, FINAL );
     }
 
-    private void sortChunks(File source, File target) {
-        BlockingQueue<Long> chunks = new ArrayBlockingQueue<>((int) this.chunks);
-        for (long i = 0; i < this.chunks; i++) {
-            boolean success = chunks.offer(i * IDS_PER_CHUNK);
+
+    private void sortChunks( File source, File target ) {
+        BlockingQueue<Long> chunks = new ArrayBlockingQueue<>( (int) this.chunks );
+        for ( long i = 0; i < this.chunks; i++ ) {
+            boolean success = chunks.offer( i * IDS_PER_CHUNK );
         }
 
         List<SortWorker> workers = new ArrayList<>();
-        CountRegistry registry = new CountRegistry(this.chunks, 1, " chunks", "sorted", false);
-        for (long i = 0; i < WORKERS; i++) {
-            SortWorker worker = new SortWorker(chunks, source, target, extractor, registry);
+        CountRegistry registry = new CountRegistry( this.chunks, 1, " chunks", "sorted", false );
+        for ( long i = 0; i < WORKERS; i++ ) {
+            SortWorker worker = new SortWorker( chunks, source, target, extractor, registry );
             worker.start();
-            workers.add(worker);
+            workers.add( worker );
         }
         try {
-            for (SortWorker worker : workers) {
+            for ( SortWorker worker : workers ) {
                 worker.join();
             }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch ( InterruptedException e ) {
+            throw new RuntimeException( e );
         }
         registry.done();
     }
 
-    private void collect(File target) {
-        CountRegistry registry = new CountRegistry(this.chunks, 1, " chunks", "merged", false);
 
-        for (long chunk = 0; chunk < chunks; chunk++) {
+    private void collect( File target ) {
+        CountRegistry registry = new CountRegistry( this.chunks, 1, " chunks", "merged", false );
+
+        for ( long chunk = 0; chunk < chunks; chunk++ ) {
             registry.update( 0, chunk );
             long chunkStart = chunk * IDS_PER_CHUNK;
-            File chunkTarget = FileUtils.getJson(target, String.valueOf(chunkStart));
+            File chunkTarget = FileUtils.getJson( target, String.valueOf( chunkStart ) );
             boolean coveredByOne = false;
-            for (long i = 0; i < WORKERS; i++) {
-                File workerFolder = new File(this.target, getWorkerFolder(i));
-                if (FileUtils.hasJsonFile(workerFolder, String.valueOf(chunkStart))) {
-                    FileUtils.copy(FileUtils.getJson(workerFolder, String.valueOf(chunkStart)), chunkTarget);
+            for ( long i = 0; i < WORKERS; i++ ) {
+                File workerFolder = new File( this.target, getWorkerFolder( i ) );
+                if ( FileUtils.hasJsonFile( workerFolder, String.valueOf( chunkStart ) ) ) {
+                    FileUtils.copy( FileUtils.getJson( workerFolder, String.valueOf( chunkStart ) ), chunkTarget );
                     coveredByOne = true;
                 }
             }
-            if (!coveredByOne) {
+            if ( !coveredByOne ) {
                 try {
                     chunkTarget.createNewFile();
-                    Display.INSTANCE.warn("Chunk {} was not covered", chunk);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    Display.INSTANCE.warn( "Chunk {} was not covered", chunk );
+                } catch ( IOException e ) {
+                    throw new RuntimeException( e );
                 }
             }
         }
     }
 
+
     @NotNull
-    private static String getWorkerFolder(long i) {
+    private static String getWorkerFolder( long i ) {
         return "w" + i;
     }
 
+
     private File createMergedFolder() {
-        return FileUtils.createFolder(target, MERGED);
+        return FileUtils.createFolder( target, MERGED );
     }
+
 
     private File createSortedFolder() {
-        return FileUtils.createFolder(target, SORTED);
+        return FileUtils.createFolder( target, SORTED );
     }
 
-    private static JsonTarget getJsonTarget(File target, long start) {
-        return new FileJsonTarget(FileUtils.getJson(target, String.valueOf(start)), 1_000);
+
+    private static JsonTarget getJsonTarget( File target, long start ) {
+        return new FileJsonTarget( FileUtils.getJson( target, String.valueOf( start ) ), 1_000 );
     }
+
 
     public static class ChunkWorker extends Thread {
+
         private final long id;
         private final long lines;
         private final File target;
@@ -183,67 +200,72 @@ public class ChunkSorter {
                 long lines,
                 JsonSource source,
                 File target,
-                Function<JsonNode, Long> tickExtractor) {
+                Function<JsonNode, Long> tickExtractor ) {
             this.id = id;
             this.target = target;
             this.lines = lines;
             this.source = source.copy();
-            this.source.offset(start);
+            this.source.offset( start );
             this.tickExtractor = tickExtractor;
             this.registry = registry;
         }
+
 
         @Override
         public void run() {
             separate();
         }
 
+
         private void separate() {
-            for (long i = 0; i < lines; i++) {
-                if (!source.hasNext()) {
+            for ( long i = 0; i < lines; i++ ) {
+                if ( !source.hasNext() ) {
                     break;
                 }
                 JsonNode current = source.next();
-                long id = tickExtractor.apply(current);
+                long id = tickExtractor.apply( current );
                 long chunk = id / IDS_PER_CHUNK;
                 long currentChunk = chunk * IDS_PER_CHUNK;
                 JsonTarget target = targets.get( currentChunk );
-                if (target == null) {
-                    target = getJsonTarget(this.target, currentChunk );
-                    targets.put( currentChunk, target);
+                if ( target == null ) {
+                    target = getJsonTarget( this.target, currentChunk );
+                    targets.put( currentChunk, target );
                 }
-                target.attach(current);
+                target.attach( current );
 
-                if (i % 1_000 == 0) {
-                    registry.update(this.id, i);
+                if ( i % 1_000 == 0 ) {
+                    registry.update( this.id, i );
                 }
             }
 
             try {
-                for (JsonTarget f : this.targets.values()) {
+                for ( JsonTarget f : this.targets.values() ) {
                     f.close();
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch ( IOException e ) {
+                throw new RuntimeException( e );
             }
 
         }
 
     }
 
+
     private static class SortWorker extends Thread {
+
         private final BlockingQueue<Long> chunks;
         private final File source;
         private final File target;
         private final Function<JsonNode, Long> extractor;
         private final CountRegistry registry;
 
+
         public SortWorker(
                 BlockingQueue<Long> chunks,
                 File source,
                 File target,
                 Function<JsonNode, Long> extractor,
-                CountRegistry registry) {
+                CountRegistry registry ) {
             this.chunks = chunks;
             this.source = source;
             this.target = target;
@@ -251,33 +273,36 @@ public class ChunkSorter {
             this.registry = registry;
         }
 
+
         @Override
         public void run() {
             try {
                 Long chunk = chunks.poll();
-                while (chunk != null) {
-                    JsonSource file = JsonSource.of(FileUtils.getJson(this.source, String.valueOf(chunk)), 10_000);
-                    JsonTarget target = getJsonTarget(this.target, chunk);
+                while ( chunk != null ) {
+                    JsonSource file = JsonSource.of( FileUtils.getJson( this.source, String.valueOf( chunk ) ), 10_000 );
+                    JsonTarget target = getJsonTarget( this.target, chunk );
 
-                    TreeSet<JsonNode> queue = new TreeSet<>(Comparator.comparing(extractor));
-                    while (file.hasNext()) {
+                    TreeSet<JsonNode> queue = new TreeSet<>( Comparator.comparing( extractor ) );
+                    while ( file.hasNext() ) {
                         JsonNode next = file.next();
-                        queue.add(next);
+                        queue.add( next );
                     }
-                    for (JsonNode jsonNode : queue) {
-                        target.attach(jsonNode);
+                    for ( JsonNode jsonNode : queue ) {
+                        target.attach( jsonNode );
                     }
 
                     target.close();
 
-                    synchronized (chunks) {
-                        this.registry.update(0, this.registry.getLast() + 1);
+                    synchronized ( chunks ) {
+                        this.registry.update( 0, this.registry.getLast() + 1 );
                         chunk = chunks.poll();
                     }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch ( IOException e ) {
+                throw new RuntimeException( e );
             }
         }
+
     }
+
 }

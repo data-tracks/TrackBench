@@ -3,11 +3,10 @@ package dev.trackbench.validation.max;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.util.file.JsonSource;
 import dev.trackbench.validation.Comparator;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import lombok.Getter;
 
 public class MaxCounter extends Thread {
 
@@ -20,18 +19,26 @@ public class MaxCounter extends Thread {
     private long maxTick = -1;
 
 
-    public MaxCounter(long start, long end, JsonSource target, Function<JsonNode, Long> numExtractor) {
+    public MaxCounter( long start, long end, JsonSource target, Function<JsonNode, Long> numExtractor ) {
         this.start = start;
         this.end = end;
         this.target = target;
         target.offset( start );
         this.tickExtractor = numExtractor;
+
     }
 
-    public static long extractMax(JsonSource source, Function<JsonNode, Long> numberExtractor) {
+
+    public static long extractMax( JsonSource source, Function<JsonNode, Long> numberExtractor ) {
         long lines = source.countLines();
 
-        long chunks = lines / Comparator.WORKERS;
+        if ( lines < 1 ) {
+            return -1;
+        }
+
+        long workers = Math.min( lines, Comparator.WORKERS );
+
+        long chunks = lines / workers;
 
         List<MaxCounter> threads = new ArrayList<>();
 
