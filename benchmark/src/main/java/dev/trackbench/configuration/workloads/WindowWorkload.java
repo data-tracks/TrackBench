@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public class WindowWorkload extends Workload {
 
-    public WindowWorkload( BenchmarkConfig config ) {
-        super( "Window", config );
+    public WindowWorkload( long id, BenchmarkConfig config ) {
+        super( id, "Window", config );
     }
 
 

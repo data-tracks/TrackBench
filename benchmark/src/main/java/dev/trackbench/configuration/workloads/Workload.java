@@ -17,7 +17,7 @@ public abstract class Workload {
     private final String name;
 
 
-    public Workload( String name,  BenchmarkConfig config ) {
+    public Workload( long id, String name,  BenchmarkConfig config ) {
         this.config = config;
         this.name = name;
     }

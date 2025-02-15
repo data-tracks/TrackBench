@@ -3,6 +3,7 @@ package dev.kafka.streams;
 
 import static dev.kafka.util.Connection.MAPPER;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.kafka.average.Average;
 import dev.kafka.average.AverageAccelerometer;
@@ -44,6 +45,8 @@ import dev.kafka.serialize.AverageTireSerde;
 import dev.kafka.util.Connection;
 import dev.kafka.util.TrackProducer;
 import java.time.Duration;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -67,75 +70,128 @@ public class StreamSetup {
 
     public static final long SMALL_WINDOW_MS = 100;
     public static final long LARGE_WINDOW_MS = 5000;
+    public static final String ERRORS_TOPIC = "errors";
+
+    public static final Queue<Thread> threads = new ConcurrentLinkedQueue<>();
 
 
     public static void run() {
-        setupStreams( "accelerometer-app", false, Accelerometer::from, AverageAccelerometer::new, new AverageAccelerometerSerde() );
+        setupStreams( "accelerometer", false, Accelerometer::from, AverageAccelerometer::new, new AverageAccelerometerSerde() );
 
-        setupStreams( "accelerometer-group-app", true, Accelerometer::from, AverageAccelerometerGroup::new, new AverageAccelerometerGroupSerde() );
+        setupStreams( "accelerometer", true, Accelerometer::from, AverageAccelerometerGroup::new, new AverageAccelerometerGroupSerde() );
 
-        setupStreams( "break-app", false, Brake::from, AverageBrake::new, new AverageBrakeSerde() );
+        setupStreams( "break", false, Brake::from, AverageBrake::new, new AverageBrakeSerde() );
 
-        setupStreams( "break-group-app", true, Brake::from, AverageBrakeGroup::new, new AverageBrakeGroupSerde() );
+        setupStreams( "break", true, Brake::from, AverageBrakeGroup::new, new AverageBrakeGroupSerde() );
 
-        setupStreams( "engine-app", false, Engine::from, AverageEngine::new, new AverageEngineSerde() );
+        setupStreams( "engine", false, Engine::from, AverageEngine::new, new AverageEngineSerde() );
 
-        setupStreams( "engine-group-app", true, Engine::from, AverageEngineGroup::new, new AverageEngineGroupSerde() );
+        setupStreams( "engine", true, Engine::from, AverageEngineGroup::new, new AverageEngineGroupSerde() );
 
-        setupStreams( "fuel-pump-app", false, FuelPump::from, AverageFuelPump::new, new AverageFuelPumpSerde() );
+        setupStreams( "fuel", false, FuelPump::from, AverageFuelPump::new, new AverageFuelPumpSerde() );
 
-        setupStreams( "fuel-pump-group-app", true, FuelPump::from, AverageFuelPumpGroup::new, new AverageFuelPumpGroupSerde() );
+        setupStreams( "fuel", true, FuelPump::from, AverageFuelPumpGroup::new, new AverageFuelPumpGroupSerde() );
 
-        setupStreams( "heat-app", false, Heat::from, AverageHeat::new, new AverageHeatSerde() );
+        setupStreams( "heat", false, Heat::from, AverageHeat::new, new AverageHeatSerde() );
 
-        setupStreams( "heat-group-app", true, Heat::from, AverageHeatGroup::new, new AverageHeatGroupSerde() );
+        setupStreams( "heat", true, Heat::from, AverageHeatGroup::new, new AverageHeatGroupSerde() );
 
-        setupStreams( "speed-app", false, Speed::from, AverageSpeed::new, new AverageSpeedSerde() );
+        setupStreams( "speed", false, Speed::from, AverageSpeed::new, new AverageSpeedSerde() );
 
-        setupStreams( "speed-group-app", false, Speed::from, AverageSpeedGroup::new, new AverageSpeedGroupSerde() );
+        setupStreams( "speed", true, Speed::from, AverageSpeedGroup::new, new AverageSpeedGroupSerde() );
 
-        setupStreams( "tire-app", true, Tire::from, AverageTire::new, new AverageTireSerde() );
+        setupStreams( "tire", false, Tire::from, AverageTire::new, new AverageTireSerde() );
 
-        setupStreams( "tire-group-app", false, Tire::from, AverageTireGroup::new, new AverageTireGroupSerde() );
+        setupStreams( "tire", true, Tire::from, AverageTireGroup::new, new AverageTireGroupSerde() );
 
-        WarningsStream.run();
+        threads.add( WarningStream.run() );
+
+        filterErrorsStream();
+
+        threads.forEach( t -> {
+            try {
+                t.join();
+            } catch ( InterruptedException e ) {
+                throw new RuntimeException( e );
+            }
+        } );
+
+        Runtime.getRuntime().addShutdownHook( new Thread( () -> {
+            try {
+                threads.forEach( Thread::interrupt );
+            } finally {
+                log.info( "Interrupting all threads forcefully." );
+            }
+        } ) );
 
     }
 
 
+    private static void filterErrorsStream() {
+        TrackProducer<String, String> producer = Connection.getProducer( "errors-app" );
+
+        StreamsBuilder builder = new StreamsBuilder();
+        KStream<String, String> sensorStream = builder.stream( INPUT_TOPIC );
+
+        sensorStream
+                .selectKey( ( k, v ) -> extractType( v ) )
+                .filter( ( k, v ) -> {
+                    try {
+                        JsonNode node = MAPPER.readTree( v );
+                        if ( node.has( "data" ) ) {
+                            return node.get( "data" ).has( "Error" );
+                        }
+                        return true;
+                    } catch ( JsonProcessingException e ) {
+                        throw new RuntimeException( e );
+                    }
+                } )
+                .to( ERRORS_TOPIC );
+
+        // Start the Kafka Streams application
+        KafkaStreams streams = new KafkaStreams( builder.build(), producer.getProperties() );
+        cleanupStream( producer, streams );
+    }
+
+
     private static <Avg extends Average> void setupStreams(
-            String id,
+            String type,
             boolean grouped,
             Function<String, Sensor> sensorFunction,
             Supplier<Avg> avgSupplier,
             Serde<Avg> serde ) {
-        TrackProducer<String, String> producer = Connection.getProducer( id );
-        runAsIs( producer, sensorFunction );
+        String id = String.format( "%s%s-app", type, grouped ? "-group" : "" );
+
         if ( grouped ) {
-            runGroupedWindow( producer, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
-            runGroupedWindow( producer, Duration.ofMillis( LARGE_WINDOW_MS ), "large-group", sensorFunction, avgSupplier, serde );
+            /*runGroupedWindow( Connection.getProducer( "mini-" + id ), type, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
+            runGroupedWindow( Connection.getProducer( "large-" + id ), type, Duration.ofMillis( LARGE_WINDOW_MS ), "large-group", sensorFunction, avgSupplier, serde );*/
         } else {
-            runWindow( producer, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
-            runWindow( producer, Duration.ofMillis( LARGE_WINDOW_MS ), "large-group", sensorFunction, avgSupplier, serde );
+            runAsIs( Connection.getProducer( id ), type, sensorFunction ); // only do it for "ungrouped"
+            /*runWindow( Connection.getProducer( "mini-" + id ), type, Duration.ofMillis( SMALL_WINDOW_MS ), "mini-group", sensorFunction, avgSupplier, serde );
+            runWindow( Connection.getProducer( "large-" + id ), type, Duration.ofMillis( LARGE_WINDOW_MS ), "large-group", sensorFunction, avgSupplier, serde );*/
         }
 
     }
 
 
-    private static void runAsIs( TrackProducer<String, String> producer, Function<String, Sensor> sensorFunction ) {
+    private static void runAsIs( TrackProducer<String, String> producer, String type, Function<String, Sensor> sensorFunction ) {
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, String> sensorStream = builder.stream( INPUT_TOPIC );
 
         sensorStream
-                .mapValues( StreamSetup::extractType )
-                .filter( ( k, v ) -> !sensorFunction.apply( v ).error )
+                .selectKey( ( k, v ) -> extractType( v ) )
+                .filter( ( k, v ) -> type.equals( k ) && !sensorFunction.apply( v ).error )
                 .to( OUTPUT_TOPIC );
 
+        // Start the Kafka Streams application
+        KafkaStreams streams = new KafkaStreams( builder.build(), producer.getProperties() );
+        cleanupStream( producer, streams );
     }
 
 
     public static <Avg extends Average> void runWindow(
             TrackProducer<String, String> producer,
+            String type,
             Duration windowSize,
             String outputTopic,
             Function<String, Sensor> sensorFunction,
@@ -145,8 +201,8 @@ public class StreamSetup {
         KStream<String, String> sensorStream = builder.stream( INPUT_TOPIC );
 
         KTable<Windowed<String>, Avg> aggregatedStream = sensorStream
-                .mapValues( StreamSetup::extractType )
-                .filter( ( k, v ) -> !sensorFunction.apply( v ).error )
+                .selectKey( ( k, v ) -> extractType( v ) )
+                .filter( ( k, v ) -> type.equals( k ) && !sensorFunction.apply( v ).error )
                 .groupBy( ( key, value ) -> key )
                 .windowedBy(
                         TimeWindows.ofSizeWithNoGrace( windowSize ) )
@@ -162,7 +218,7 @@ public class StreamSetup {
     private static String extractType( String value ) {
         try {
             JsonNode node = MAPPER.readTree( value );
-            return node.get( "data" ).get( "type" ).toString();
+            return node.get( "data" ).get( "type" ).asText();
         } catch ( Exception e ) {
             return "unknown";
         }
@@ -171,6 +227,7 @@ public class StreamSetup {
 
     public static <Avg extends Average> void runGroupedWindow(
             TrackProducer<String, String> producer,
+            String type,
             Duration windowSize,
             String outputTopic,
             Function<String, Sensor> sensorFunction,
@@ -180,8 +237,8 @@ public class StreamSetup {
         KStream<String, String> sensorStream = builder.stream( INPUT_TOPIC );
 
         KTable<Windowed<String>, Avg> aggregatedStream = sensorStream
-                .mapValues( StreamSetup::extractType )
-                .selectKey( ( key, value ) -> key ) // Use "type" as the key
+                .selectKey( ( k, v ) -> extractType( v ) )
+                .filter( ( k, v ) -> type.equals( k ) && !sensorFunction.apply( v ).error )
                 .groupByKey( Grouped.with( Serdes.String(), Serdes.String() ) )
                 .windowedBy( TimeWindows.ofSizeWithNoGrace( windowSize ) )
                 .aggregate( avgSupplier::get, ( key, value, agg ) -> {
@@ -207,7 +264,6 @@ public class StreamSetup {
                     producer.send( record, ( metadata, exception ) -> {
                         if ( exception != null ) {
                             System.err.println( "Failed to send message: " + exception.getMessage() );
-                            // Optionally, handle the failure (e.g., retry logic)
                         }
                     } );
                 } );
@@ -220,7 +276,9 @@ public class StreamSetup {
 
     private static void cleanupStream( TrackProducer<String, String> producer, KafkaStreams streams ) {
         streams.cleanUp();
-        streams.start();
+        Thread thread = new Thread( streams::start );
+        thread.start();
+        threads.add( thread );
 
         // Graceful shutdown
         Runtime.getRuntime().addShutdownHook( new Thread( () -> {

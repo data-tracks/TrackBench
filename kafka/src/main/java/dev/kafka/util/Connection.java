@@ -35,9 +35,10 @@ public class Connection {
         // Configure producer
         props.put( "key.serializer", StringSerializer.class.getName() );
         props.put( "value.serializer", StringSerializer.class.getName() );
-        props.put( ProducerConfig.ACKS_CONFIG, "all" );  // Ensure that all replicas acknowledge the message
+        //props.put( ProducerConfig.ACKS_CONFIG, "all" );  // Ensure that all replicas acknowledge the message
         props.put( ProducerConfig.RETRIES_CONFIG, 3 );   // Retry on failure
-        props.put( "enable.idempotence", "true" );
+        props.put( ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 5 ); // ms to wait until data is fetched
+        //props.put( "enable.idempotence", "true" );
 
         // Initialize the producer once
         return new TrackProducer<>( props );

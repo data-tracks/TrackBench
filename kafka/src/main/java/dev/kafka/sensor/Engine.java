@@ -2,23 +2,45 @@ package dev.kafka.sensor;
 
 import static dev.kafka.util.Connection.MAPPER;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 import lombok.SneakyThrows;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Engine extends Sensor {
 
-    @JsonProperty("data.temperature engine")
+
     public int temp;
-    @JsonProperty("data.rpm")
-    public long rpm;
-    @JsonProperty("data.fuelFlow")
+    public double rpm;
     public int fuelFlow;
-    @JsonProperty("data.oil_pressure")
     public double oilPressure;
-    @JsonProperty("data.fuel_pressure")
     public double fuelPressure;
-    @JsonProperty("data.exhaust")
     public double exhaust;
+
+    @JsonProperty("data")
+    void setData( Map<String, String> data ) {
+        super.setData( data );
+        if ( data.containsKey( "temperature engine" ) ) {
+            temp = Integer.parseInt( data.get( "temperature engine" ) );
+        }
+        if ( data.containsKey( "rpm" ) ) {
+            rpm = Double.parseDouble( data.get( "rpm" ) );
+        }
+        if ( data.containsKey( "fuelFlow" ) ) {
+            fuelFlow = Integer.parseInt( data.get( "fuelFlow" ) );
+        }
+        if ( data.containsKey( "oil_pressure" ) ) {
+            oilPressure = Double.parseDouble( data.get( "oil_pressure" ) );
+        }
+
+        if ( data.containsKey( "fuelPressure" ) ) {
+            fuelPressure = Double.parseDouble( data.get( "fuelPressure" ) );
+        }
+        if ( data.containsKey( "exhaust" ) ) {
+            exhaust = Double.parseDouble( data.get( "exhaust" ) );
+        }
+    }
 
 
     @SneakyThrows

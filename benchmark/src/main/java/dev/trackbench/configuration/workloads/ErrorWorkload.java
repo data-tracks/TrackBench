@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public class ErrorWorkload extends Workload {
 
-    public ErrorWorkload( BenchmarkConfig config ) {
-        super( "Error", config );
+    public ErrorWorkload( long id, BenchmarkConfig config ) {
+        super( id, "Error", config );
     }
 
 

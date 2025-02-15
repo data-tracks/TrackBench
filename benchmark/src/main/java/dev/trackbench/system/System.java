@@ -1,6 +1,7 @@
 package dev.trackbench.system;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.execution.receiver.Buffer;
 import dev.trackbench.util.Clock;
@@ -17,10 +18,14 @@ public interface System {
         };
     }
 
+    void setConfig( BenchmarkConfig config );
+
     void prepare();
 
     Consumer<JsonNode> getSender();
 
     Runnable getReceiver( Workload workload, AtomicBoolean running, AtomicBoolean ready, Clock clock, Buffer dataConsumer );
+
+    void finish();
 
 }

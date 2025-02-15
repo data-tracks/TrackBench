@@ -25,6 +25,7 @@ public record BenchmarkConfig(
         boolean validate,
         boolean analyze,
         boolean aggregated,
+        long executionMaxM,
         long sensorBatchSize,
         long readBatchSize,
         float maxErrorAlteration,
@@ -44,7 +45,6 @@ public record BenchmarkConfig(
     public static final String ERRORS_DATA_PATH = "errors";
     public static final String DATA_WITH_ERRORS_PATH = "data_and_errors";
     public static final String RESULT_PATH = "result";
-    public static final long executionMaxMin = 1;
     public static final String ARRIVED_TICK_KEY = "arrived";
 
     public static final String OUTPUT_PATH = "summary.txt";
@@ -60,8 +60,8 @@ public record BenchmarkConfig(
             throw new RuntimeException( e );
         }
 
-        return new BenchmarkConfig(
-                System.from(props.getString( "system" )),
+        BenchmarkConfig config = new BenchmarkConfig(
+                System.from( props.getString( "system" ) ),
                 props.getInt( "seed" ),
                 new File( props.getString( "path" ) ),
                 props.getBoolean( "generate" ),
@@ -70,6 +70,7 @@ public record BenchmarkConfig(
                 props.getBoolean( "validate" ),
                 props.getBoolean( "analyze" ),
                 props.getBoolean( "aggregatedData" ),
+                props.getLong( "executionMaxM" ),
                 getNumber( props, "sensorBatchSize" ),
                 getNumber( props, "readBatchSize" ),
                 props.getFloat( "maxErrorAlteration" ),
@@ -79,6 +80,8 @@ public record BenchmarkConfig(
                 props.getInt( "stepDurationNs" ),
                 getNumber( props, "updateTickVisual" )
         );
+        config.system.setConfig( config );
+        return config;
     }
 
 

@@ -1,6 +1,5 @@
 package dev.trackbench.execution;
 
-import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.BenchmarkContext;
 import dev.trackbench.display.Component;
 import dev.trackbench.display.Display;
@@ -9,7 +8,6 @@ import dev.trackbench.execution.receiver.ReceiveCoordinator;
 import dev.trackbench.execution.sending.SendCoordinator;
 import dev.trackbench.util.Clock;
 import dev.trackbench.util.Pair;
-import dev.trackbench.util.file.JsonSource;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,9 +36,9 @@ public class ExecutionCoordinator {
 
             sender.join();
             context.getClock().finishDisplay();
-            Display.INSTANCE.info( "All send. Waiting {} mins for receiver to finish...", BenchmarkConfig.executionMaxMin );
+            Display.INSTANCE.info( "All send. Waiting {} mins for receiver to finish...", context.getConfig().executionMaxM() );
 
-            waitExecution( BenchmarkConfig.executionMaxMin );
+            waitExecution( context.getConfig().executionMaxM() );
 
             //we can start stopping threads, the target system takes too long to process or finished everything
             receiver.stopReceivers();

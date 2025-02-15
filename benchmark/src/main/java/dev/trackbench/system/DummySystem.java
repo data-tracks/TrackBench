@@ -1,6 +1,7 @@
 package dev.trackbench.system;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.execution.receiver.Buffer;
 import dev.trackbench.util.Clock;
@@ -16,6 +17,13 @@ public class DummySystem implements System {
 
     public static final int CAPACITY = 2_000_000;
     private final Map<String, BlockingQueue<String>> queues = new ConcurrentHashMap<>();
+    private BenchmarkConfig config;
+
+
+    @Override
+    public void setConfig( BenchmarkConfig config ) {
+        this.config = config;
+    }
 
 
     @Override
@@ -46,6 +54,12 @@ public class DummySystem implements System {
                 // all good
             }
         };
+    }
+
+
+    @Override
+    public void finish() {
+
     }
 
 }

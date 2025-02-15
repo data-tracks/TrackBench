@@ -72,11 +72,16 @@ public class SendCoordinator extends Thread {
             throw new RuntimeException( e );
         }
         clock.stop();
+        finishSender();
     }
 
 
     private Consumer<JsonNode> getSender() {
         return context.getSystem().getSender();
+    }
+
+    private void finishSender() {
+        context.getSystem().finish();
     }
 
 }

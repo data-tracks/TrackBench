@@ -27,6 +27,7 @@ public class BlockingMessage extends Component {
     public void finish(){
         if ( finish == null ){
             // we did not yet get published
+            System.out.print( "\r" );
             unpublished = true;
             return;
 

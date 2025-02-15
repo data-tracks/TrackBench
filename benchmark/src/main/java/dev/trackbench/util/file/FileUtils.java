@@ -100,34 +100,46 @@ public class FileUtils {
     }
 
 
-    private static long countLinesInChunk( AsynchronousFileChannel fileChannel, long start, long end ) {
+    private static long countLinesInChunk( AsynchronousFileChannel fileChannel, long position, long endPos ) {
         long lineCount = 0;
         ByteBuffer buffer = ByteBuffer.allocate( BUFFER_SIZE );
+        long bytesReadTotal = 0;
 
-        try {
-            while ( start < end ) {
-                long remaining = end - start;
-                int readSize = (int) Math.min( BUFFER_SIZE, remaining );
-                buffer.clear();
+        long chunkSize = endPos - position;
 
-                Future<Integer> readFuture = fileChannel.read( buffer, start );
-                int bytesRead = readFuture.get();
+        while ( bytesReadTotal < chunkSize ) {
+            Future<Integer> future = fileChannel.read( buffer, position + bytesReadTotal );
+            try {
+                int bytesRead = future.get();
                 if ( bytesRead == -1 ) {
-                    break;
+                    break; // End of file
                 }
 
+                bytesReadTotal += bytesRead;
                 buffer.flip();
+                byte[] data = new byte[bytesRead];
+                buffer.get( data );
+
+                if ( bytesReadTotal >= chunkSize ) {
+                    // we have read too much
+                    bytesRead -= (int) (bytesReadTotal - chunkSize);
+                }
+
                 for ( int i = 0; i < bytesRead; i++ ) {
-                    if ( buffer.get() == '\n' ) {
+                    if ( data[i] == '\n' ) {
                         lineCount++;
                     }
                 }
-                start += bytesRead;
-            }
-        } catch ( Exception e ) {
-            throw new RuntimeException( e );
-        }
+                buffer.clear();
 
+                if ( bytesReadTotal >= chunkSize ) {
+                    return lineCount;
+                }
+
+            } catch ( Exception e ) {
+                throw new RuntimeException( e );
+            }
+        }
         return lineCount;
     }
 

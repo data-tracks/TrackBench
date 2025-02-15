@@ -56,8 +56,8 @@ public abstract class Average {
         ObjectNode json = JsonNodeFactory.instance.objectNode();
         json.put( "id", id );
         json.put( "type", key );
-        json.put( "startTime", tickStart );
-        json.put( "endTime", tickEnd );
+        //json.put( "startTime", tickStart );
+        //json.put( "endTime", tickEnd );
         json.putIfAbsent( "data", data );
 
         String jsonMessage = json.toString();

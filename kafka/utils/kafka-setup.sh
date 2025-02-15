@@ -1,14 +1,20 @@
 #! /bin/bash
+docker rm -f trackbench-kafka
+sleep 2
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic f1
+docker compose up -d
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic f2
+sleep 3
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic "mini-window"
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --partitions 1 --topic f1
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic "large-window"
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --partitions 1 --topic f2
 
-docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --topic errors
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --partitions 1 --topic "mini-window"
+
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --partitions 1 --topic "large-window"
+
+docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server :9092 --partitions 1 --topic errors
 
 docker exec -ti trackbench-kafka /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 

@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Clock extends Thread {
 
+    public static final int INITIAL_DELAY_NS = 100;
     private final AtomicLong tick = new AtomicLong(-1);
     private final BenchmarkConfig config;
     private final ScheduledExecutorService scheduler;
@@ -20,7 +21,7 @@ public class Clock extends Thread {
 
     public void run() {
         // the clock starts with some delay to get all workers started correctly
-        scheduler.scheduleAtFixedRate( tick::incrementAndGet, 100, config.stepDurationNs(), TimeUnit.NANOSECONDS);
+        scheduler.scheduleAtFixedRate( tick::incrementAndGet, INITIAL_DELAY_NS, config.stepDurationNs(), TimeUnit.NANOSECONDS);
     }
 
     public void shutdown() {

@@ -2,7 +2,6 @@ package dev.trackbench.configuration;
 
 import dev.trackbench.configuration.workloads.ErrorWorkload;
 import dev.trackbench.configuration.workloads.IdentityWorkload;
-import dev.trackbench.configuration.workloads.WindowGroupWorkload;
 import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.display.Display;
 import dev.trackbench.simulation.SensorGenerator;
@@ -47,8 +46,8 @@ public class BenchmarkContext {
         this.config = config;
         this.system = config.system();
 
-        workloads.put( 0, new IdentityWorkload( config ) );
-        workloads.put( 1, new ErrorWorkload( config ) );
+        workloads.put( 0, new IdentityWorkload( 0, config ) );
+        workloads.put( 1, new ErrorWorkload( 1, config ) );
         //workloads.put( 2, new WindowWorkload( config ) );
         //setSensors( new ArrayList<>() );
 
@@ -59,7 +58,7 @@ public class BenchmarkContext {
         this.sensors = sensors;
         List<SensorTemplate> distinct = sensors.stream().map( Sensor::getTemplate ).filter( t -> t.pickHeader( List.of( LongType.class, DoubleType.class, NumberType.class ) ).isPresent() ).filter( distinctByKey( template -> template.getType().toLowerCase() ) ).toList();
         for ( SensorTemplate template : distinct ) {
-            workloads.put( workloads.size(), new WindowGroupWorkload( template, config ) );
+            //workloads.put( workloads.size(), new WindowGroupWorkload( template, config ) );
         }
     }
 

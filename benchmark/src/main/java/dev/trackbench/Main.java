@@ -69,6 +69,11 @@ public class Main {
 
         cleanUp();
 
+        try {
+            Thread.sleep( 1000 );
+        } catch ( InterruptedException e ) {
+            throw new RuntimeException( e );
+        }
         Display.INSTANCE.setFile( null );
         Display.INSTANCE.nextLine();
         Display.INSTANCE.doubleLine();

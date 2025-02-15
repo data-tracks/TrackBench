@@ -2,19 +2,23 @@ package dev.trackbench.system;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.trackbench.Main;
+import dev.trackbench.configuration.BenchmarkConfig;
 import dev.trackbench.configuration.workloads.ErrorWorkload;
 import dev.trackbench.configuration.workloads.IdentityWorkload;
 import dev.trackbench.configuration.workloads.WindowGroupWorkload;
 import dev.trackbench.configuration.workloads.Workload;
 import dev.trackbench.display.Display;
+import dev.trackbench.display.DisplayUtils;
 import dev.trackbench.execution.receiver.Buffer;
 import dev.trackbench.util.Clock;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
@@ -23,7 +27,9 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -37,6 +43,11 @@ public class KafkaSystem implements System {
 
     private final PropertiesConfiguration configuration;
 
+    @Setter
+    private BenchmarkConfig config;
+
+    private final List<Producer<String, String>> producers = new ArrayList<>();
+
 
     public KafkaSystem() {
         Configurations configs = new Configurations();
@@ -45,7 +56,6 @@ public class KafkaSystem implements System {
         } catch ( ConfigurationException e ) {
             throw new RuntimeException( e );
         }
-
     }
 
 
@@ -64,6 +74,7 @@ public class KafkaSystem implements System {
         String topic = this.configuration.getString( "senderTopic" );
 
         KafkaProducer<String, String> producer = new KafkaProducer<>( props );
+        producers.add( producer );
         return node -> {
             ProducerRecord<String, String> record = new ProducerRecord<>( topic, node.toString() );
             try {
@@ -78,13 +89,16 @@ public class KafkaSystem implements System {
 
     @Override
     public Runnable getReceiver( Workload workload, AtomicBoolean running, AtomicBoolean ready, Clock clock, Buffer dataConsumer ) {
+        long timeout = config.executionMaxM() * 60 * toSecondsMultiplier();
         return () -> {
             Properties props = new Properties();
             props.put( ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configuration.getProperty( "receiverUrl" ) );
             props.put( ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName() );
             props.put( ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName() );
-            props.put( "group.id", configuration.getString( "receiverGroupId" ) );
-            props.put( "auto.offset.reset", "latest" ); // Start from the beginning of the topic if no offset is found
+            props.put( ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName() );
+            props.put( ConsumerConfig.GROUP_ID_CONFIG, String.format( "consumer-%s-app", workload.getName() ) );
+            props.put( ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 1 ); // ms to wait until data is fetched
+            props.put( ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest" ); // Start from the beginning of the topic if no offset is found
 
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>( props );
 
@@ -108,9 +122,12 @@ public class KafkaSystem implements System {
 
                     } else {
                         long now = clock.tick();
-                        if ( now - tick > 10000 ) {
-                            Display.INSTANCE.info( "No messages received for 10 seconds. Ending loop." );
+                        if ( now - tick > timeout ) {
+                            //Display.INSTANCE.info( "No messages received for {} seconds ({} ticks). Ending loop.", config.executionMaxM() * 60, DisplayUtils.printNumber( timeout ) );
                             running.set( false );
+
+                            consumer.close();
+                            dataConsumer.interrupt();
                         }
                     }
 
@@ -119,6 +136,17 @@ public class KafkaSystem implements System {
                 throw new RuntimeException( e );
             }
         };
+    }
+
+
+    @Override
+    public void finish() {
+        producers.forEach( Producer::close );
+    }
+
+
+    private long toSecondsMultiplier() {
+        return 1_000_000_000 / config.stepDurationNs();
     }
 
 

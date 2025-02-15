@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public class IdentityWorkload extends Workload {
 
-    public IdentityWorkload( BenchmarkConfig config ) {
-        super( "Identity", config );
+    public IdentityWorkload( long id, BenchmarkConfig config ) {
+        super( id, "Identity", config );
     }
 
 

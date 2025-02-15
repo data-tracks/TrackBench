@@ -14,9 +14,9 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 
 @Slf4j
-public class WarningsStream {
+public class WarningStream {
 
-    public static void run() {
+    public static Thread run() {
         // Initialize the producer once
         TrackProducer<String, String> producer = Connection.getProducer( "warning-app" );
 
@@ -53,7 +53,7 @@ public class WarningsStream {
                             System.err.println( "Failed to send message: " + exception.getMessage() );
                             // Optionally, handle the failure (e.g., retry logic)
                         } else {
-                            log.info( "Message sent to topic f3: " + value );
+                            log.info( "Message sent to topic: {}", value );
                         }
                     } );
                 } else {
@@ -192,7 +192,7 @@ public class WarningsStream {
                                 System.err.println( "Failed to send message: " + exception.getMessage() );
                                 // Optionally, handle the failure (e.g., retry logic)
                             } else {
-                                log.info( "Message sent to topic f3: " + value );
+                                log.info( "Message sent to topic f3: {}", value );
                             }
                         } );
                     }
@@ -205,10 +205,11 @@ public class WarningsStream {
 
         // Start the Kafka Streams application
         KafkaStreams streams = new KafkaStreams( builder.build(), producer.getProperties() );
-        streams.start();
+        Thread thread = new Thread( streams::start );
 
         // Graceful shutdown
         Runtime.getRuntime().addShutdownHook( new Thread( streams::close ) );
+        return thread;
     }
 
 

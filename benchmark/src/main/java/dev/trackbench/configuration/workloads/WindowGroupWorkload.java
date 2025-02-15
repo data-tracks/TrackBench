@@ -24,8 +24,8 @@ public class WindowGroupWorkload extends Workload {
     private final SensorTemplate template;
 
 
-    public WindowGroupWorkload( SensorTemplate template, BenchmarkConfig config ) {
-        super( "WindowGroup" + WordUtils.capitalize( template.getType() ), config );
+    public WindowGroupWorkload( long id, SensorTemplate template, BenchmarkConfig config ) {
+        super( id, "WindowGroup" + WordUtils.capitalize( template.getType() ), config );
         this.template = template;
     }
 
