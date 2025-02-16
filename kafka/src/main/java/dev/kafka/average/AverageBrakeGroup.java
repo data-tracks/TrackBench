@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.kafka.sensor.Brake;
 import dev.kafka.sensor.Sensor;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -21,8 +22,8 @@ public class AverageBrakeGroup extends Average {
     public int maxPressure;
 
 
-    public AverageBrakeGroup( int temp, int pressure, long count, long tickStart, long tickEnd, long id, int wear, long tick ) {
-        super( count, tickStart, tickEnd, tick, id );
+    public AverageBrakeGroup( int temp, int pressure, int wear, SerdeValues values ) {
+        super( values );
         this.temp = temp;
         this.pressure = pressure;
         this.wear = wear;

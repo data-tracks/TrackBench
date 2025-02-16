@@ -13,4 +13,19 @@ public class SerdeUtil {
         buffer.putLong( average.tick );
     }
 
+
+    public static SerdeValues readDefault( ByteBuffer buffer ) {
+        return new SerdeValues(
+                buffer.getLong(),
+                buffer.getLong(),
+                buffer.getLong(),
+                buffer.getLong(),
+                buffer.getLong() );
+    }
+
+
+    public static record SerdeValues(long count, long tickStart, long tickEnd, long id, long tick) {
+
+    }
+
 }

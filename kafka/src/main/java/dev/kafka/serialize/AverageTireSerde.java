@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageTire;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -29,13 +30,13 @@ public class AverageTireSerde implements Serde<AverageTire> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 2 + Integer.BYTES * 6 );
+            ByteBuffer buffer = ByteBuffer.allocate( 60_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.temp );
             buffer.putDouble( data.pressure );
             buffer.putInt( data.position );
             buffer.putInt( data.wear );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -62,16 +63,12 @@ public class AverageTireSerde implements Serde<AverageTire> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double temp = buffer.getDouble();
             double pressure = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             int position = buffer.getInt();
             int wear = buffer.getInt();
-            long tick = buffer.getLong();
-            return new AverageTire( temp, pressure, count, tickS, tickE, id, position, wear, tick );
+            return new AverageTire( temp, pressure, position, wear, values );
         }
 
 

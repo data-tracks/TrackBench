@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageAccelerometerGroup;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -29,12 +30,12 @@ public class AverageAccelerometerGroupSerde implements Serde<AverageAcceleromete
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 3 + Integer.BYTES * 4 );
+            ByteBuffer buffer = ByteBuffer.allocate( 20_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.throttle );
             buffer.putDouble( data.maxThrottle );
             buffer.putDouble( data.minThrottle );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -61,15 +62,12 @@ public class AverageAccelerometerGroupSerde implements Serde<AverageAcceleromete
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double throttle = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             double minThrottle = buffer.getDouble();
             double maxThrottle = buffer.getDouble();
-            long tick = buffer.getLong();
-            return new AverageAccelerometerGroup( throttle, count, tickS, tickE, tick, id );
+
+            return new AverageAccelerometerGroup( throttle, values );
         }
 
 

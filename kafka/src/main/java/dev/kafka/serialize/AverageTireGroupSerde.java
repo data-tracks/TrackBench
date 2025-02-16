@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageTireGroup;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -29,7 +30,8 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 6 + Integer.BYTES * 6 );
+            ByteBuffer buffer = ByteBuffer.allocate( 60_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.temp );
             buffer.putDouble( data.pressure );
             buffer.putInt( data.position );
@@ -39,7 +41,6 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
             buffer.putDouble( data.minPressure );
             buffer.putDouble( data.maxPressure );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -66,20 +67,16 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double temp = buffer.getDouble();
             double pressure = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             int position = buffer.getInt();
             int wear = buffer.getInt();
             double minTemp = buffer.getDouble();
             double maxTemp = buffer.getDouble();
             double minPressure = buffer.getDouble();
             double maxPressure = buffer.getDouble();
-            long tick = buffer.getLong();
-            return new AverageTireGroup( temp, pressure, count, tickS, tickE, id, position, wear, tick );
+            return new AverageTireGroup( temp, pressure, position, wear, values );
         }
 
 

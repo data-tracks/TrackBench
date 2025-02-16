@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.kafka.sensor.Heat;
 import dev.kafka.sensor.Sensor;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -17,12 +18,8 @@ public class AverageHeat extends Average {
 
     public AverageHeat(
             double temp,
-            int count,
-            int tickStart,
-            int tickEnd,
-            int id,
-            long tick ) {
-        super( count, tickStart, tickEnd, id, tick );
+            SerdeValues values ) {
+        super( values );
         this.temp = temp;
     }
 

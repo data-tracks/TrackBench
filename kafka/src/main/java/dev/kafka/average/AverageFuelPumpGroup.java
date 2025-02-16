@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.kafka.sensor.FuelPump;
 import dev.kafka.sensor.Sensor;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -23,12 +24,8 @@ public class AverageFuelPumpGroup extends Average {
     public AverageFuelPumpGroup(
             double temp,
             double flowRate,
-            long count,
-            long tickStart,
-            long tickEnd,
-            long id,
-            long tick ) {
-        super( count, tickStart, tickEnd, id, tick );
+            SerdeValues values ) {
+        super( values );
         this.temp = temp;
         this.flowRate = flowRate;
         this.maxTemp = Double.MAX_VALUE;

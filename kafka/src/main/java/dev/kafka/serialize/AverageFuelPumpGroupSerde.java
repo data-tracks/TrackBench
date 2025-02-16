@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageFuelPumpGroup;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -29,7 +30,8 @@ public class AverageFuelPumpGroupSerde implements Serde<AverageFuelPumpGroup> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 6 + Integer.BYTES * 4 );
+            ByteBuffer buffer = ByteBuffer.allocate( 40_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.temp );
             buffer.putDouble( data.flowRate );
             buffer.putDouble( data.maxTemp );
@@ -37,7 +39,6 @@ public class AverageFuelPumpGroupSerde implements Serde<AverageFuelPumpGroup> {
             buffer.putDouble( data.maxFlow );
             buffer.putDouble( data.minFlow );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -64,18 +65,14 @@ public class AverageFuelPumpGroupSerde implements Serde<AverageFuelPumpGroup> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double temp = buffer.getDouble();
             double flowRate = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             double maxTemp = buffer.getDouble();
             double minTemp = buffer.getDouble();
             double maxFlow = buffer.getDouble();
             double minFlow = buffer.getDouble();
-            long tick = buffer.getLong();
-            return new AverageFuelPumpGroup( temp, flowRate, count, tickS, tickE, id, tick );
+            return new AverageFuelPumpGroup( temp, flowRate, values );
         }
 
 

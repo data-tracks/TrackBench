@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageSpeedGroup;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -29,7 +30,8 @@ public class AverageSpeedGroupSerde implements Serde<AverageSpeedGroup> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 6 + Integer.BYTES * 4 );
+            ByteBuffer buffer = ByteBuffer.allocate( 30_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.speed );
             buffer.putDouble( data.wind );
             buffer.putDouble( data.minSpeed );
@@ -37,7 +39,6 @@ public class AverageSpeedGroupSerde implements Serde<AverageSpeedGroup> {
             buffer.putDouble( data.minWind );
             buffer.putDouble( data.maxWind );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -64,18 +65,14 @@ public class AverageSpeedGroupSerde implements Serde<AverageSpeedGroup> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double speed = buffer.getDouble();
             double wind = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             double minSpeed = buffer.getDouble();
             double maxSpeed = buffer.getDouble();
             double minWind = buffer.getDouble();
             double maxWind = buffer.getDouble();
-            long tick = buffer.getLong();
-            return new AverageSpeedGroup( speed, wind, count, tickS, tickE, id, tick );
+            return new AverageSpeedGroup( speed, wind, values );
         }
 
 

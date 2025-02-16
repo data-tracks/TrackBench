@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageBrake;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -29,13 +30,13 @@ public class AverageBrakeSerde implements Serde<AverageBrake> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( Integer.BYTES * 7 );
+            ByteBuffer buffer = ByteBuffer.allocate( 20_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putInt( data.temp );
             buffer.putInt( data.pressure );
             buffer.putLong( data.count );
             buffer.putInt( data.wear );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -62,15 +63,11 @@ public class AverageBrakeSerde implements Serde<AverageBrake> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             int temp = buffer.getInt();
             int pressure = buffer.getInt();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             int wear = buffer.getInt();
-            long tick = buffer.getLong();
-            return new AverageBrake( temp, pressure, count, tickS, tickE, id, wear, tick );
+            return new AverageBrake( temp, pressure, wear, values );
         }
 
 

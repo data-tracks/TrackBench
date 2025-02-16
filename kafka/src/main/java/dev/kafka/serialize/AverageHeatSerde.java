@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageHeat;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -30,9 +31,9 @@ public class AverageHeatSerde implements Serde<AverageHeat> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.allocate( 20_000 );
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.temp );
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -59,13 +60,9 @@ public class AverageHeatSerde implements Serde<AverageHeat> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap( data );
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double temp = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
-            long tick = buffer.getLong();
-            return new AverageHeat( temp, count, tickS, tickE, id, tick );
+            return new AverageHeat( temp, values );
         }
 
 

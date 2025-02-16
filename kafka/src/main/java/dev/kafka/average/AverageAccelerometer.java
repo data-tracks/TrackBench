@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.kafka.sensor.Accelerometer;
 import dev.kafka.sensor.Sensor;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import lombok.Getter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -17,8 +18,8 @@ public class AverageAccelerometer extends Average {
     }
 
 
-    public AverageAccelerometer( double throttle, int count, int tickS, int tickE, int id, long tick ) {
-        super( count, tickS, tickE, tick, id );
+    public AverageAccelerometer( double throttle, SerdeValues values ) {
+        super( values );
         this.throttle = throttle;
     }
 

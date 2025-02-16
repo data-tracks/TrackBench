@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageHeatGroup;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
@@ -29,11 +30,11 @@ public class AverageHeatGroupSerde implements Serde<AverageHeatGroup> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.allocate(20_000);
+            SerdeUtil.addDefault( buffer, data );
             buffer.putDouble(data.temp);
             buffer.putDouble(data.minTemp);
             buffer.putDouble(data.maxTemp);
 
-            SerdeUtil.addDefault( buffer, data );
             return buffer.array();
         }
 
@@ -56,15 +57,11 @@ public class AverageHeatGroupSerde implements Serde<AverageHeatGroup> {
                 return null;
             }
             ByteBuffer buffer = ByteBuffer.wrap(data);
+            SerdeValues values = SerdeUtil.readDefault( buffer );
             double temp = buffer.getDouble();
-            int count = buffer.getInt();
-            int tickS = buffer.getInt();
-            int tickE = buffer.getInt();
-            int id = buffer.getInt();
             double minTemp = buffer.getDouble();
             double maxTemp = buffer.getDouble();
-            long tick = buffer.getLong();
-            return new AverageHeatGroup(temp, count, tickS, tickE, id, tick);
+            return new AverageHeatGroup(temp, values);
         }
 
         @Override

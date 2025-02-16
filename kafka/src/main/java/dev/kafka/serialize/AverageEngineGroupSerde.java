@@ -2,6 +2,7 @@ package dev.kafka.serialize;
 
 import dev.kafka.average.AverageEngineGroup;
 import dev.kafka.util.SerdeUtil;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -31,7 +32,8 @@ public class AverageEngineGroupSerde implements Serde<AverageEngineGroup> {
             }
             try {
                 // Allocate a ByteBuffer of the correct size
-                ByteBuffer buffer = ByteBuffer.allocate( Double.BYTES * 9 + Integer.BYTES * 6 + Long.BYTES * 3 );
+                ByteBuffer buffer = ByteBuffer.allocate( 40_000 );
+                SerdeUtil.addDefault( buffer, data );
                 buffer.putInt( data.temp );
                 buffer.putLong( data.rpm );
                 buffer.putInt( data.fuelFlow );
@@ -47,7 +49,6 @@ public class AverageEngineGroupSerde implements Serde<AverageEngineGroup> {
                 buffer.putLong( data.maxRPM );
                 buffer.putLong( data.minRPM );
 
-                SerdeUtil.addDefault( buffer, data );
                 return buffer.array();
             } catch ( Exception e ) {
                 System.err.println( "Serialization error: " + e.getMessage() );
@@ -80,18 +81,21 @@ public class AverageEngineGroupSerde implements Serde<AverageEngineGroup> {
             }
             try {
                 ByteBuffer buffer = ByteBuffer.wrap( data );
+                SerdeValues values = SerdeUtil.readDefault( buffer );
                 int temp = buffer.getInt();
                 long rpm = buffer.getLong();
                 int fuelFlow = buffer.getInt();
                 double oilPressure = buffer.getDouble();
                 double fuelPressure = buffer.getDouble();
                 double exhaust = buffer.getDouble();
-                int count = buffer.getInt();
-                int tickStart = buffer.getInt();
-                int tickEnd = buffer.getInt();
-                int id = buffer.getInt();
-                long tick = buffer.getLong();
-                return new AverageEngineGroup( temp, rpm, fuelFlow, oilPressure, fuelPressure, exhaust, count, tickStart, tickEnd, id, tick );
+                return new AverageEngineGroup(
+                        temp,
+                        rpm,
+                        fuelFlow,
+                        oilPressure,
+                        fuelPressure,
+                        exhaust,
+                        values );
             } catch ( Exception e ) {
                 System.err.println( "Deserialization error: " + e.getMessage() );
                 return null; // or handle the error in another way

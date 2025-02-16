@@ -3,6 +3,7 @@ package dev.kafka.average;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.kafka.sensor.Sensor;
+import dev.kafka.util.SerdeUtil.SerdeValues;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -24,6 +25,14 @@ public abstract class Average {
         tickStart = 0;
         tickEnd = 0;
         id = -1;
+    }
+
+    public Average( SerdeValues values) {
+        this.count = values.count();
+        this.tickStart = values.tickStart();
+        this.tickEnd = values.tickEnd();
+        this.tick = values.tick();
+        this.id = values.id();
     }
 
     public abstract ProducerRecord<String, String> getRecord( String topic );
