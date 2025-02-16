@@ -49,6 +49,8 @@ public record BenchmarkConfig(
 
     public static final String OUTPUT_PATH = "summary.txt";
 
+    private static String outputFile = OUTPUT_PATH;
+
 
     public static BenchmarkConfig fromFile() {
         //Get Data from Settings file
@@ -193,7 +195,7 @@ public record BenchmarkConfig(
 
 
     public File getSummeryFile() {
-        return new File( path.toString(), OUTPUT_PATH );
+        return new File( path.toString(), outputFile );
     }
 
 
@@ -222,5 +224,11 @@ public record BenchmarkConfig(
         return node.get( ARRIVED_TICK_KEY ).asLong();
     }
 
+
+    public void setPrefix( String prefix ) {
+        if ( prefix != null ) {
+            outputFile = prefix + "_summary.txt";
+        }
+    }
 
 }

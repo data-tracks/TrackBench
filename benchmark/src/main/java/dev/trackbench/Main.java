@@ -12,19 +12,34 @@ import dev.trackbench.simulation.SensorGenerator;
 import dev.trackbench.simulation.aggregate.AveragedData;
 import dev.trackbench.simulation.aggregate.FinalData;
 import dev.trackbench.simulation.processing.ProcessingGenerator;
-import dev.trackbench.system.DummySystem;
 import dev.trackbench.util.file.FileUtils;
 import dev.trackbench.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
+@Command(name = "TrackBench", mixinStandardHelpOptions = true, version = "1.0.0",
+        description = "A heterogeneous, highly-configurable and highly-parallel stream processing benchmark.")
 @Slf4j
-public class Main {
+public class Main implements Runnable {
+
+    @Option(names = { "-p", "--prefix" }, description = "The output file which contains the summary of the evaluation.")
+    private static String prefix;
 
 
     public static void main( String[] args ) {
+        int exitCode = new CommandLine(new Main()).execute(args);
+        System.exit(exitCode);
+    }
+
+    @Override
+    public void run() {
         //Get Data from Settings file
         BenchmarkConfig config = BenchmarkConfig.fromFile();
         BenchmarkContext context = new BenchmarkContext( config );
+        config.setPrefix(prefix);
+
         // set to new seed
         RandomData.seed = config.seed();
 
@@ -96,5 +111,7 @@ public class Main {
         FinalData.setFolderStore( config.path() );
         Comparer.setFolder( config.path() );
     }
+
+
 
 }

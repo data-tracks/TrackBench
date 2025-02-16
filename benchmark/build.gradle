@@ -52,3 +52,8 @@ dependencies {
     // Logging
     implementation 'org.slf4j:slf4j-simple:2.0.16'
 }
+
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
