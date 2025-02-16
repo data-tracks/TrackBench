@@ -98,7 +98,7 @@ public class KafkaSystem implements System {
             props.put( ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName() );
             props.put( ConsumerConfig.GROUP_ID_CONFIG, String.format( "consumer-%s-app", workload.getName() ) );
             props.put( ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 1 ); // ms to wait until data is fetched
-            props.put( ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest" ); // Start from the beginning of the topic if no offset is found
+            props.put( ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest" );
 
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>( props );
 

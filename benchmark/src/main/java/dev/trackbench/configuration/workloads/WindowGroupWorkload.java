@@ -12,40 +12,38 @@ import dev.trackbench.simulation.type.DoubleType;
 import dev.trackbench.simulation.type.LongType;
 import dev.trackbench.simulation.type.NumberType;
 import dev.trackbench.simulation.window.SlidingWindow;
-import dev.trackbench.util.ValueHandler;
 import dev.trackbench.util.file.FileJsonTarget;
 import dev.trackbench.util.file.FileStep;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.text.WordUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class WindowGroupWorkload extends Workload {
 
-    private final SensorTemplate template;
+    private final List<SensorTemplate> templates;
 
 
-    public WindowGroupWorkload( long id, SensorTemplate template, BenchmarkConfig config ) {
-        super( id, "WindowGroup" + WordUtils.capitalize( template.getType() ), config );
-        this.template = template;
+    public WindowGroupWorkload( long id, List<SensorTemplate> templates, BenchmarkConfig config ) {
+        super( id, "WindowGroup", config );
+        this.templates = templates;
     }
 
 
     @Override
     public Optional<Step> getProcessing( String fileName ) {
-        Optional<ValueHandler> project = template.pickHeader( List.of( LongType.class, DoubleType.class, NumberType.class ) );
-        if ( project.isEmpty() ) {
-            return Optional.empty();
-        }
-
-        return Optional.of( new DistributionStep().after(
+        List<Step> projects = templates.stream().map( t -> Pair.of( t, t.pickHeader( List.of( LongType.class, DoubleType.class, NumberType.class ) ) ) ).filter( p -> p.getValue().isPresent() ).map( p ->
                 new Filter( v -> {
                     JsonNode data = v.getNode();
-                    return data.has( "data" ) && data.get( "data" ).has( "type" ) && data.get( "data" ).get( "type" ).asText().equals( template.getType() ) && !data.get( "data" ).has( "Error" );
-                } ).after(
-                        new Project( project.orElseThrow().extractor() ).after(
-                                new SlidingWindow( AvgAggregator::new, 1_000 ).after(
-                                        new Project( project.orElseThrow().setter() ).after(
-                                                new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) ) ) ) ) ) );
+                    return data.has( "data" ) && data.get( "data" ).has( "type" ) && data.get( "data" ).get( "type" ).asText().equals( p.getKey().getType() ) && !data.get( "data" ).has( "Error" );
+                } ).after( new Project( p.getValue().orElseThrow().extractor() ).after(
+                        new SlidingWindow( AvgAggregator::new, 1_000 ).after(
+                                new Project( p.getValue().orElseThrow().setter() )
+                                        .after( new FileStep( new FileJsonTarget( getConfig().getSimulationFile( this.getName(), fileName ), getConfig() ) ) ) ) ) ) ).toList();
+
+        Step process = new DistributionStep();
+
+        projects.forEach( process::after );
+        return Optional.of( process );
     }
 
 }

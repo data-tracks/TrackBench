@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +29,8 @@ public class Analyser {
     private final BenchmarkContext context;
     private final Workload workload;
     Queue<Long> delays = new ConcurrentLinkedQueue<>();
-    final Map<Long, Long> throughputs = new ConcurrentHashMap<>();
+    final Map<Long, Long> throughput_millis = new ConcurrentHashMap<>();
+    final Map<Long, Long> throughput_seconds = new ConcurrentHashMap<>();
 
 
     public Analyser( BenchmarkContext context, Workload workload ) {
@@ -67,16 +69,29 @@ public class Analyser {
 
 
     private List<Pair<String, String>> analyseThroughput() {
-        executeAnalysis( node -> {
-            long sendTick = node.get( BenchmarkConfig.ARRIVED_TICK_KEY).asLong();
+        long toMillis = 1_000_000 / context.getConfig().stepDurationNs();
+        long toSecond = 1_000_000_000 / context.getConfig().stepDurationNs();
+        long toMinute = 60_000_000_000L / context.getConfig().stepDurationNs();
 
-            throughputs.putIfAbsent( sendTick, 0L );
-            synchronized ( throughputs ) {
-                throughputs.put( sendTick, throughputs.get( sendTick ) + 1 );
+        executeAnalysis( node -> {
+            long milli = node.get( BenchmarkConfig.ARRIVED_TICK_KEY ).asLong() / toMillis; // we merge to millis
+            long second = node.get( BenchmarkConfig.ARRIVED_TICK_KEY ).asLong() / toSecond; // we merge to seconds
+
+            throughput_millis.putIfAbsent( milli, 0L );
+            synchronized ( throughput_millis ) {
+                throughput_millis.put( milli, throughput_millis.get( milli ) + 1 );
             }
+
+            throughput_seconds.putIfAbsent( second, 0L );
+            synchronized ( throughput_seconds ) {
+                throughput_seconds.put( second, throughput_seconds.get( second ) + 1 );
+            }
+
         } );
 
-        return avgMedianMinMax( throughputs.values(), "throughput", "data points", false );
+        return
+                Stream.concat( avgMedianMinMax( throughput_millis.values(), "throughput", "data points per ms", false ).stream(),
+                        avgMedianMinMax( throughput_seconds.values(), "throughput", "data points per s", false ).stream() ).toList();
     }
 
 

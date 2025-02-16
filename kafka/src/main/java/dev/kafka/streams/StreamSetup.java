@@ -7,19 +7,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.kafka.average.Average;
 import dev.kafka.average.AverageAccelerometer;
-import dev.kafka.average.AverageAccelerometerGroup;
 import dev.kafka.average.AverageBrake;
-import dev.kafka.average.AverageBrakeGroup;
 import dev.kafka.average.AverageEngine;
-import dev.kafka.average.AverageEngineGroup;
 import dev.kafka.average.AverageFuelPump;
-import dev.kafka.average.AverageFuelPumpGroup;
 import dev.kafka.average.AverageHeat;
-import dev.kafka.average.AverageHeatGroup;
 import dev.kafka.average.AverageSpeed;
-import dev.kafka.average.AverageSpeedGroup;
 import dev.kafka.average.AverageTire;
-import dev.kafka.average.AverageTireGroup;
 import dev.kafka.sensor.Accelerometer;
 import dev.kafka.sensor.Brake;
 import dev.kafka.sensor.Engine;
@@ -28,20 +21,14 @@ import dev.kafka.sensor.Heat;
 import dev.kafka.sensor.Sensor;
 import dev.kafka.sensor.Speed;
 import dev.kafka.sensor.Tire;
-import dev.kafka.serialize.AverageAccelerometerGroupSerde;
 import dev.kafka.serialize.AverageAccelerometerSerde;
-import dev.kafka.serialize.AverageBrakeGroupSerde;
 import dev.kafka.serialize.AverageBrakeSerde;
-import dev.kafka.serialize.AverageEngineGroupSerde;
 import dev.kafka.serialize.AverageEngineSerde;
-import dev.kafka.serialize.AverageFuelPumpGroupSerde;
 import dev.kafka.serialize.AverageFuelPumpSerde;
-import dev.kafka.serialize.AverageHeatGroupSerde;
 import dev.kafka.serialize.AverageHeatSerde;
-import dev.kafka.serialize.AverageSpeedGroupSerde;
 import dev.kafka.serialize.AverageSpeedSerde;
-import dev.kafka.serialize.AverageTireGroupSerde;
 import dev.kafka.serialize.AverageTireSerde;
+import dev.kafka.util.Admin;
 import dev.kafka.util.Connection;
 import dev.kafka.util.TrackProducer;
 import java.time.Duration;
@@ -76,6 +63,8 @@ public class StreamSetup {
 
 
     public static void run() {
+        setupTopics();
+
         setupStreams( "accelerometer", false, Accelerometer::from, AverageAccelerometer::new, new AverageAccelerometerSerde() );
 
         //setupStreams( "accelerometer", true, Accelerometer::from, AverageAccelerometerGroup::new, new AverageAccelerometerGroupSerde() );
@@ -124,6 +113,14 @@ public class StreamSetup {
             }
         } ) );
 
+    }
+
+
+    private static void setupTopics() {
+        Admin.truncateTopic( "f1", 3 );
+        Admin.truncateTopic( "f2", 3 );
+        Admin.truncateTopic( "window", 3 );
+        Admin.truncateTopic( "errors", 3 );
     }
 
 
