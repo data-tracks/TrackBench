@@ -17,7 +17,7 @@ repositories {
 
 application {
     // Define the main class for the application.
-    mainClass = 'dev.trackbench.Main'
+    mainClass = 'dev.kafka.Main'
 }
 
 dependencies {
