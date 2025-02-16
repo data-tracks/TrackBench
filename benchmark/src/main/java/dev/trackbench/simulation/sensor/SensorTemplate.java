@@ -42,17 +42,17 @@ public class SensorTemplate {
             );
 
     public static Map<String, Integer> tickLength = new HashMap<>() {{
-        put( "tire", 1 );                //tick --> 10 entries per timeunit
+        put( "tire", 10 );                //tick --> 10 entries per timeunit
         put( "heat", 1 );
-        put( "speed", 1 );
+        put( "speed", 10 );
         put( "gForce", 1 );
-        put( "fuelPump", 1 );
-        put( "DRS", 1 );
+        put( "fuelPump", 10 );
+        put( "DRS", 20 );
         put( "brake", 1 );
-        put( "steering", 1 );
+        put( "steering", 50 );
         put( "accelerometer", 1 );
         put( "engine", 1 );
-        put( "blackbox", 5 );           // every 5th tick an entry
+        put( "blackbox", 25 );           // every 5th tick an entry
     }};
 
     static long idCounter = 0;
