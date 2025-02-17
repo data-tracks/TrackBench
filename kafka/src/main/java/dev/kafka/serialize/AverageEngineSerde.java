@@ -32,7 +32,7 @@ public class AverageEngineSerde implements Serde<AverageEngine> {
             }
             try {
                 // Allocate a ByteBuffer of the correct size
-                ByteBuffer buffer = ByteBuffer.allocate( 40_000 );
+                ByteBuffer buffer = ByteBuffer.allocate( 100_000 );
                 SerdeUtil.addDefault( buffer, data );
                 buffer.putInt( data.temp );
                 buffer.putLong( data.rpm );

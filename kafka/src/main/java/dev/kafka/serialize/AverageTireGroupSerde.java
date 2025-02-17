@@ -30,7 +30,7 @@ public class AverageTireGroupSerde implements Serde<AverageTireGroup> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( 60_000 );
+            ByteBuffer buffer = ByteBuffer.allocate( 100_000 );
             SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.temp );
             buffer.putDouble( data.pressure );

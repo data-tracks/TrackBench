@@ -29,7 +29,7 @@ public class AverageHeatGroupSerde implements Serde<AverageHeatGroup> {
             if (data == null) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate(20_000);
+            ByteBuffer buffer = ByteBuffer.allocate(50_000);
             SerdeUtil.addDefault( buffer, data );
             buffer.putDouble(data.temp);
             buffer.putDouble(data.minTemp);

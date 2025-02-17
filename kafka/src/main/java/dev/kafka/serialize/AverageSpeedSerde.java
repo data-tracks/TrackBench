@@ -30,7 +30,7 @@ public class AverageSpeedSerde implements Serde<AverageSpeed> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( 20_000 );
+            ByteBuffer buffer = ByteBuffer.allocate( 30_000 );
             SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.speed );
             buffer.putDouble( data.wind );

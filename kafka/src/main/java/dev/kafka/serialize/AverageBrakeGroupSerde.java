@@ -30,7 +30,7 @@ public class AverageBrakeGroupSerde implements Serde<AverageBrakeGroup> {
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( 20_000 );
+            ByteBuffer buffer = ByteBuffer.allocate( 100_000 );
             SerdeUtil.addDefault( buffer, data );
             buffer.putInt( data.temp );
             buffer.putInt( data.pressure );

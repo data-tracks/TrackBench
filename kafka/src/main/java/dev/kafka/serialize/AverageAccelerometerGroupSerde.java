@@ -30,7 +30,7 @@ public class AverageAccelerometerGroupSerde implements Serde<AverageAcceleromete
             if ( data == null ) {
                 return null;
             }
-            ByteBuffer buffer = ByteBuffer.allocate( 20_000 );
+            ByteBuffer buffer = ByteBuffer.allocate( 100_000 );
             SerdeUtil.addDefault( buffer, data );
             buffer.putDouble( data.throttle );
             buffer.putDouble( data.maxThrottle );
