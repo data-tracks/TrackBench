@@ -257,7 +257,7 @@ public class StreamSetup {
                 .foreach( ( key, value ) -> {
                     ProducerRecord<String, String> record = value.getRecord( outputTopic );
 
-                    log.info( "Message: {}", record );
+                    //log.info( "Message: {}", record );
                     producer.send( record, ( metadata, exception ) -> {
                         if ( exception != null ) {
                             System.err.println( "Failed to send message: " + exception.getMessage() );

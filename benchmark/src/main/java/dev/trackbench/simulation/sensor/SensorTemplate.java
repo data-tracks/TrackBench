@@ -28,14 +28,14 @@ import org.jetbrains.annotations.NotNull;
 public class SensorTemplate {
 
     public static List<Supplier<SensorTemplate>> templates = List.of(
-            () -> SensorTemplate.of( "heat", "0", ErrorRates.of( 0.001, 0.001 ), "temperature c" ),//heat sensor
+            //() -> SensorTemplate.of( "heat", "0", ErrorRates.of( 0.001, 0.001 ), "temperature c" ),//heat sensor
             () -> SensorTemplate.of( "tire", "0", ErrorRates.of( 0.001, 0.001 ), "temperature tire", "pressure psi", "wear", "liability", "position" ),//front_left_tyre
-            () -> SensorTemplate.of( "speed", "0", ErrorRates.of( 0.001, 0.001 ), "kph", "mph", "acceleration", "wind speed" ),//speed_sensor
+            //() -> SensorTemplate.of( "speed", "0", ErrorRates.of( 0.001, 0.001 ), "kph", "mph", "acceleration", "wind speed" ),//speed_sensor
             //() -> SensorTemplate.of( "gForce", "0", ErrorRates.of( 0.001, 0.001 ), "g-lateral", "g-longitudinal" ),//g_sensor
-            () -> SensorTemplate.of( "fuelPump", "0", ErrorRates.of( 0.001, 0.001 ), "temperature fuelP", "ml/min" ),//fuel_pump_sensor
+            //() -> SensorTemplate.of( "fuelPump", "0", ErrorRates.of( 0.001, 0.001 ), "temperature fuelP", "ml/min" ),//fuel_pump_sensor
             //() -> SensorTemplate.of( "DRS", "0", ErrorRates.of( 0.001, 0.001 ), "on/off", "drs-zone" ),//drs_sensor
-            () -> SensorTemplate.of( "brake", "0", ErrorRates.of( 0.001, 0.001 ), "temperature brake", "brake_pressure", "wear" ),//front_left_brake
-            () -> SensorTemplate.of( "accelerometer", "0", ErrorRates.of( 0.001, 0.001 ), "throttlepedall" ),
+            //() -> SensorTemplate.of( "brake", "0", ErrorRates.of( 0.001, 0.001 ), "temperature brake", "brake_pressure", "wear" ),//front_left_brake
+            //() -> SensorTemplate.of( "accelerometer", "0", ErrorRates.of( 0.001, 0.001 ), "throttlepedall" ),
             () -> SensorTemplate.of( "engine", "0", ErrorRates.of( 0.001, 0.001 ), "temperature engine", "rpm", "fuelFlow", "oil_pressure", "fuel_pressure", "exhaust" )
             //() -> SensorTemplate.of( "blackbox", "0", ErrorRates.of( 0.001, 0.001 ), "array_of_data" ),
             //() -> SensorTemplate.of( "steering", "0", ErrorRates.of( 0.001, 0.001 ), "direction", "turning_degree" )
