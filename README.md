@@ -1,4 +1,4 @@
-# 🏎️ TrackBench (formerly *MMDSPBenchmark*)
+# 🏎️ TrackBench
 
 TrackBench is a benchmarking suite designed specifically to test the performance and efficiency of stream processing systems under diverse workloads.
 
@@ -18,7 +18,24 @@ With a flexible and easy-to-configure set of tools, TrackBench is ideal for asse
 
 ## Getting Started
 
-_TODO_
+### Benchmark 
+To start the benchmark one has to execute the following command in the `benchmark` folder:
+
+```
+./gradlew run
+```
+to prefix the summary file a prefix can be specified by appending `--p` or `-prefix` followed by the desired prefix.
+All other options can be specified in the settings file which is by default located in `benchmark/src/main/resources/settings.properties`.
+
+### Kafka Streams 
+
+To start the Kafka Streams implementation of the 3 default workloads one need to have already a running Kafka instance or
+can start a new one by using the `dock-compose.yml` file which is located in `kafka/utils/docker-compose.yml`.
+The Kafka configurations might need adjustment, which can be done in the `kafka.properties` file which is locaed in `benchmark/src/main/resources/kafka.properties`.
+The Kafka Streams jobs can be started by executing the following command in the `kafka` folder:
+```
+./gradlew run
+```
 
 ---
 
@@ -27,11 +44,4 @@ _TODO_
 This project is licensed under the [GPL3 License](./LICENSE).  
 Feel free to use, modify, and distribute this software as per the terms of the license.
 
----
 
-## Acknowledgments
-
-We would like to thank all contributors and supporters of the project for their valuable feedback and contributions.  
-Special thanks to:
-- **@dmadoery**: Initial development and key contributions.
-- Our community of users and testers who help make TrackBench better.  

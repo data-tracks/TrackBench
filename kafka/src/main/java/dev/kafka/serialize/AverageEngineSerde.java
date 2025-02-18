@@ -67,7 +67,7 @@ public class AverageEngineSerde implements Serde<AverageEngine> {
 
         @Override
         public AverageEngine deserialize( String topic, byte[] data ) {
-            if ( data == null || data.length != (100_000) ) {
+            if ( data == null || data.length == 0 ) {
                 System.err.println( "Deserialization error: Invalid byte array length" );
                 return null; // Handle null or malformed input
             }
